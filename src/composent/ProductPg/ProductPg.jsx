@@ -4,15 +4,13 @@ import { IoFileTrayStackedOutline } from "react-icons/io5";
 import { IoWalletOutline } from "react-icons/io5";
 import { IoBagRemoveOutline } from "react-icons/io5";
 import { IoBanOutline } from "react-icons/io5";
-import Dialog from "../Dialog/Dialog";
 import ProductList from "./ProductList";
 
 
 export default function ProductPg() {
-    const [open , setOpen] = useState(false)
 
   return (
-    <div>
+    <div className="">
         <div className="flex p-6 gap-5">
             <div className="ProductsCard flex justify-center items-center gap-5">
                 <div>
@@ -60,9 +58,7 @@ export default function ProductPg() {
         </div>
 
 
-            <Dialog isOpen={open} onClose={() => setOpen(false)} title="Product Details">
-                    <input type="text" />
-            </Dialog>
+
 
 
 

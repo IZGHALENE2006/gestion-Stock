@@ -14,7 +14,6 @@
 
 .dialog {
   background: #fff;
-  width: 400px;
   border-radius: 10px;
   overflow: hidden;
   animation: scaleIn 0.3s ease;

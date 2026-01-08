@@ -20,7 +20,7 @@ export default function Sidebar() {
       >
         
         <div className="flex items-center h-20 px-6">
-          <div className="bg-[#2C74B3] p-2 rounded-lg min-w-[32px]">
+          <div className="bg-[#2C74B3] p-2 rounded-lg min-w-8">
             <div className="w-4 h-4 bg-white rounded-sm" /> 
           </div>
           <span className={`ml-4 font-bold text-[#2C74B3] transition-opacity duration-300 whitespace-nowrap
@@ -29,7 +29,7 @@ export default function Sidebar() {
           </span>
         </div>
 
-        <nav className="flex-grow px-3 mt-4 space-y-2">
+        <nav className="grow px-3 mt-4 space-y-2">
           <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
           <NavItem to="/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
           <NavItem to="/employees" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
@@ -39,7 +39,7 @@ export default function Sidebar() {
         </nav>
 
         <div className="p-4 border-t border-[#42434a] flex items-center">
-          <div className="min-w-[40px] overflow-hidden h-10 rounded-full bg-[#2C74B3] flex items-center justify-center font-bold">
+          <div className="min-w-10 overflow-hidden h-10 rounded-full bg-[#2C74B3] flex items-center justify-center font-bold">
             <IoPersonOutline size={35} className='mt-3.5'/>
           </div>
           <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
@@ -65,7 +65,7 @@ function NavItem({ to, icon, label, expanded }) {
         }
       `}
     >
-      <div className="min-w-[56px] flex justify-center items-center">
+      <div className="min-w-14 flex justify-center items-center">
         {icon}
       </div>
 

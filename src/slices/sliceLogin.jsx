@@ -10,8 +10,6 @@ export const RegistreAdmin = createAsyncThunk('addAdmin',async(Admin,{ rejectWit
          return rejectWithValue(error.response.data.message)
    }
   
-  
-    
 })
 
 

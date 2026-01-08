@@ -1,7 +1,7 @@
 import React from "react";
 import "./Dialog.css";
 
-const Dialog = ({ isOpen, onClose, title, children }) => {
+const Dialog = ({ isOpen, onClose, title, children , width }) => {
   if (!isOpen) return null;
 
   return (
@@ -9,10 +9,14 @@ const Dialog = ({ isOpen, onClose, title, children }) => {
     <div className="dialog-overlay" onClick={onClose}>
       
       {/* ⬇️ منع انتشار الكليك داخل الـ dialog */}
-      <div className="dialog" onClick={(e) => e.stopPropagation()}>
+      <div className="dialog"
+            style={{width : width}}
+      onClick={(e) => e.stopPropagation()}>
         
         <div className="dialog-header">
-          <h3>{title}</h3>
+          <h3 className="tracking-wide font-semibold text-xl">
+              {title}
+              </h3>
           <button className="close-btn scale-150" onClick={onClose}>×</button>
         </div>
 
