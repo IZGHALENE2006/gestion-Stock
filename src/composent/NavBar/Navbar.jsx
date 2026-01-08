@@ -30,7 +30,7 @@ export default function Sidebar() {
         </div>
 
         <nav className="flex-grow px-3 mt-4 space-y-2">
-          <NavItem to="/" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
+          <NavItem to="/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
           <NavItem to="/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
           <NavItem to="/employees" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
           <NavItem to="/sell" icon={<IoCartOutline size={22} />} label="Sell" expanded={isExpanded} />
