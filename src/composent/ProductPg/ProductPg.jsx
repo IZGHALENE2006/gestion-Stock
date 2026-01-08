@@ -14,43 +14,40 @@ export default function ProductPg() {
   return (
     <div>
         <div className="flex p-6 gap-5">
-            <div className="ProductsCard flex justify-center items-center gap-5">
-                <div>
-                    <IoFileTrayStackedOutline size={35} color="azure"/>
-                </div>
-                <div className="text-xl">
-                    <h1 className="text-[#ffffff87]">Count Product</h1>
-                    <h1 className="ml-3 text-2xl"><b>15</b></h1>
-                </div>
+   <div className="flex flex-wrap gap-6">
+  <div className="ProductsCard flex items-center gap-3">
+    <IoFileTrayStackedOutline size={35} color="azure"/>
+    <div>
+      <h1 className="text-[#ffffff87] text-sm">Count Product</h1>
+      <h1 className="text-2xl font-bold">15</h1>
+    </div>
+  </div>
 
-            </div>
-            <div className="ProductsCard flex justify-center items-center gap-5">
-                <div>
-                    <IoBagRemoveOutline size={35} color="azure"/>
-                </div>
-                <div className="text-xl">
-                    <h1 className="text-[#ffffff87]">Low Stock</h1>
-                    <h1 className="ml-3 text-2xl"><b>5</b></h1>
-                </div>
-            </div>
-            <div className="ProductsCard flex justify-center items-center gap-5">
-                <div>
-                    <IoBanOutline size={35} color="azure"/>
-                </div>
-                <div className="text-xl">
-                    <h1 className="text-[#ffffff87]">Out Of Stock</h1>
-                    <h1 className="ml-3 text-2xl"><b>0</b></h1>
-                </div>
-            </div>
-            <div className="ProductsCard flex justify-center items-center gap-5">
-                <div>
-                    <IoWalletOutline size={37} color="azure"/>
-                </div>
-                <div className="text-xl">
-                    <h1 className="text-[#ffffff87]">Total Price</h1>
-                    <h1 className="ml-2"><b>20.00 dh</b></h1>
-                </div>
-            </div>
+  <div className="ProductsCard flex items-center gap-3">
+    <IoBagRemoveOutline size={35} color="azure"/>
+    <div>
+      <h1 className="text-[#ffffff87] text-sm">Low Stock</h1>
+      <h1 className="text-2xl font-bold">5</h1>
+    </div>
+  </div>
+
+  <div className="ProductsCard flex items-center gap-3">
+    <IoBanOutline size={35} color="azure"/>
+    <div>
+      <h1 className="text-[#ffffff87] text-sm">Out Of Stock</h1>
+      <h1 className="text-2xl font-bold">0</h1>
+    </div>
+  </div>
+
+  <div className="ProductsCard flex items-center gap-3">
+    <IoWalletOutline size={37} color="azure"/>
+    <div>
+      <h1 className="text-[#ffffff87] text-sm">Total Price</h1>
+      <h1 className="text-2xl font-bold">20.00 dh</h1>
+    </div>
+  </div>
+</div>
+
 
 
         </div>

@@ -1,16 +1,21 @@
-.ProductsCard{
+.ProductsCard {
     border: 1px solid #42434a;
     color: azure;
     padding: 25px;
     border-radius: 15px;
     width: 250px;
-    background-color: #11121a93;
-    transition: all 1s ease;
+    background-color: rgba(17, 18, 26, 0.58); /* بدل #11121a93 باش يكون صحيح */
+    transition: all 0.5s ease; /* 1s بزاف */
     overflow: hidden;
     position: relative;
 }
+.ProductsCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
 
-.ProductsCard::before{
+
+.ProductsCard::before {
     content: "";
     position: absolute;
     top: 100%;
@@ -20,11 +25,9 @@
     background: linear-gradient(to top , transparent , rgba(240, 255, 255, 0.35) , transparent);
     transition: all 1s ease;
     transform: rotate(45deg);
-
-
 }
 
-.ProductsCard:hover::before{
+.ProductsCard:hover::before {
     top: -90%;
     left: 110%;
     transition: all 1s ease;
