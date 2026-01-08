@@ -4,11 +4,14 @@ import {
   IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
   IoPersonOutline 
 } from "react-icons/io5";
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const {admin,loading,error} = useSelector((state)=>{
+    return state.LoginAdmin
+  })
   return (
     <div className="fixed z-1000 flex min-h-screen bg-[#0f1016]">
       <div
@@ -43,7 +46,7 @@ export default function Sidebar() {
             <IoPersonOutline size={35} className='mt-3.5'/>
           </div>
           <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-            <p className="text-sm font-medium whitespace-nowrap">Ayoub basker</p>
+            <p className="text-sm font-medium whitespace-nowrap">{admin.name}</p>
             <p className="text-xs text-gray-500">Online</p>
           </div>
         </div>

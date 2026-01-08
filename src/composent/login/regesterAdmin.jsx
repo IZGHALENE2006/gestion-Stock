@@ -93,8 +93,8 @@
             >
               {loading ? "Loading..." : "Register"}
             </button>
-              
         <p style={{ color: "red" }}>{error}</p>
+              
           </form>
         </div>
       </div>

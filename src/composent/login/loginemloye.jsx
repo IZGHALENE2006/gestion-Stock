@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { FaUser } from "react-icons/fa";
 
 function LoginEmploye() {
+
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       
@@ -14,13 +15,14 @@ function LoginEmploye() {
         </h1>
 
         {/* Form */}
-        <form className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" >
           
           <input
             type="email"
             placeholder="Employee Email"
             className="w-full px-4 py-3 rounded-lg border
                        focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
+
           />
 
           <input
