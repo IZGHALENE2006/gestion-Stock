@@ -1,0 +1,31 @@
+.ProductsCard{
+    border: 1px solid #42434a;
+    color: azure;
+    padding: 25px;
+    border-radius: 15px;
+    width: 250px;
+    background-color: #11121a93;
+    transition: all 1s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.ProductsCard::before{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: -190%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(to top , transparent , rgba(240, 255, 255, 0.35) , transparent);
+    transition: all 1s ease;
+    transform: rotate(45deg);
+
+
+}
+
+.ProductsCard:hover::before{
+    top: -90%;
+    left: 110%;
+    transition: all 1s ease;
+}
