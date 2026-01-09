@@ -27,7 +27,14 @@ const LoginAdminSlice = createSlice(
     {
         name:"LginAdmin",
         initialState:initialState,
-         reducers:{}   ,
+         reducers:{
+          logoutAdmin:(state)=>{
+           state.admin = null;
+           state.token = null;
+           state.error = null;
+           localStorage.removeItem("token");
+          }
+         },
          extraReducers:(bulder)=>{
           bulder
           .addCase(LoginAdmine.pending,(state,action)=>{
@@ -49,5 +56,5 @@ const LoginAdminSlice = createSlice(
          }
     }
 )
-
+export const {logoutAdmin} = LoginAdminSlice.actions
 export default LoginAdminSlice.reducer

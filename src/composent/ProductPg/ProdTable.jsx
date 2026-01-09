@@ -1,11 +1,18 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-import Products from "./Products.json";
+import { GetAllProduct } from "../../slices/SliceProduct";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function ProdTable() {
-  const Prd = Products.data;
-
+  const Dispatch = useDispatch()
+ useEffect(()=>{
+  Dispatch(GetAllProduct())
+ },[Dispatch])
+  const {Produts,loading } = useSelector((state)=>state.Product)
+ 
+  if(loading) return <p>Loading...</p>
   return (
     <div>
       <div className="relative overflow-x-auto bg-neutral-primary-soft">
@@ -14,34 +21,34 @@ export default function ProdTable() {
             <tr style={{fontWeight : "bold" , letterSpacing : "1px"}}>
               <th scope="col" className="px-6 py-3 font-medium">Product name</th>
               <th scope="col" className="px-6 py-3 font-medium">Status</th>
-              <th scope="col" className="px-6 py-3 font-medium">Price</th>
-              <th scope="col" className="px-6 py-3 font-medium">Category</th>
+              <th scope="col" className="px-6 py-3 font-medium">prix_achat</th>
+              <th scope="col" className="px-6 py-3 font-medium">categorie</th>
               <th scope="col" className="px-3 py-3 font-medium">Quantity</th>
               <th scope="col" className="py-3 font-medium">Action</th>
             </tr>
           </thead>
           <tbody>
-            {Prd.map((Prdd, index) => (
+            {Produts.map((Prdd, index) => (
             <tr key={index} className="bg-neutral-primary text-gray-300 border-b border-gray-500">
                 <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
                 {Prdd.name}
                 </th>
                 <td className="px-6 py-4 font-bold"
-                    style={{color : Prdd.Quantity > 0 ? "#00ce00" : "red"}}
+                    style={{color :Prdd.status ? "#00ce00" : "red"}}
                 >
-                    {Prdd.Quantity > 0 ? "On Stock" : "Out of stock"}
+                    {Prdd.quantite > 0 ? "On Stock" : "Out of stock"}
                 </td>
                 <td className="px-6 py-4">
-                {Prdd["Selling Price"].toFixed(2)} Dh
+                {Prdd.prix_achat.toFixed(2)} Dh
                 </td>
                 <td className="px-6 py-4">
-                {Prdd.Category}
+                {Prdd.categorie}
                 </td>
                 <td className="px-6 py-4"
                     style={{color : Prdd.Quantity > 10 ? "azure" : "red"}}
                     
                 >
-                {Prdd.Quantity}
+                {Prdd.quantite}
                 </td>
                 <td className="font-bold">
                 <div className="flex gap-3">

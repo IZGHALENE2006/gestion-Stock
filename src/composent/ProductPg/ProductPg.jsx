@@ -5,10 +5,13 @@ import { IoWalletOutline } from "react-icons/io5";
 import { IoBagRemoveOutline } from "react-icons/io5";
 import { IoBanOutline } from "react-icons/io5";
 import ProductList from "./ProductList";
-
+import { useSelector } from "react-redux";
 
 export default function ProductPg() {
-
+  const {Produts,loading } = useSelector((state)=>state.Product)
+  const Total  = Produts.reduce((somme,item)=>{
+    return somme+=item.prix_achat 
+  },0)
   return (
     <div className="">
         <div className="flex p-6 gap-5">
@@ -17,7 +20,7 @@ export default function ProductPg() {
     <IoFileTrayStackedOutline size={35} color="azure"/>
     <div>
       <h1 className="text-[#ffffff87] text-sm">Count Product</h1>
-      <h1 className="text-2xl font-bold">15</h1>
+      <h1 className="text-2xl font-bold">{Produts.length}</h1>
     </div>
   </div>
 
@@ -41,7 +44,7 @@ export default function ProductPg() {
     <IoWalletOutline size={37} color="azure"/>
     <div>
       <h1 className="text-[#ffffff87] text-sm">Total Price</h1>
-      <h1 className="text-2xl font-bold">20.00 dh</h1>
+      <h1 className="text-2xl font-bold">{Total}dh</h1>
     </div>
   </div>
 </div>
@@ -53,19 +56,6 @@ export default function ProductPg() {
         <div>
             <ProductList />
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

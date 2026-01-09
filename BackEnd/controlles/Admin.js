@@ -18,7 +18,7 @@ export const LoginAdmin = async(req,res)=>{
        const Admins = await Admin.findOne({email})
      if (!Admins) return res.status(404).json({message: "Email incorrect"} )
     const isMatch  = await bcrypt.compare(password,Admins.password)   
-        if(!isMatch) return res.status(400).json({ message: "Password incorrect" });
+        if(!isMatch) return res.status(404).json({ message: "Password incorrect" });
         //create Token
         const Token = jwt.sign(
             { id:Admins._id,

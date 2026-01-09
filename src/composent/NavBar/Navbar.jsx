@@ -4,16 +4,21 @@ import {
   IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
   IoPersonOutline, IoLogOutOutline, IoSettingsOutline 
 } from "react-icons/io5";
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router';
-
+import { useSelector ,useDispatch} from 'react-redux';
+import { NavLink, useNavigate } from 'react-router';
+import { logoutAdmin } from '../../slices/SliceLoginAdmin';
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const {admin,loading,error} = useSelector((state)=> state.LoginAdmin);
-
+const dispatch = useDispatch()
+const nav  =  useNavigate()
   const handleProfileClick = () => {
     setProfileOpen(!profileOpen);
+  }
+  function HanleLogoutAdmin(){
+    dispatch(logoutAdmin())
+    nav('/LoginAdmin')
   }
 
   return (
@@ -65,7 +70,7 @@ export default function Sidebar() {
               <button className="flex items-center w-full px-4 py-2 text-gray-200 hover:bg-[#2C74B3] transition">
                 <IoSettingsOutline className="mr-2"/> Profile
               </button>
-              <button className="flex items-center w-full px-4 py-2 text-gray-200 hover:bg-red-600 transition">
+              <button className="flex items-center w-full px-4 py-2 text-gray-200 hover:bg-red-600 transition" onClick={HanleLogoutAdmin}>
                 <IoLogOutOutline className="mr-2"/> Logout
               </button>
             </div>
