@@ -9,12 +9,12 @@ export const RegistreAdmin = createAsyncThunk('addAdmin',async(Admin,{ rejectWit
    }catch(error){
          return rejectWithValue(error.response.data.message)
    }
-  
 })
 
 
+
 const initailestate = {
-    Employe :[],
+   
     Admin: null,
     loading :false,
     error:null
