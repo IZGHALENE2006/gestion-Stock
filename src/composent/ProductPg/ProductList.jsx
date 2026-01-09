@@ -13,7 +13,7 @@ export default function ProductList() {
 
   return (
     <div>
-        <div className="text-white mx-7 mt-7 p-4 px-10 border rounded-t-xl flex justify-between items-center">
+        <div className="text-white bg-[#1e293b] mt-7 p-4 px-10 border border-gray-400 rounded-t-xl flex justify-between items-center">
           
           <div className="flex">
               <span className="bg-[#2C74B3] text-sm p-2 px-3 border border-r-0 rounded-l-lg inline-flex items-center">
@@ -77,12 +77,15 @@ export default function ProductList() {
 
 
         </div>
+        <div className="text-black">
+
         <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title="Add New Product">
               <AddProductForm />
         </Dialog>
+        </div>
 
 
-        <div className="text-white mx-7 mt-2 border rounded-b-xl">
+        <div className="text-white bg-[#1e293b] mt-2 border border-gray-400 rounded-b-xl overflow-hidden">
               <ProdTable />
         </div>
     </div>

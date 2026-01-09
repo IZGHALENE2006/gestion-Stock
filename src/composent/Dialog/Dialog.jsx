@@ -5,10 +5,8 @@ const Dialog = ({ isOpen, onClose, title, children , width }) => {
   if (!isOpen) return null;
 
   return (
-    // ⬇️ كليك على الفراغ يسدّ
     <div className="dialog-overlay" onClick={onClose}>
       
-      {/* ⬇️ منع انتشار الكليك داخل الـ dialog */}
       <div className="dialog"
             style={{width : width}}
       onClick={(e) => e.stopPropagation()}>

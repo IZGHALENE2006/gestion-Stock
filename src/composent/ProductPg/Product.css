@@ -4,8 +4,7 @@
     padding: 25px;
     border-radius: 15px;
     width: 250px;
-    background-color: rgba(17, 18, 26, 0.58); /* بدل #11121a93 باش يكون صحيح */
-    transition: all 0.5s ease; /* 1s بزاف */
+    transition: all 0.5s ease;
     overflow: hidden;
     position: relative;
 }

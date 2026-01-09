@@ -6,59 +6,78 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 export default function ProdTable() {
-  const Dispatch = useDispatch()
- useEffect(()=>{
-  Dispatch(GetAllProduct())
- },[Dispatch])
-  const {Produts,loading } = useSelector((state)=>state.Product)
- 
-  if(loading) return <p>Loading...</p>
+  const dispatch = useDispatch();
+  const { Produts, loading } = useSelector((state) => state.Product);
+
+  useEffect(() => {
+    dispatch(GetAllProduct());
+  }, [dispatch]);
+
+  if (loading) return <p className="p-10 text-center">Loading...</p>;
+
   return (
-    <div>
-      <div className="relative overflow-x-auto bg-neutral-primary-soft">
-        <table className="w-full text-sm text-left rtl:text-right text-body">
-          <thead className="text-sm bg-[#2C74B3] text-white border-b rounded-base border-default">
-            <tr style={{fontWeight : "bold" , letterSpacing : "1px"}}>
-              <th scope="col" className="px-6 py-3 font-medium">Product name</th>
-              <th scope="col" className="px-6 py-3 font-medium">Status</th>
-              <th scope="col" className="px-6 py-3 font-medium">prix_achat</th>
-              <th scope="col" className="px-6 py-3 font-medium">categorie</th>
-              <th scope="col" className="px-3 py-3 font-medium">Quantity</th>
-              <th scope="col" className="py-3 font-medium">Action</th>
+    <div className="">
+      <div className="relative overflow-x-auto shadow-md">
+        <table className="w-full text-sm text-left text-gray-300">
+          <thead className="text-xs uppercase bg-[#2C74B3] text-white">
+            <tr>
+              <th scope="col" className="px-6 py-3">Product name</th>
+              <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Buy Price</th>
+              <th scope="col" className="px-6 py-3">Category</th>
+              <th scope="col" className="px-6 py-3">Quantity</th>
+              <th scope="col" className="px-6 py-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {Produts.map((Prdd, index) => (
-            <tr key={index} className="bg-neutral-primary text-gray-300 border-b border-gray-500">
-                <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                {Prdd.name}
-                </th>
-                <td className="px-6 py-4 font-bold"
-                    style={{color :Prdd.status ? "#00ce00" : "red"}}
-                >
-                    {Prdd.quantite > 0 ? "On Stock" : "Out of stock"}
-                </td>
-                <td className="px-6 py-4">
-                {Prdd.prix_achat.toFixed(2)} Dh
-                </td>
-                <td className="px-6 py-4">
-                {Prdd.categorie}
-                </td>
-                <td className="px-6 py-4"
-                    style={{color : Prdd.Quantity > 10 ? "azure" : "red"}}
-                    
-                >
-                {Prdd.quantite}
-                </td>
-                <td className="font-bold">
-                <div className="flex gap-3">
-                    <CiEdit size={22} className="text-sky-500 hover:scale-110 cursor-pointer duration-200"/>
-                    <IoInformationCircleOutline size={22} className="text-amber-500 hover:scale-110 cursor-pointer duration-200"/>
-                    <MdDeleteOutline size={22} className="text-red-500 hover:scale-110 cursor-pointer duration-200"/>
-                </div>
-                </td>
-            </tr>
-            ))}
+            {Produts && Produts.map((item, index) => {
+              // Logic for low stock
+              const isLowStock = item.quantite < 10;
+              
+              return (
+                <tr key={item._id || index} className="border-b border-gray-500 hover:bg-[#2C74B3]/35 transition-colors">
+                  <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                    {item.name}
+                  </td>
+                  
+                  <td className="px-6 py-4 font-bold">
+                    <span style={{ color: item.quantite > 0 ? "#00ce00" : "#ff4d4d" }}>
+                      {item.quantite > 0 ? "In Stock" : "Out of Stock"}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    {item.prix_achat ? item.prix_achat.toFixed(2) : "0.00"} Dh
+                  </td>
+
+                  <td className="px-6 py-4">
+                    {item.categorie}
+                  </td>
+
+                  {/* Quantity Fix: Highlight Red if less than 10 */}
+                  <td className="px-6 py-4 font-bold">
+                    <div className="flex flex-col">
+                      <span style={{ color: isLowStock ? "#ff4d4d" : "azure" }}>
+                        {item.quantite}
+                      </span>
+                      {isLowStock && (
+                        <span className="text-[10px] text-red-500 animate-pulse">
+                          LOW STOCK
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center gap-3">
+                      <CiEdit size={22} className="text-sky-500 hover:scale-125 cursor-pointer duration-200" title="Edit" />
+                      <IoInformationCircleOutline size={22} className="text-amber-500 hover:scale-125 cursor-pointer duration-200" title="Details" />
+                      <MdDeleteOutline size={22} className="text-red-500 hover:scale-125 cursor-pointer duration-200" title="Delete" />
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
