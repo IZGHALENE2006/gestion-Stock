@@ -20,10 +20,11 @@ export default function ProductList() {
 
     {/* Search */}
     <div className="flex items-center bg-[#0f172a] border border-gray-600 rounded-lg overflow-hidden">
-      <span className="px-3 text-gray-400">
+      <label htmlFor="search" className="px-3 text-gray-400">
         <IoSearchOutline />
-      </span>
+      </label>
       <input
+        id="search"
         type="text"
         placeholder="Search product..."
         className="bg-transparent text-sm text-white px-3 py-2 outline-none w-44"

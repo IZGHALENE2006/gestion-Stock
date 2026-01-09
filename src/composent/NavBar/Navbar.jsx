@@ -36,7 +36,7 @@ console.log(admin);
       <div
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
-        className={`fixed left-0 top-0 h-full bg-[#11121a] backdrop-blur-lg border-r border-[#42434a] text-white 
+        className={`fixed left-0 top-0 h-full bg-[#11121a]/50 backdrop-blur-lg border-r border-[#42434a] text-white 
           transition-all duration-300 ease-in-out flex flex-col overflow-hidden
           ${isExpanded ? 'w-64' : 'w-20'}`}
       >
@@ -53,19 +53,19 @@ console.log(admin);
         </div>
 
         {/* Nav */}
-        <nav className="flex-grow px-3 mt-4 space-y-2">
+        <nav className="grow px-3 mt-4 space-y-2">
           <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
           <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
-          <NavItem to="/employees" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
-          <NavItem to="/sell" icon={<IoCartOutline size={22} />} label="Sell" expanded={isExpanded} />
-          <NavItem to="/profits" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
-          <NavItem to="/history" icon={<IoCalendarOutline size={22} />} label="History" expanded={isExpanded} />
+          <NavItem to="/Home/employees" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
+          <NavItem to="/Home/sell" icon={<IoCartOutline size={22} />} label="Sell" expanded={isExpanded} />
+          <NavItem to="/Home/profits" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
+          <NavItem to="/Home/history" icon={<IoCalendarOutline size={22} />} label="History" expanded={isExpanded} />
         </nav>
 
         {/* Profile */}
         <div className="p-4 border-t border-[#42434a] relative">
           <div className="flex items-center cursor-pointer" onClick={handleProfileClick}>
-            <div className="min-w-[40px] overflow-hidden h-10 rounded-full bg-[#2C74B3] flex items-center justify-center font-bold">
+            <div className="min-w-10 overflow-hidden h-10 rounded-full bg-[#2C74B3] flex items-center justify-center font-bold">
               <IoPersonOutline size={35} className='mt-3.5'/>
             </div>
             <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
@@ -76,7 +76,7 @@ console.log(admin);
 
           {/* Dropdown menu */}
           {profileOpen && isExpanded && (
-            <div className="absolute left-0 bottom-[60px] w-42 bg-[#1b1c25] shadow-lg rounded-lg overflow-hidden">
+            <div className="absolute left-0 bottom-15 w-42 bg-[#1b1c25] shadow-lg rounded-lg overflow-hidden">
               <button className="flex items-center w-full px-4 py-2 text-gray-200 hover:bg-[#2C74B3] transition">
                 <IoSettingsOutline className="mr-2"/> Profile
               </button>
@@ -101,7 +101,7 @@ function NavItem({ to, icon, label, expanded }) {
         flex items-center h-12 rounded-xl transition-all duration-200 
         ${isActive 
           ? 'bg-[#2C74B3] text-white' 
-          : 'text-gray-400 hover:bg-[#222533] hover:text-white'
+          : 'text-gray-400 hover:bg-[#2C74B3]/30 hover:text-white'
         }
       `}
     >

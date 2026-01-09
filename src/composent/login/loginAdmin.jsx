@@ -22,7 +22,7 @@ function Login(e){
   }
      Dispatch(LoginAdmine(infoAdmin))
      .unwrap().then(()=>{
-    Nav("/Home/products")
+    Nav("/Home/Dashboard")
      }
     
     ).catch((err) => {
