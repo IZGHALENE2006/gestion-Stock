@@ -4,7 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const RegistreAdmin = createAsyncThunk('addAdmin',async(Admin,{ rejectWithValue })=>{
    try{
-  const res = await axios.post('http://localhost:7000/api/Admin',Admin)
+  const res = await axios.post('http://localhost:7000/aip/adimn/register',Admin)
     return res.data
    }catch(error){
          return rejectWithValue(error.response.data.message)

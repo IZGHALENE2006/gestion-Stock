@@ -1,6 +1,7 @@
 import Admin from '../models/AdminModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import AdminModel from '../models/AdminModel.js'
 //Register Admin
 export const CreatAdmin = async(req,res)=>{
     const {name,email,password}  = req.body
@@ -38,4 +39,10 @@ export const LoginAdmin = async(req,res)=>{
                 }
             }
         )
+}
+
+//GetAdmin
+export const getAdminFromToken =async (req,res)=>{
+    const admin =await AdminModel.findById(req.user.id).select("-password")
+    res.json(admin)
 }

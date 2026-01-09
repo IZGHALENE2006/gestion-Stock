@@ -5,7 +5,7 @@ import axios from "axios";
 //Login Admin 
 export const LoginAdmine = createAsyncThunk('LoginAdmin',async(Admin,{rejectWithValue})=>{
     try{
-        const res = await axios.post('http://localhost:7000/LoginAdmin',Admin)
+        const res = await axios.post('http://localhost:7000/aip/adimn/Login',Admin)
         return res.data
     }catch(error){
           return rejectWithValue(
@@ -16,7 +16,25 @@ export const LoginAdmine = createAsyncThunk('LoginAdmin',async(Admin,{rejectWith
 
 
 })
+//Login Admin 
+export const GetAdmin = createAsyncThunk('getAdmin',async(_,{rejectWithValue})=>{
+  const  token = localStorage.getItem('token')
+    try{
+        const res = await axios.get('http://localhost:7000/aip/adimn/GetAdmin',{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        })
+        return res.data
+    }catch(error){
+          return rejectWithValue(
+            error.response?.data?.message || "Server error"
+          ) 
 
+    }
+
+
+})
 const initialState = {
   admin: null,
   token: localStorage.getItem("token") || null,
@@ -44,14 +62,17 @@ const LoginAdminSlice = createSlice(
           .addCase(LoginAdmine.fulfilled,(state,action)=>{
             state.loading = false
             state.error = null
-            state.admin = action.payload.admin
-            state.token = action.payload.token
+            state.token = action.payload.Token
             localStorage.setItem('token',action.payload.Token)
           })
            .addCase(LoginAdmine.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload
         
+          })
+          bulder.addCase(GetAdmin.fulfilled,(state,action)=>{
+            state.admin = action.payload
+      
           })
          }
     }

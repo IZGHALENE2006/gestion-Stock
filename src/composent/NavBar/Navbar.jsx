@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   IoGridOutline, IoPeopleOutline, IoCartOutline, 
   IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
@@ -7,12 +7,22 @@ import {
 import { useSelector ,useDispatch} from 'react-redux';
 import { NavLink, useNavigate } from 'react-router';
 import { logoutAdmin } from '../../slices/SliceLoginAdmin';
+import { GetAdmin } from '../../slices/SliceLoginAdmin';
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const {admin,loading,error} = useSelector((state)=> state.LoginAdmin);
+  const {admin,loading,error,token} = useSelector((state)=> state.LoginAdmin);
+
+  
 const dispatch = useDispatch()
 const nav  =  useNavigate()
+useEffect(()=>{
+ if(token){
+   dispatch(GetAdmin())
+ }
+},[dispatch,token])
+console.log(admin);
+
   const handleProfileClick = () => {
     setProfileOpen(!profileOpen);
   }
@@ -59,7 +69,7 @@ const nav  =  useNavigate()
               <IoPersonOutline size={35} className='mt-3.5'/>
             </div>
             <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-sm font-medium whitespace-nowrap">{admin.name}</p>
+              <p className="text-sm font-medium whitespace-nowrap">  {admin?.name || "Admin"}</p>
               <p className="text-xs text-gray-500">Online</p>
             </div>
           </div>
