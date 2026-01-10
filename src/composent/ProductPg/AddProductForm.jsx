@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { IoBarcodeOutline, IoSaveOutline } from "react-icons/io5";
 import { AddProduct } from "../../slices/SliceProduct";
 import { useDispatch,useSelector } from "react-redux";
+import { GetAllCatefory } from "../../slices/SilceCategory";
 export default function AddProductForm() {
   const Dispatch = useDispatch()
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,7 +19,19 @@ export default function AddProductForm() {
 
   });
 
+//Logic select 
 
+  const { Category } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    Dispatch(GetAllCatefory());
+  }, [Dispatch]);
+  //  Handle Get value select
+  function HandlegetCategort(e){
+    const val = e.target.value
+   const name =  Category.find((t)=>t._id ==val)
+    setFormData({...formData,categorie:name.name})
+  }
   // 1. Submit Handler
   const handleSubmit = async (e) => {
         e.preventDefault(); // Prevents the browser from reloading the page
@@ -76,14 +89,35 @@ export default function AddProductForm() {
               className="border p-2 mb-4 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
             />
 
-            <label className="text-sm font-semibold text-gray-600 mb-1">Category</label>
-            <input 
-              name="categorie"
-              value={formData.categorie}
-               onChange={(e)=>setFormData({...formData,categorie:e.target.value})}
-              placeholder="Product Category"
-              className="border p-2 mb-4 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            />
+          <label className="text-sm font-semibold text-gray-600 mb-1">
+  Category
+</label>
+
+<select
+  onChange={HandlegetCategort}
+  className="
+    w-full
+    px-4 py-2
+    rounded-lg
+    border border-gray-300
+    bg-white
+    text-gray-700
+    focus:outline-none
+    focus:ring-2
+    focus:ring-[#2C74B3]
+    focus:border-[#2C74B3]
+    transition
+    cursor-pointer
+  "
+>
+  <option value="">Select category</option>
+  {Category.map((t) => (
+    <option key={t._id} value={t._id}>
+      {t.name}
+    </option>
+  ))}
+</select>
+
           </div>
 
           <div className="flex flex-col flex-1">
