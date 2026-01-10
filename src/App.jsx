@@ -7,6 +7,7 @@ import LoginAdmin from './composent/login/loginAdmin'
 import LoginEmploye from './composent/login/loginemloye'
 import Home from './composent/home'
 import ProductPg from './composent/ProductPg/ProductPg'
+import Categories from './composent/Categories/Categories'
 function App() {
  
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/LoginAdmin' element={<LoginAdmin/>}/>
         <Route path='/LoginEmploye' element={<LoginEmploye/>}/>
         <Route path='/Home' element={<Home/>}>
+        <Route path='Categories' element={<Categories/>}/>
         <Route path='products' element={  <ProductPg />} />
         <Route path='Dashboard' element={""} />
         <Route path='employees' element={""} />

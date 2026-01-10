@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { 
   IoGridOutline, IoPeopleOutline, IoCartOutline, 
   IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
-  IoPersonOutline, IoLogOutOutline, IoSettingsOutline 
+  IoPersonOutline, IoLogOutOutline, IoSettingsOutline ,IoPricetagsOutline 
 } from "react-icons/io5";
 import { useSelector ,useDispatch} from 'react-redux';
 import { NavLink, useNavigate } from 'react-router';
@@ -21,7 +21,6 @@ useEffect(()=>{
    dispatch(GetAdmin())
  }
 },[dispatch,token])
-console.log(admin);
 
   const handleProfileClick = () => {
     setProfileOpen(!profileOpen);
@@ -55,6 +54,8 @@ console.log(admin);
         {/* Nav */}
         <nav className="grow px-3 mt-4 space-y-2">
           <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
+          <NavItem to="/Home/Categories" icon={<IoPricetagsOutline  size={22} />} label="Categories" expanded={isExpanded} />
+         
           <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
           <NavItem to="/Home/employees" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
           <NavItem to="/Home/sell" icon={<IoCartOutline size={22} />} label="Sell" expanded={isExpanded} />
