@@ -1,5 +1,7 @@
 
 import CategoryModel from '../models/Category.js'
+import productModel from '../models/productModel.js';
+import ProductModel from '../models/productModel.js';
 
 //Add New Category
 export const AddCategory = async(req,res)=>{
@@ -10,8 +12,7 @@ try{
         name,
         DateCreate
     })
-  if(!NewCategory) return res.status(404).json({message:"Not Found"})
-    res.satus(201).json(NewCategory)
+    res.status(201).json(NewCategory)
 }catch(err){
     res.status(500).json({message:"Server Error"})
 }
@@ -21,3 +22,30 @@ export const GetCategory = async(req,res)=>{
     const Categoreis = await CategoryModel.find({idAdmin:req.user.id})
     res.json(Categoreis)
 }
+
+ //delete Category
+
+ export const DeleteCategory  = async(req,res)=>{
+    const {id} = req.params
+    const DeleteItem = await CategoryModel.findByIdAndDelete(id)
+  if(!DeleteItem) return res.status(404).json({message:"Not Found"})
+    res.status(201).json(DeleteItem)
+
+ }
+
+    // Update Category
+
+    export const UpdateCategory = async(req,res)=>{
+        const {id} = req.params 
+        const {name} = req.body
+        // const  item = await CategoryModel.find({_id:id})
+        const Newitem  = await CategoryModel.findByIdAndUpdate(id,
+           {name},
+           {new:true}
+        )
+        // const produit  = await  productModel.updateMany({categorie:item.name},{
+
+        // })
+        if(!Newitem) return res.status(404).json({message:"Not Found"})
+        res.status(201).json(Newitem)
+    }

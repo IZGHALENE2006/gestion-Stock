@@ -20,7 +20,13 @@ function Login(e){
   if (!infoAdmin.email || !infoAdmin.password) {
     return alert("عمر الإيميل و الباسوورد");
   }
-     Dispatch(LoginAdmine(infoAdmin))
+     Dispatch(LoginAdmine({
+      role:'admin',
+      data:{
+        email:infoAdmin.email,
+        password:infoAdmin.password
+      }
+     }))
      .unwrap().then(()=>{
     Nav("/Home/Dashboard")
      }

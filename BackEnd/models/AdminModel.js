@@ -4,7 +4,11 @@ const AdminShema = new mongoose.Schema(
         {
             name:String,
             email:String,
-            password :String
+            password :String,
+            role:{
+              type:String,
+              default:"admin"
+            }
         }
 )
 AdminShema.pre("save", async function () {

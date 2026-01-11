@@ -3,9 +3,23 @@ import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { GetAllProduct } from "../../slices/SliceProduct";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect ,useState} from "react";
+import ConfirmDelete from "../Dialog/ConfirmDelete";
 
 export default function ProdTable() {
+  //Logic delete 
+    const [openDailgoConfirmation, setOpenDailgoConfirmation] = useState(false);
+  //Handle confireme delete 
+  const [iddelete,setIdDelete] = useState('')
+  function HandleOpenDelete(id){
+    setIdDelete(id)
+    setOpenDailgoConfirmation(true)
+  }
+
+ function HandleconfiremeDEleteProduit(){
+    
+  }
+
   const dispatch = useDispatch();
   const { Produts, loading } = useSelector((state) => state.Product);
 
@@ -62,7 +76,7 @@ export default function ProdTable() {
                       </span>
                       {isLowStock && (
                         <span className="text-[10px] text-red-500 animate-pulse">
-                          LOW STOCK
+                          LOW STOCK 
                         </span>
                       )}
                     </div>
@@ -70,9 +84,9 @@ export default function ProdTable() {
 
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-3">
-                      <CiEdit size={22} className="text-sky-500 hover:scale-125 cursor-pointer duration-200" title="Edit" />
+                      <CiEdit size={22} className="text-sky-500 hover:scale-125 cursor-pointer duration-200" title="Edit"  />
                       <IoInformationCircleOutline size={22} className="text-amber-500 hover:scale-125 cursor-pointer duration-200" title="Details" />
-                      <MdDeleteOutline size={22} className="text-red-500 hover:scale-125 cursor-pointer duration-200" title="Delete" />
+                      <MdDeleteOutline size={22} className="text-red-500 hover:scale-125 cursor-pointer duration-200" title="Delete" onClick={()=>HandleOpenDelete(item._id)}/>
                     </div>
                   </td>
                 </tr>
@@ -81,6 +95,10 @@ export default function ProdTable() {
           </tbody>
         </table>
       </div>
+   <ConfirmDelete  open={openDailgoConfirmation} onClose={()=>setOpenDailgoConfirmation(false)}
+    onConfirm={HandleconfiremeDEleteProduit} title={"Delete Product"} message={"Êtes-vous certain(e) de vouloir supprimer cette catégorie"}
+    >
+   </ConfirmDelete>
     </div>
   );
 }

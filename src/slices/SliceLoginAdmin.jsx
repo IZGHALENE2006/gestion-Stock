@@ -3,9 +3,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 //Login Admin 
-export const LoginAdmine = createAsyncThunk('LoginAdmin',async(Admin,{rejectWithValue})=>{
+export const LoginAdmine = createAsyncThunk('LoginAdmin',async({role,data},{rejectWithValue})=>{
     try{
-        const res = await axios.post('http://localhost:7000/aip/adimn/Login',Admin)
+        const res = await axios.post('http://localhost:7000/aip/adimn/Login',data)
         return res.data
     }catch(error){
           return rejectWithValue(
@@ -36,10 +36,11 @@ export const GetAdmin = createAsyncThunk('getAdmin',async(_,{rejectWithValue})=>
 
 })
 const initialState = {
-  admin: null,
+  user: "",
   token: localStorage.getItem("token") || null,
   loading: false,
   error: null
+
 }
 const LoginAdminSlice = createSlice(
     {
@@ -63,6 +64,7 @@ const LoginAdminSlice = createSlice(
             state.loading = false
             state.error = null
             state.token = action.payload.Token
+            state.user = action.payload.admin.role
             localStorage.setItem('token',action.payload.Token)
           })
            .addCase(LoginAdmine.rejected,(state,action)=>{

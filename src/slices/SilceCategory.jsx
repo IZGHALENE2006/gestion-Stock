@@ -37,7 +37,46 @@ export const GetAllCatefory = createAsyncThunk("GetAllCatefory",async()=>{
     }
 })
 
+//Delete Category
+export const DeleteCategory  = createAsyncThunk('DeleteCategory',async(id,{rejectWithValue})=>{
+    const Token = localStorage.getItem('token')
+    try{
+        const res  = await axios.delete(`http://localhost:7000/Category/Delete/${id}`,
+            {
+                headers:{
+                    Authorization:`Bearer ${Token}`
+                }
+            }
+        )
+        return res.data
+    }catch(err){
+        return rejectWithValue(
+        err.response?.data?.message || "Server error"
 
+        )
+    }
+
+})
+//UpdateCategory
+export const UpdateCategory = createAsyncThunk("UpdateCategory",async(data,{rejectWithValue})=>{
+    const Token  = localStorage.getItem('token')
+  
+    console.log(data);
+    
+    try{
+        const res = await axios.patch(`http://localhost:7000/Category/Update/${data.id}`,{name:data.name},{
+            headers:{
+                Authorization:`Bearer ${Token}`
+            }
+        })
+        
+        return res.data
+    }catch(error){
+        return rejectWithValue(
+        error.response?.data?.message || "Server error"
+        )
+    }
+})
 const inialState ={
 Category:[],
 loading:false,
@@ -72,9 +111,45 @@ const SliceCateroy = createSlice(
     .addCase(GetAllCatefory.fulfilled, (state, action) => {
       state.Category = action.payload
     })
+    //Delete Category 
+   builder  
+   .addCase(DeleteCategory.pending,(state,action)=>{
+      state.loading = true
+      state.error = null
+   })
+   .addCase(DeleteCategory.fulfilled,(state,action)=>{
+          state.loading = false
+      state.error = null
+    state.Category = state.Category.filter((t)=>t._id!==action.payload._id)
+   })
+     .addCase(DeleteCategory.rejected,(state,action)=>{
+      state.loading = false
+      state.error = action.payload
+   })
+   //UpdateCategory
+   builder  
+   .addCase(UpdateCategory.pending,(state,action)=>{
+      state.loading = true
+      state.error = null
+   })
+   .addCase(UpdateCategory.fulfilled,(state,action)=>{
+          state.loading = false
+      state.error = null
+      const Categoryitem = state.Category.find((t)=>t._id ===action.payload._id)
+     
+    if(Categoryitem){
+         Categoryitem.name = action.payload.name
+    }
+
+
+   })
+     .addCase(UpdateCategory.rejected,(state,action)=>{
+      state.loading = false
+      state.error = action.payload
+   })
 }
 
-       
+     
         
     }
 )

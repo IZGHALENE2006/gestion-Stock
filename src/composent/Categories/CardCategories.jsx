@@ -1,7 +1,7 @@
 import { IoCreateOutline, IoTrashOutline, IoInformationCircleOutline, IoCalendarOutline } from "react-icons/io5";
 
 function CardCategories(props) {
-  const { name, Datee } = props;
+  const { name, Datee,btn ,id,update} = props;
 
   // Format Date to a readable format
   const formattedDate = new Date(Datee).toLocaleDateString("fr-FR", {
@@ -30,12 +30,16 @@ function CardCategories(props) {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition">
+        <button className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition"
+        onClick={()=>update(id)}
+        >
           <IoCreateOutline size={18} />
           Edit
         </button>
 
-        <button className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition">
+        <button className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition"
+        onClick={()=>btn(id)}
+        >
           <IoTrashOutline size={18} />
           Delete
         </button>

@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { IoSaveOutline, IoGridOutline } from "react-icons/io5";
-import { AddCategory } from "../../slices/SilceCategory"; 
+import { AddCategory, UpdateCategory } from "../../slices/SilceCategory"; 
 import { useDispatch, useSelector } from "react-redux";
 
-export default function AddCategoryForm() {
+export default function UpdateCategoryForma(props) {
+    const {idupdate} = props
+      const { Category } = useSelector((state) => state.category);
+     const item = Category.find((t)=>t._id==idupdate)
   const Dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    DateCreate: new Date()
+    name: item.name
+   
   });
 
   const handleSubmit = async (e) => {
@@ -16,8 +19,8 @@ export default function AddCategoryForm() {
     setIsSubmitting(true);
 
     try {
-      await Dispatch(AddCategory(formData)).unwrap();
-      setFormData({ name: "" });
+      await Dispatch(UpdateCategory({name:formData.name,id:idupdate})).unwrap()
+      setFormData({ name: "" })
     } catch (err) {
       alert("Failed to add category");
     } finally {
@@ -31,7 +34,7 @@ export default function AddCategoryForm() {
       {/* 🔹 Input */}
       <div>
         <label className="text-sm text-gray-700  mb-2 block">
-          Nom de la catégorie
+        Entre nouveu  Nom de la catégorie
         </label>
 
         <div className="relative">
@@ -66,7 +69,7 @@ export default function AddCategoryForm() {
           }`}
       >
         <IoSaveOutline size={20} />
-        {isSubmitting ? "Ajout..." : "Ajouter"}
+        {isSubmitting ? "Save..." : "Save"}
       </button>
     </form>
   );

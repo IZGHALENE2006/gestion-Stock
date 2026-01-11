@@ -1,12 +1,19 @@
 import { IoSearchOutline } from "react-icons/io5";
 import Dialog from "../Dialog/Dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddProductForm from "./AddProductForm"
 import ProdTable from "./ProdTable"
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllCatefory } from "../../slices/SilceCategory";
 
 export default function ProductList() {
-    const [open , setOpen] = useState(false)
+  const Dispatch = useDispatch()
 
+    const [open , setOpen] = useState(false)
+  const { Category } = useSelector((state) => state.category);
+     useEffect(() => {
+       Dispatch(GetAllCatefory());
+     }, [Dispatch]);
   const Categories = ["categorie1","categorie2","categorie3","categorie4"]
 
 
@@ -46,9 +53,9 @@ export default function ProductList() {
       <option value="" disabled>
         Category
       </option>
-      {Categories.map((cat, i) => (
+      {Category.map((cat, i) => (
         <option key={i} value={cat} className="bg-[#0f172a] text-white">
-          {cat}
+          {cat.name}
         </option>
       ))}
     </select>
@@ -83,7 +90,7 @@ export default function ProductList() {
 
         <div className="text-black">
 
-        <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title="Add New Product">
+        <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title="Ajouter nouveau Produit">
               <AddProductForm />
         </Dialog>
         </div>

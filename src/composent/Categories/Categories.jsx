@@ -5,17 +5,45 @@ import AddCategoryorm from "./AddForm";
 import { useEffect, useState } from "react";
 import { IoGridOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { GetAllCatefory } from "../../slices/SilceCategory";
-
+import { GetAllCatefory ,DeleteCategory} from "../../slices/SilceCategory";
+//Dailog confirmation 
+import ConfirmDelete from "../Dialog/ConfirmDelete";
+import UpdateCategoryForma from "./UpdateCategoryForma";
 function Categories() {
   const Dispatch = useDispatch();
   const { Category } = useSelector((state) => state.category);
-
+ 
   useEffect(() => {
     Dispatch(GetAllCatefory());
   }, [Dispatch]);
 
   const [open, setOpen] = useState(false);
+  const [openDailgoConfirmation, setOpenDailgoConfirmation] = useState(false);
+//Logic Delete Categorey 
+//Iditem
+const [iddelete,setiddelet] = useState('')
+
+
+function HandleDeleteCategory(id){
+setiddelet(id)
+  
+  setOpenDailgoConfirmation(true)
+}
+//Handle confirem  delete 
+function HandleconfiremeDEleteCategorey(){
+    Dispatch(DeleteCategory(iddelete)).unwrap().then(()=>{
+  setOpenDailgoConfirmation(false)
+      
+    })
+
+}
+//Logci Update 
+const [idupdate,setidupdate] = useState('')
+const [openDailgoupdate, setopenDailgoupdate] = useState(false);
+ function  Hnadleupdatecategory(id){
+  setidupdate(id)
+ setopenDailgoupdate(true)
+  }
 
   return (
     <div className="p-6 bg-[#0f172a] min-h-screen text-white flex flex-col">
@@ -62,18 +90,27 @@ function Categories() {
           {Category.map((t, i) => (
             <CardCategories
               key={i}
+              id={t._id}
               name={t.name}
               Datee={t.DateCreate}
+              btn={HandleDeleteCategory}
+              update={Hnadleupdatecategory}
             />
           ))}
         </div>
       </div>
 
       {/* DIALOG */}
-      <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)}>
+      <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title='Ajouter nouveau categorie'>
         <AddCategoryorm />
       </Dialog>
-
+   <ConfirmDelete  open={openDailgoConfirmation} onClose={()=>setOpenDailgoConfirmation(false)}
+    onConfirm={HandleconfiremeDEleteCategorey} title={"Delete Product"} message={"Êtes-vous certain(e) de vouloir supprimer cette catégorie"}
+    >
+   </ConfirmDelete>
+   <Dialog width="550px" isOpen={openDailgoupdate} onClose={() => setopenDailgoupdate(false)} title="modifie info catégorie" >
+                 <UpdateCategoryForma  idupdate={idupdate}/>
+           </Dialog>
     </div>
   );
 }
