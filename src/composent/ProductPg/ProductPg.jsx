@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 export default function ProductPg() {
   const { Produts, loading } = useSelector((state) => state.Product);
   const { user } = useSelector((state) => state.LoginAdmin);
- console.log(user);
+
  
   const Total = Produts.reduce((somme, item) => {
     return somme += item.prix_achat;

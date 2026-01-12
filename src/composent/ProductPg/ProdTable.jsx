@@ -11,10 +11,20 @@ import {
   HiOutlineUser, HiOutlineCalendar, HiOutlineCash, 
   HiOutlineTrendingUp 
 } from "react-icons/hi";
+import UpdateProduit from "./updateProduit";
 
 
 export default function ProdTable() {
   const Dispatch = useDispatch()
+  //LogicUpdate
+//State open
+const [open,setopen] = useState(false)
+const [idupdate,setidupdate] = useState('')
+//function HandleopenUpdate
+function handleopenUpdate(id){
+  setopen(true)
+  setidupdate(id)
+}
   const InfoItem = ({ icon, label, value, subValue, subColor = "text-gray-400" }) => (
   <div className="flex gap-3">
     <div className="mt-1 text-xl">{icon}</div>
@@ -102,7 +112,7 @@ const BarcodeDisplay = ({ value }) => {
                   <td className="px-6 py-4 font-medium text-white">{item.name}</td>
                   <td className="px-6 py-4 font-bold">
                     <span style={{ color: item.quantite > 0 ? "#00ce00" : "#ff4d4d" }}>
-                      {item.quantite === 0 ? "In Stock" : "Out of Stock"}
+                      {item.quantite === 0 ? "Out of Stock" : "In Stock"}
                     </span>
                   </td>
                   <td className="px-6 py-4">{item.prix_achat ? item.prix_achat.toFixed(2) : "0.00"} Dh</td>
@@ -112,7 +122,7 @@ const BarcodeDisplay = ({ value }) => {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center gap-3">
-                      <CiEdit size={22} className="text-sky-500 cursor-pointer" />
+                      <CiEdit size={22} className="text-sky-500 cursor-pointer"  onClick={()=>handleopenUpdate(item._id)}/>
                       
                       <IoInformationCircleOutline 
                         size={22} 
@@ -216,7 +226,9 @@ const BarcodeDisplay = ({ value }) => {
     </div>
   )}
 </Dialog>
-
+  <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setopen(false)} title="modifie  Produit">
+              <UpdateProduit idupdate={idupdate} />
+        </Dialog>
     </div>
   );
 }

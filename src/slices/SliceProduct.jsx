@@ -49,7 +49,24 @@ export const DeleteProduit = createAsyncThunk("DeleteProduit",async(id,{rejectWi
         )
     }
 })
-
+//UpdateProduit
+export const updateProduit = createAsyncThunk("UpdateProduit",async(data,{rejectWithValue})=>{
+    const Token  = localStorage.getItem('token')
+    console.log(data.idupdate);
+    
+    try{
+        const res = await axios.put(`http://localhost:7000/Product/Update/${data.idupdate}`,data.formData,{
+            headers:{
+                Authorization:`Bearer ${Token}`
+            }
+        })
+        return res.data
+    }catch(error){
+        return rejectWithValue(
+        error.response?.data?.message || "Server error"
+        )
+    }
+})
 const inialState ={
 Produts:[],
 loading:false,
@@ -98,6 +115,26 @@ const SliceProduct = createSlice(
 
     })
     .addCase(DeleteProduit.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    })
+
+     //UpdateProduit      
+
+      builder
+    .addCase(updateProduit.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+ .addCase(updateProduit.fulfilled, (state, action) => {
+    state.loading = false;
+    state.error = null;
+
+    const index = state.Produts.findIndex(t => t._id === action.payload._id);
+    if (index !== -1) state.Produts[index] = action.payload;
+})
+
+    .addCase(updateProduit.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload
     })
