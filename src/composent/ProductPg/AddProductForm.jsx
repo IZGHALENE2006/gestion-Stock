@@ -4,6 +4,7 @@ import { AddProduct } from "../../slices/SliceProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { GetAllCatefory } from "../../slices/SilceCategory";
 import Barcode from "react-barcode"; 
+import toast, { Toaster } from 'react-hot-toast';
 
 // bar code looooooooooogic
 const generateEAN13 = () => {
@@ -72,11 +73,40 @@ export default function AddProductForm() {
         categorie: "", quantite: "", barcode: generateEAN13(), 
         fournisseur: "", datecreate: new Date(), status: true
       });
+      
+
     } catch (err) {
       console.error(err);
       alert("Failed to add product");
+      toast.error('Failed to add product.', {
+      style: {
+        border: '1px solid #e22620',
+        padding: '16px',
+        color: '#e22620',
+        backgroundColor : "#fffffe",
+        backdropFilter : "blur(10px)",
+      },
+      iconTheme: {
+        primary: '#e22620',
+        secondary: '#FFFAEE',
+      },
+    });
+
     } finally {
       setIsSubmitting(false);
+    toast.success('The Product Added Succefuly', {
+      style: {
+        border: '1px solid #00d435',
+        padding: '16px',
+        color: '#00d435',
+        backgroundColor : "#fffffe",
+        backdropFilter : "blur(10px)",
+      },
+      iconTheme: {
+        primary: '#00d435',
+        secondary: '#FFFAEE',
+      },
+    });
     }
   };
 
@@ -133,21 +163,14 @@ export default function AddProductForm() {
             <input value={formData.barcode} readOnly className="text-center font-mono font-bold text-gray-600 w-full px-15 border p-2 rounded border-gray-300 bg-white" />
           </InputWrapper>
 
-          <div className="bg-white rounded shadow-sm">
-            <Barcode 
-              value={formData.barcode} 
-              format="EAN13" 
-              width={1.5} 
-              height={50} 
-              fontSize={14}
-            />
-          </div>
+        
         </div>
 
         <button type="submit" disabled={isSubmitting} className={`mt-8 w-full flex items-center justify-center gap-2 py-3 px-4 rounded font-bold text-white transition-all ${isSubmitting ? 'bg-gray-400' : 'bg-[#2C74B3] hover:bg-[#4887da] hover:scale-103 cursor-pointer active:scale-[0.98]'}`}>
           {isSubmitting ? "Saving..." : <><IoSaveOutline size={20} /> Save Product</>}
         </button>
       </form>
+      <Toaster />
     </div>
   );
 }

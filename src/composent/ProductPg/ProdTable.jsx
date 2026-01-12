@@ -1,4 +1,6 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
+
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { DeleteProduit, GetAllProduct } from "../../slices/SliceProduct";
@@ -11,10 +13,13 @@ import {
   HiOutlineUser, HiOutlineCalendar, HiOutlineCash, 
   HiOutlineTrendingUp 
 } from "react-icons/hi";
+import toast, { Toaster } from 'react-hot-toast';
+
 
 
 export default function ProdTable() {
   const Dispatch = useDispatch()
+
   const InfoItem = ({ icon, label, value, subValue, subColor = "text-gray-400" }) => (
   <div className="flex gap-3">
     <div className="mt-1 text-xl">{icon}</div>
@@ -71,6 +76,20 @@ const BarcodeDisplay = ({ value }) => {
   function HandleconfiremeDEleteProduit() {
     Dispatch(DeleteProduit(iddelete))
     setOpenDailgoConfirmation(false);
+    toast.success('Product Delete Succefuly.', {
+      icon : <MdDeleteForever size={22}/>,
+      style: {
+        border: '1px solid #d40700',
+        padding: '16px',
+        color: '#d40700',
+        backgroundColor : "#fffffe",
+        backdropFilter : "blur(10px)",
+      },
+      iconTheme: {
+        primary: '#d40700',
+        secondary: '#FFFAEE',
+      },
+    });
 
   }
 
@@ -193,7 +212,8 @@ const BarcodeDisplay = ({ value }) => {
             icon={<HiOutlineUser className="text-purple-500" />} 
             label="Supplier" 
             value={selectedProduct.fournisseur || "Direct"} 
-          />
+
+/>
 
           <InfoItem 
             icon={<HiOutlineCash className="text-amber-500" />} 
@@ -216,7 +236,7 @@ const BarcodeDisplay = ({ value }) => {
     </div>
   )}
 </Dialog>
-
+<Toaster />
     </div>
   );
 }
