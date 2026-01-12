@@ -14,10 +14,10 @@ function UpdateProduit(props) {
 
  const   Dispatch = useDispatch()
     //Get item///
-    const {idupdate}= props
+    const {idupdate2}= props
      const { Produts, loading } = useSelector((state) => state.Product);
 
-   const currentproduit = Produts.find((t)=>t._id ==idupdate)
+   const currentproduit = Produts.find((t)=>t._id ==idupdate2)
 //Get all Category
   const { Category = [] } = useSelector((state) => state.category);
 
@@ -42,9 +42,9 @@ function UpdateProduit(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
- console.log(idupdate);
- 
-  Dispatch(updateProduit({formData,idupdate}))
+
+    
+  Dispatch(updateProduit({formData,idupdate2}))
 
    
 

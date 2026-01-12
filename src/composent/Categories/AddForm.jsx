@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IoSaveOutline, IoGridOutline } from "react-icons/io5";
 import { AddCategory } from "../../slices/SilceCategory"; 
 import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function AddCategoryForm() {
   const Dispatch = useDispatch();
@@ -19,16 +20,40 @@ export default function AddCategoryForm() {
       await Dispatch(AddCategory(formData)).unwrap();
       setFormData({ name: "" });
     } catch (err) {
-      alert("Failed to add category");
+      toast.error('Failed to add category', {
+            style: {
+              border: '1px solid #e22620',
+              padding: '16px',
+              color: '#e22620',
+              backgroundColor : "#fffffe",
+              backdropFilter : "blur(10px)",
+            },
+            iconTheme: {
+              primary: '#e22620',
+              secondary: '#FFFAEE',
+            },
+          });
     } finally {
       setIsSubmitting(false);
+      toast.success('Categorie Added Succefuly', {
+            style: {
+              border: '1px solid #00d435',
+              padding: '16px',
+              color: '#00d435',
+              backgroundColor : "#fffffe",
+              backdropFilter : "blur(10px)",
+            },
+            iconTheme: {
+              primary: '#00d435',
+              secondary: '#FFFAEE',
+            },
+          });
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
 
-      {/* 🔹 Input */}
       <div>
         <label className="text-sm text-gray-700  mb-2 block">
           Nom de la catégorie
@@ -54,7 +79,6 @@ export default function AddCategoryForm() {
         </div>
       </div>
 
-      {/* 🔹 Button */}
       <button
         type="submit"
         disabled={isSubmitting}
@@ -68,6 +92,7 @@ export default function AddCategoryForm() {
         <IoSaveOutline size={20} />
         {isSubmitting ? "Ajout..." : "Ajouter"}
       </button>
+      <Toaster />
     </form>
   );
 }

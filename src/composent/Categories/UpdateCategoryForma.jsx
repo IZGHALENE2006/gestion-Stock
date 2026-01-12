@@ -1,40 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoSaveOutline, IoGridOutline } from "react-icons/io5";
-import { AddCategory, UpdateCategory } from "../../slices/SilceCategory"; 
+import { UpdateCategory } from "../../slices/SilceCategory"; 
 import { useDispatch, useSelector } from "react-redux";
+import toast from 'react-hot-toast';
 
 export default function UpdateCategoryForma(props) {
-    const {idupdate} = props
-      const { Category } = useSelector((state) => state.category);
-     const item = Category.find((t)=>t._id==idupdate)
+  const { idupdate, onClose } = props;
+  const { Category } = useSelector((state) => state.category);
+  
+  // Find the specific item to edit
+  const item = Category.find((t) => t._id === idupdate);
+  
   const Dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: item.name
-   
+    name: item ? item.name : ""
   });
+
+  // Sync state if idupdate changes or item is found
+  useEffect(() => {
+    if (item) {
+      setFormData({ name: item.name });
+    }
+  }, [item]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      await Dispatch(UpdateCategory({name:formData.name,id:idupdate})).unwrap()
-      setFormData({ name: "" })
+      await Dispatch(UpdateCategory({ name: formData.name, id: idupdate })).unwrap();
+      
+
+      if (onClose) onClose();
+
     } catch (err) {
-      alert("Failed to add category");
+      
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
+    // basker test
     <form onSubmit={handleSubmit} className="space-y-6">
-
-      {/* 🔹 Input */}
       <div>
-        <label className="text-sm text-gray-700  mb-2 block">
-        Entre nouveu  Nom de la catégorie
+        <label className="text-sm text-gray-700 mb-2 block">
+          Entrez nouveau Nom de la catégorie
         </label>
 
         <div className="relative">
@@ -52,12 +64,11 @@ export default function UpdateCategoryForma(props) {
             className="w-full bg-[#071a2f]/10 border border-[#2C74B3]/40
                        rounded-lg pl-10 pr-4 py-3
                        focus:outline-none focus:ring-2
-                       focus:ring-[#2C74B3]"
+                       focus:ring-[#2C74B3] text-gray-800"
           />
         </div>
       </div>
 
-      {/* 🔹 Button */}
       <button
         type="submit"
         disabled={isSubmitting}
@@ -69,7 +80,7 @@ export default function UpdateCategoryForma(props) {
           }`}
       >
         <IoSaveOutline size={20} />
-        {isSubmitting ? "Save..." : "Save"}
+        {isSubmitting ? "Saving..." : "Save Changes"}
       </button>
     </form>
   );

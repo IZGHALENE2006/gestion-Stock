@@ -1,4 +1,6 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
+
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { DeleteProduit, GetAllProduct } from "../../slices/SliceProduct";
@@ -11,7 +13,9 @@ import {
   HiOutlineUser, HiOutlineCalendar, HiOutlineCash, 
   HiOutlineTrendingUp 
 } from "react-icons/hi";
+import toast, { Toaster } from 'react-hot-toast';
 import UpdateProduit from "./updateProduit";
+
 
 
 export default function ProdTable() {
@@ -19,11 +23,11 @@ export default function ProdTable() {
   //LogicUpdate
 //State open
 const [open,setopen] = useState(false)
-const [idupdate,setidupdate] = useState('')
+const [idupdate2,setidupdate2] = useState('')
 //function HandleopenUpdate
 function handleopenUpdate(id){
   setopen(true)
-  setidupdate(id)
+  setidupdate2(id)
 }
   const InfoItem = ({ icon, label, value, subValue, subColor = "text-gray-400" }) => (
   <div className="flex gap-3">
@@ -81,6 +85,20 @@ const BarcodeDisplay = ({ value }) => {
   function HandleconfiremeDEleteProduit() {
     Dispatch(DeleteProduit(iddelete))
     setOpenDailgoConfirmation(false);
+    toast.success('Product Delete Succefuly.', {
+      icon : <MdDeleteForever size={22}/>,
+      style: {
+        border: '1px solid #d40700',
+        padding: '16px',
+        color: '#d40700',
+        backgroundColor : "#fffffe",
+        backdropFilter : "blur(10px)",
+      },
+      iconTheme: {
+        primary: '#d40700',
+        secondary: '#FFFAEE',
+      },
+    });
 
   }
 
@@ -203,7 +221,8 @@ const BarcodeDisplay = ({ value }) => {
             icon={<HiOutlineUser className="text-purple-500" />} 
             label="Supplier" 
             value={selectedProduct.fournisseur || "Direct"} 
-          />
+
+/>
 
           <InfoItem 
             icon={<HiOutlineCash className="text-amber-500" />} 
@@ -226,9 +245,10 @@ const BarcodeDisplay = ({ value }) => {
     </div>
   )}
 </Dialog>
-  <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setopen(false)} title="modifie  Produit">
-              <UpdateProduit idupdate={idupdate} />
+   <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setopen(false)} title="update  Produit">
+              <UpdateProduit idupdate2={idupdate2} />
         </Dialog>
+<Toaster />
     </div>
   );
 }
