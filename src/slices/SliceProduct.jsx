@@ -33,7 +33,22 @@ export const GetAllProduct = createAsyncThunk("GetPrudct",async()=>{
      
     }
 })
-
+//Delete product
+export const DeleteProduit = createAsyncThunk("DeleteProduit",async(id,{rejectWithValue})=>{
+    const Token  = localStorage.getItem('token')
+    try{
+        const res = await axios.delete(`http://localhost:7000/Product/Delete/${id}`,{
+            headers:{
+                Authorization:`Bearer ${Token}`
+            }
+        })
+        return res.data
+    }catch(error){
+        return rejectWithValue(
+        error.response?.data?.message || "Server error"
+        )
+    }
+})
 
 const inialState ={
 Produts:[],
@@ -69,9 +84,25 @@ const SliceProduct = createSlice(
     .addCase(GetAllProduct.fulfilled, (state, action) => {
       state.Produts = action.payload
     })
+ //DeleteProduit      
+
+      builder
+    .addCase(DeleteProduit.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    .addCase(DeleteProduit.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+    state.Produts = state.Produts.filter(((t)=>t._id!==action.payload._id))
+
+    })
+    .addCase(DeleteProduit.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload
+    })
 }
 
-       
         
     }
 )

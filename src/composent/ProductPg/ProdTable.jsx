@@ -1,12 +1,13 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-import { GetAllProduct } from "../../slices/SliceProduct";
+import { DeleteProduit, GetAllProduct } from "../../slices/SliceProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect ,useState} from "react";
 import ConfirmDelete from "../Dialog/ConfirmDelete";
 
 export default function ProdTable() {
+  const Dispatch = useDispatch()
   //Logic delete 
     const [openDailgoConfirmation, setOpenDailgoConfirmation] = useState(false);
   //Handle confireme delete 
@@ -17,15 +18,16 @@ export default function ProdTable() {
   }
 
  function HandleconfiremeDEleteProduit(){
-    
+      Dispatch(DeleteProduit(iddelete))
+    setOpenDailgoConfirmation(false)
+
   }
 
-  const dispatch = useDispatch();
   const { Produts, loading } = useSelector((state) => state.Product);
 
   useEffect(() => {
-    dispatch(GetAllProduct());
-  }, [dispatch]);
+    Dispatch(GetAllProduct());
+  }, [Dispatch]);
 
   if (loading) return <p className="p-10 text-center">Loading...</p>;
 

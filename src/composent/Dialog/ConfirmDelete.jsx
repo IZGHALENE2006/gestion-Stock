@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 const ConfirmDelete = ({ open, onClose, onConfirm, title, message }) => {
   if (!open) return null;
    const {loading,error} = useSelector((state)=>state.category)
- 
+   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}

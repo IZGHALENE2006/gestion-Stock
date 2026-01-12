@@ -24,7 +24,7 @@ export const CreateProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
+//get All Product
 export const AllProduct = async (req, res) => {
     try {
         const products = await ProductModel.find({ idAdmin: req.user.id });
@@ -33,3 +33,15 @@ export const AllProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+//Delete Product
+export const DeleteProduct = async(req,res)=>{
+    const {id} = req.params
+    try{
+       const currentproduct = await ProductModel.findByIdAndDelete(id)
+       if(!currentproduct) return res.status(404).json({message:"Not Found"})
+        res.status(200).json(currentproduct)
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
