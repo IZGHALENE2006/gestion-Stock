@@ -1,14 +1,14 @@
 import React from "react";
 import "./Dialog.css";
 
-const Dialog = ({ isOpen, onClose, title, children , width }) => {
+const Dialog = ({ isOpen, onClose, title, children , width , bgcolor}) => {
   if (!isOpen) return null;
 
   return (
     <div className="dialog-overlay" onClick={onClose}>
       
       <div className="dialog"
-            style={{width : width}}
+            style={{width : width, backgroundColor : bgcolor}}
       onClick={(e) => e.stopPropagation()}>
         
         <div className="dialog-header">
