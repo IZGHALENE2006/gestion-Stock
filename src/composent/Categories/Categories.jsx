@@ -101,14 +101,14 @@ const [openDailgoupdate, setopenDailgoupdate] = useState(false);
       </div>
 
       {/* DIALOG */}
-      <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title='Ajouter nouveau categorie'>
+      <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setOpen(false)} title='Ajouter nouveau categorie'>
         <AddCategoryorm />
       </Dialog>
    <ConfirmDelete  open={openDailgoConfirmation} onClose={()=>setOpenDailgoConfirmation(false)}
-    onConfirm={HandleconfiremeDEleteCategorey} title={"Delete Product"} message={"Êtes-vous certain(e) de vouloir supprimer cette catégorie"}
+    onConfirm={HandleconfiremeDEleteCategorey} title={"Delete Categorie"} message={"Êtes-vous certain(e) de vouloir supprimer cette catégorie"}
     >
    </ConfirmDelete>
-   <Dialog width="550px" isOpen={openDailgoupdate} onClose={() => setopenDailgoupdate(false)} title="modifie info catégorie" >
+   <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={openDailgoupdate} onClose={() => setopenDailgoupdate(false)} title="modifie info catégorie" >
                  <UpdateCategoryForma  idupdate={idupdate}/>
            </Dialog>
     </div>

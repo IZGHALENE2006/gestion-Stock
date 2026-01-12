@@ -90,7 +90,7 @@ export default function ProductList() {
 
         <div className="text-black">
 
-        <Dialog width="550px" isOpen={open} onClose={() => setOpen(false)} title="Ajouter nouveau Produit">
+        <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setOpen(false)} title="Ajouter nouveau Produit">
               <AddProductForm />
         </Dialog>
         </div>
