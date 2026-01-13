@@ -10,20 +10,14 @@ gsap.registerPlugin(Draggable);
 export const EmployeeDashboard = () => {
   
   const [deleteopen , setdeleteopen] = useState(false)
-function enterplus() {
-  gsap.to("#plus", {
-    rotate: "45deg",
-    duration: 0.3,
-    ease: "power2.out"
-  });
-}
+
 
 
   const [employees, setEmployees] = useState([
-    { id: 1, name: "Alice Zhang", age: 28 },
-    { id: 2, name: "Bob Smith", age: 34 },
-    { id: 3, name: "Charlie Day", age: 41 },
-    { id: 4, name: "Diana Prince", age: 30 },
+    { id: 1, name: "Alice Zhang" , color : "#2C74B3", role : "delete",  age: 28 },
+    { id: 2, name: "Bob Smith",color : "#e9cb24" , role : "Add",  age: 34 },
+    { id: 3, name: "Charlie Day", color : "#24e9a7" , role : "Updata",  age: 41 },
+    { id: 4, name: "Diana Prince",color : "#e97d24", role : "delete",  age: 30 },
   ]);
 
   const containerRef = useRef(null);

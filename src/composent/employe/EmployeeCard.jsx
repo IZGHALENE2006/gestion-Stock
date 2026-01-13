@@ -20,20 +20,25 @@ export const EmployeeCard = ({ employee }) => {
       <div ref={innerRef} className="relative w-full h-full" style={{ transformStyle: "preserve-3d" }}>
         
         {/* FRONT */}
-        <div className="absolute inset-0 bg-slate-800 bg-[#1e293b] border border-slate-700 shadow-xl rounded-3xl p-6 flex flex-col justify-between shadow-lg" style={{ backfaceVisibility: "hidden" }}>
+        <div 
+        className="absolute inset-0 bg-slate-800 border border-slate-700 shadow-xl rounded-3xl p-6 flex flex-col justify-between shadow-lg" style={{ backfaceVisibility: "hidden" }}>
           <div>
-            <div className="w-10 h-1 bg-[#2C74B3] rounded-full mb-4" />
+            <div 
+            style={{backgroundColor : employee.color}}
+            className="w-10 h-1 rounded-full mb-4" />
             <h3 className="text-white font-bold text-xl">{employee.name}</h3>
-            <p className="text-[#2C74B3] text-sm font-medium">Engineer</p>
+            <p 
+            style={{color : employee.color}}
+            className="text-sm font-medium">{employee.role}</p>
           </div>
           
           <div className="flex justify-between items-center">
             <span className="text-slate-500 text-xs font-bold uppercase">Age: {employee.age}</span>
             <button 
               onPointerDown={toggleFlip}
-              className="p-3 bg-slate-700 hover:bg-[#2C74B3] rounded-2xl text-white transition-colors"
+              className={`p-3 bg-slate-700 hover:bg-white group rounded-2xl text-white transition-colors`}
             >
-              <IoPencil size={15} />
+              <IoPencil size={15} className='group-hover:text-slate-700'/>
             </button>
           </div>
         </div>
@@ -59,7 +64,8 @@ export const EmployeeCard = ({ employee }) => {
 
           <button 
             onPointerDown={toggleFlip} 
-            className="mt-auto w-full py-3 bg-[#2C74B3] text-white rounded-2xl text-xs font-bold hover:shadow-lg transition-all"
+            className="mt-auto w-full py-3 text-white rounded-2xl text-xs font-bold hover:shadow-lg transition-all"
+            style={{backgroundColor : employee.color}}
           >
             CONFIRM
           </button>
