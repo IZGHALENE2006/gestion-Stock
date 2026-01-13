@@ -7,7 +7,7 @@ export const AddEmploye= async(req,res)=>{
     const item  = await EmployeModel.findOne({email})
      if(item) return res.status(400).json({message:"email if exite"})
         const newEmploye  = await EmployeModel.create({
-        idAdmin :req.user.id,
+        idAdmin :req.user.id || null,
         name,
          cin,
         phone,

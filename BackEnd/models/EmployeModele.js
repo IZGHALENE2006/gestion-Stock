@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 
+import bcrypt from "bcryptjs";
 
 const ShemaEmploye = new mongoose.Schema(
     {
