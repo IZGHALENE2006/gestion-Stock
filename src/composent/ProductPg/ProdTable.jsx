@@ -16,6 +16,7 @@ import { FaPrint } from "react-icons/fa";
 import toast, { Toaster } from 'react-hot-toast';
 import { useReactToPrint } from "react-to-print";
 import JsBarcode from "jsbarcode";
+import UpdateProduit from "./updateProduit";
 
 // Separate component for the printable area to avoid style conflicts
 const PrintContainer = forwardRef(({ product }, ref) => {
@@ -98,7 +99,16 @@ const handlePrint = useReactToPrint({
       style: { border: '1px solid #d40700', padding: '16px', color: '#d40700', backgroundColor: "#fffffe" },
     });
   }
-
+  //LogicUpdate
+//State open
+const [openupdate,setopeopenupdaten] = useState(false)
+const [idupdate2,setidupdate] = useState('')
+//function HandleopenUpdate
+function handleopenUpdate(id){
+  setopeopenupdaten(true)
+  setidupdate(id)
+  
+}
   useEffect(() => {
     Dispatch(GetAllProduct());
   }, [Dispatch]);
@@ -136,7 +146,7 @@ const handlePrint = useReactToPrint({
                     <span style={{ color: isLowStock ? "#ff4d4d" : "azure" }}>{item.quantite}</span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-3">
+                    <div className="flex justify-center gap-3" onClick={()=>handleopenUpdate(item._id)}>
                       <CiEdit size={22} className="text-sky-500 cursor-pointer" />
                       <IoInformationCircleOutline
                         size={22}
@@ -269,6 +279,9 @@ const handlePrint = useReactToPrint({
         <PrintContainer ref={printRef} product={selectedProduct} />
       </div>
 
+  <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={openupdate} onClose={() => setopeopenupdaten(false)} title="modifie  Produit">
+              <UpdateProduit idupdate2={idupdate2} close={()=>setopeopenupdaten(false)} />
+        </Dialog>
       <Toaster />
     </div>
   );

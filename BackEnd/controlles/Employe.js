@@ -6,6 +6,27 @@ export const AddEmploye= async(req,res)=>{
     const {name,phone,cin,email,password,color,isActive} =req.body
     const item  = await EmployeModel.findOne({email})
      if(item) return res.status(400).json({message:"email if exite"})
+        const cinExist = await EmployeModel.findOne({ cin });
+if (cinExist) {
+  return res.status(400).json({ message: "CIN already exists" });
+}
+
+    if (!cin) {
+      return res.status(400).json({ message: "CIN is required" });
+    }
+    if (!name) {
+      return res.status(400).json({ message: "nom is required" });
+    }
+    if (!email) {
+      return res.status(400).json({ message: "email is required" });
+    }
+      if (!password) {
+      return res.status(400).json({ message: "password is required" });
+    }
+    if (cin.length < 6 || cin.length > 8) {
+      return res.status(400).json({ message: "CIN length must be between 6 and 8 digits" });
+    }
+
         const newEmploye  = await EmployeModel.create({
         idAdmin :req.user.id || null,
         name,

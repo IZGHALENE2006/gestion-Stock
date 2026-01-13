@@ -7,7 +7,7 @@ import {
   IoCloseOutline,
 } from "react-icons/io5";
 import { addEmploye } from "../../slices/sliceEmploye";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from 'react-hot-toast';
 
 function AddEmploye({ open, onClose }) {
@@ -21,6 +21,8 @@ const dispatch = useDispatch()
     color: "#2C74B3",
     isActive: true,
   });
+  //Get state 
+  const {loading,error} = useSelector((state)=>state.Employe)
   //function add 
 function HandelAddEmploye() {
   dispatch(addEmploye(infoEmp))
@@ -35,14 +37,16 @@ function HandelAddEmploye() {
           backgroundColor: "#fffffe",
         },
       });
-      onClose()
+
+      onClose(); // ✅ تسد غير ملي تنجح العملية
     })
     .catch((err) => {
-      toast.error(err || "Server error", {
+      toast.error(error|| "Server error", {
         duration: 3000,
       });
     });
 }
+
 
 
   if (!open) return null;
@@ -222,12 +226,18 @@ function HandelAddEmploye() {
           >
             Annuler
           </button>
-          <button
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          onClick={HandelAddEmploye}
-         >
-            Ajouter
-          </button>
+        <button
+  onClick={HandelAddEmploye}
+  disabled={loading}
+  className={`px-5 py-2 rounded-lg text-white transition
+    ${loading
+      ? "bg-blue-400 cursor-not-allowed"
+      : "bg-blue-600 hover:bg-blue-700"}
+  `}
+>
+  {loading ? "Ajout en cours..." : "Ajouter"}
+</button>
+
         </div>
       </div>
       <Toaster />

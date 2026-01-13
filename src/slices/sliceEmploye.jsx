@@ -19,6 +19,23 @@ export const addEmploye = createAsyncThunk("addEmploye",async(Employe,{rejectWit
     )
    }
 })
+//GetAllEmploye
+export const GetAllEmploye = createAsyncThunk("GetAllEmploye",async(_,{rejectWithValue})=>{
+   const Token = localStorage.getItem("token")
+   try{
+        const res = await axios.get("http://localhost:7000/Employe/get",{
+        headers:{
+            Authorization:`Bearer ${Token}`
+        }
+    })
+    return res.data
+   }catch(err){
+    return rejectWithValue(
+        err.response?.data?.message || "Server error"
+          
+    )
+   }
+})
 const initialstate = {
     Employe :[],
     loading:false,
@@ -42,6 +59,22 @@ const SliceEmploye = createSlice(
             state.Employe.push(action.payload)
           })
           .addCase(addEmploye.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.payload
+           
+          })
+          //get all Employe 
+               bulder
+          .addCase(GetAllEmploye.pending,(state)=>{
+            state.loading = true
+            state.error = null
+          })
+           .addCase(GetAllEmploye.fulfilled,(state,action)=>{
+            state.loading = false
+            state.error = null
+            state.Employe =action.payload
+          })
+          .addCase(GetAllEmploye.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload
            

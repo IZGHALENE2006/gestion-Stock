@@ -1,19 +1,30 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/dist/Draggable';
 import { IoTrashOutline } from "react-icons/io5";
 import { EmployeeCard } from "./EmployeeCard";
 import "./emp.css"
 import EmployeeSearch from "./EmployeeSearch"
+import { useDispatch, useSelector } from 'react-redux';
+import { GetAllEmploye } from '../../slices/sliceEmploye';
 gsap.registerPlugin(Draggable);
 
 export const EmployeeDashboard = () => {
   
   const [deleteopen , setdeleteopen] = useState(false)
+//Get Dispatch
+ const dispatch = useDispatch()
+//get state 
 
+useEffect(()=>{
+  dispatch(GetAllEmploye())
+},[dispatch])
+//List Enploye
+const {Employe} = useSelector((state)=>state.Employe)
 
+// map ayoube {Employe}
 
-  const [employees, setEmployees] = useState([
+const [employees, setEmployees] = useState([
     { id: 1, name: "Alice Zhang" , color : "#2C74B3", role : "delete",  age: 28 },
     { id: 2, name: "Bob Smith",color : "#e9cb24" , role : "Add",  age: 34 },
     { id: 3, name: "Charlie Day", color : "#24e9a7" , role : "Updata",  age: 41 },
