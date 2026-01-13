@@ -27,9 +27,12 @@ const ShemaEmploye = new mongoose.Schema(
         role:{
             type:String,
             default:"Employe"
-        }
+        },
 
-
+       datecreate:{
+        type:Date,
+        default:new Date()
+       }
     }
 )
 ShemaEmploye.pre("save", async function () {

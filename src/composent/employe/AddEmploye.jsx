@@ -6,8 +6,10 @@ import {
   IoLockClosedOutline,
   IoCloseOutline,
 } from "react-icons/io5";
-
+import { addEmploye } from "../../slices/sliceEmploye";
+import { useDispatch } from "react-redux";
 function AddEmploye({ open, onClose }) {
+const dispatch = useDispatch()
   const [infoEmp, setInfoEmp] = useState({
     name: "",
     cin: "",
@@ -15,9 +17,19 @@ function AddEmploye({ open, onClose }) {
     email: "",
     password: "",
     color: "#2C74B3",
-    isActive: false,
+    isActive: true,
   });
-console.log(infoEmp);
+  //function add 
+  function HandelAddEmploye(){
+     dispatch(addEmploye(infoEmp))
+          .unwrap()
+    .then(() => {
+      alert("Employee added")
+    })
+    .catch(err => {
+      alert(err)
+    })
+  }
 
   if (!open) return null;
 
@@ -198,7 +210,8 @@ console.log(infoEmp);
           </button>
           <button
             className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+          onClick={HandelAddEmploye}
+         >
             Ajouter
           </button>
         </div>
