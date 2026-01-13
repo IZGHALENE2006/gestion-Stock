@@ -8,6 +8,8 @@ import {
 } from "react-icons/io5";
 import { addEmploye } from "../../slices/sliceEmploye";
 import { useDispatch } from "react-redux";
+import toast, { Toaster } from 'react-hot-toast';
+
 function AddEmploye({ open, onClose }) {
 const dispatch = useDispatch()
   const [infoEmp, setInfoEmp] = useState({
@@ -20,16 +22,28 @@ const dispatch = useDispatch()
     isActive: true,
   });
   //function add 
-  function HandelAddEmploye(){
-     dispatch(addEmploye(infoEmp))
-          .unwrap()
+function HandelAddEmploye() {
+  dispatch(addEmploye(infoEmp))
+    .unwrap()
     .then(() => {
-      alert("Employee added")
+      toast.success("Employé ajouté avec succès", {
+        duration: 3000,
+        style: {
+          border: "1px solid #00d435",
+          padding: "16px",
+          color: "#00d435",
+          backgroundColor: "#fffffe",
+        },
+      });
+      onClose()
     })
-    .catch(err => {
-      alert(err)
-    })
-  }
+    .catch((err) => {
+      toast.error(err || "Server error", {
+        duration: 3000,
+      });
+    });
+}
+
 
   if (!open) return null;
 
@@ -216,6 +230,7 @@ const dispatch = useDispatch()
           </button>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
