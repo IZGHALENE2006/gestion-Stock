@@ -6,8 +6,12 @@ import {
   IoLockClosedOutline,
   IoCloseOutline,
 } from "react-icons/io5";
+import { addEmploye } from "../../slices/sliceEmploye";
+import { useDispatch } from "react-redux";
+import toast, { Toaster } from 'react-hot-toast';
 
 function AddEmploye({ open, onClose }) {
+const dispatch = useDispatch()
   const [infoEmp, setInfoEmp] = useState({
     name: "",
     cin: "",
@@ -15,9 +19,31 @@ function AddEmploye({ open, onClose }) {
     email: "",
     password: "",
     color: "#2C74B3",
-    isActive: false,
+    isActive: true,
   });
-console.log(infoEmp);
+  //function add 
+function HandelAddEmploye() {
+  dispatch(addEmploye(infoEmp))
+    .unwrap()
+    .then(() => {
+      toast.success("Employé ajouté avec succès", {
+        duration: 3000,
+        style: {
+          border: "1px solid #00d435",
+          padding: "16px",
+          color: "#00d435",
+          backgroundColor: "#fffffe",
+        },
+      });
+      onClose()
+    })
+    .catch((err) => {
+      toast.error(err || "Server error", {
+        duration: 3000,
+      });
+    });
+}
+
 
   if (!open) return null;
 
@@ -198,11 +224,13 @@ console.log(infoEmp);
           </button>
           <button
             className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+          onClick={HandelAddEmploye}
+         >
             Ajouter
           </button>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
