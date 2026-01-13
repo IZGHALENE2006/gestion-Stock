@@ -21,6 +21,7 @@ export default function AddCategoryForm() {
       setFormData({ name: "" });
     } catch (err) {
       toast.error('Failed to add category', {
+        duration:3000,
             style: {
               border: '1px solid #e22620',
               padding: '16px',
@@ -28,6 +29,7 @@ export default function AddCategoryForm() {
               backgroundColor : "#fffffe",
               backdropFilter : "blur(10px)",
             },
+         
             iconTheme: {
               primary: '#e22620',
               secondary: '#FFFAEE',
@@ -36,6 +38,8 @@ export default function AddCategoryForm() {
     } finally {
       setIsSubmitting(false);
       toast.success('Categorie Added Succefuly', {
+        duration:3000,
+
             style: {
               border: '1px solid #00d435',
               padding: '16px',
