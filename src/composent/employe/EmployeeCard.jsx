@@ -20,7 +20,7 @@ export const EmployeeCard = ({ employee }) => {
       <div ref={innerRef} className="relative w-full h-full" style={{ transformStyle: "preserve-3d" }}>
         
         {/* FRONT */}
-        <div className="absolute inset-0 bg-slate-800 border border-slate-700 rounded-3xl p-6 flex flex-col justify-between shadow-lg" style={{ backfaceVisibility: "hidden" }}>
+        <div className="absolute inset-0 bg-slate-800 bg-[#1e293b] border border-slate-700 shadow-xl rounded-3xl p-6 flex flex-col justify-between shadow-lg" style={{ backfaceVisibility: "hidden" }}>
           <div>
             <div className="w-10 h-1 bg-[#2C74B3] rounded-full mb-4" />
             <h3 className="text-white font-bold text-xl">{employee.name}</h3>

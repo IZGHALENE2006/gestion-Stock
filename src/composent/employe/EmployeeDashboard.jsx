@@ -4,10 +4,19 @@ import { Draggable } from 'gsap/dist/Draggable';
 import { IoTrashOutline } from "react-icons/io5";
 import { EmployeeCard } from "./EmployeeCard";
 import "./emp.css"
+import EmployeeSearch from "./EmployeeSearch"
 gsap.registerPlugin(Draggable);
 
 export const EmployeeDashboard = () => {
+  
   const [deleteopen , setdeleteopen] = useState(false)
+function enterplus() {
+  gsap.to("#plus", {
+    rotate: "45deg",
+    duration: 0.3,
+    ease: "power2.out"
+  });
+}
 
 
   const [employees, setEmployees] = useState([
@@ -83,8 +92,20 @@ export const EmployeeDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1e293b] flex flex-col items-center py-12 px-6">
+    
+
+
+
+
+
+
+
+    <div className="flex flex-col items-center p-2">
       
+      <EmployeeSearch />
+
+    
+
       <div 
         ref={containerRef} 
         className="flex flex-wrap justify-center gap-8 max-w-6xl w-full"
@@ -99,7 +120,7 @@ export const EmployeeDashboard = () => {
       <div 
       id='deletezone'
         ref={deleteZoneRef} 
-        className="fixed p-5 -bottom-45 -right-45 w-100 h-100 flex items-end justify-end opacity-0 transition-colors pointer-events-none"
+        className="fixed p-5 -bottom-45 -right-45 w-70 h-70 flex items-end justify-end opacity-0 transition-colors pointer-events-none"
       >
         {deleteopen ? <IoTrashOutline size={30} color="white" />: <IoTrashOutline size={35} color="white" />}
       </div>

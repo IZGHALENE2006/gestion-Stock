@@ -46,3 +46,13 @@ https://colorhunt.co/palette/0a26471442722052952c74b3
 
 */
 
+
+::-webkit-scrollbar{
+  background-color: #0A2647;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #2C74B3;
+  border-radius: 25px;
+
+}

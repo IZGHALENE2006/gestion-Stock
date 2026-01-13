@@ -246,7 +246,7 @@ const BarcodeDisplay = ({ value }) => {
   )}
 </Dialog>
    <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setopen(false)} title="update  Produit">
-              <UpdateProduit idupdate2={idupdate2} />
+              <UpdateProduit idupdate2={idupdate2} close={() => setopen(false)} />
         </Dialog>
 <Toaster />
     </div>

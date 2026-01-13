@@ -10,11 +10,13 @@ import {
 } from "react-icons/io5";
 import { useDispatch,useSelector } from "react-redux";
 import { updateProduit } from "../../slices/SliceProduct";
+import toast, { Toaster } from 'react-hot-toast';
+
 function UpdateProduit(props) {
 
- const   Dispatch = useDispatch()
+ const   dispatch = useDispatch()
     //Get item///
-    const {idupdate2}= props
+    const {idupdate2,close}= props
      const { Produts, loading } = useSelector((state) => state.Product);
 
    const currentproduit = Produts.find((t)=>t._id ==idupdate2)
@@ -36,17 +38,51 @@ function UpdateProduit(props) {
   }
 }, [currentproduit]);
 
-  const handleChange = (e) => {
+  const handleChange =  (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-  Dispatch(updateProduit({formData,idupdate2}))
+   try {
+    await dispatch(updateProduit({ formData, idupdate2 })).unwrap()
 
-   
+  setFormData({
+    name: "",
+    quantite: "",
+    prix_achat: "",
+    prix_vente: "",
+    categorie: "",
+    fournisseur: "",
+  });
+
+  toast.success('Produit updated successfully', {
+        duration:3000,
+
+    style: {
+      border: '1px solid #00d435',
+      padding: '16px',
+      color: '#00d435',
+      backgroundColor: "#fffffe",
+    },
+  });
+close()
+} catch (err) {
+  toast.error('Failed to update produit', {
+        duration:3000,
+
+    style: {
+      border: '1px solid #e22620',
+      padding: '16px',
+      color: '#e22620',
+      backgroundColor: "#fffffe",
+    },
+  });
+}
+
+
+    
 
     }
 if (!currentproduit || !formData) {
@@ -143,7 +179,10 @@ if (!currentproduit || !formData) {
                 className="w-full pl-10 py-2.5 rounded-lg border border-gray-300
                 focus:ring-2 focus:ring-[#2C74B3] outline-none bg-white"
               >
+                <option value=''>--------------</option>
+
                 {Category.map((t)=>{
+                
                     return(
                 <option value={t.name}>{t.name}</option>
                     
@@ -181,6 +220,7 @@ if (!currentproduit || !formData) {
          {loading?"Save Changes...":"Save Changes"}  
         </button>
       </form>
+      <Toaster/>
     </div>
   );
 }

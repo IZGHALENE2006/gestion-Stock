@@ -52,10 +52,10 @@ export const DeleteProduit = createAsyncThunk("DeleteProduit",async(id,{rejectWi
 //UpdateProduit
 export const updateProduit = createAsyncThunk("UpdateProduit",async(data,{rejectWithValue})=>{
     const Token  = localStorage.getItem('token')
-    console.log(data.idupdate);
+   const {idupdate2} = data
     
     try{
-        const res = await axios.put(`http://localhost:7000/Product/Update/${data.idupdate}`,data.formData,{
+        const res = await axios.put(`http://localhost:7000/Product/Update/${idupdate2}`,data.formData,{
             headers:{
                 Authorization:`Bearer ${Token}`
             }

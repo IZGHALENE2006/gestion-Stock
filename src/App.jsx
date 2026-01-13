@@ -8,7 +8,8 @@ import LoginEmploye from './composent/login/loginemloye'
 import Home from './composent/home'
 import ProductPg from './composent/ProductPg/ProductPg'
 import Categories from './composent/Categories/Categories'
-import {EmployeeDashboard} from "./composent/employee/EmployeeDashboard"
+import EmployeesPage from './composent/employe/employe'
+import {EmployeeDashboard} from "./composent/employe/EmployeeDashboard"
 function App() {
  
 
@@ -26,10 +27,13 @@ function App() {
         <Route path='Categories' element={<Categories/>}/>
         <Route path='products' element={  <ProductPg />} />
         <Route path='Dashboard' element={""} />
-        <Route path='employees' element={<EmployeeDashboard />} />
         <Route path='sell' element={""} />
         <Route path='profits' element={""} />
         <Route path='history' element={""} />
+        <Route path="employees" element={<EmployeesPage />}>
+        <Route path="EmployeeDashboard" element={<EmployeeDashboard/>} />
+        <Route path="statistique" element={""} />
+      </Route>
 
         </Route>  
 
