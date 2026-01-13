@@ -3,16 +3,18 @@ import EmployeModel from '../models/EmployeModele.js'
 //Add Employe 
 
 export const AddEmploye= async(req,res)=>{
-    const {name,phone,email,password,isActive} =req.body
+    const {name,phone,cin,email,password,isActive} =req.body
     const item  = await EmployeModel.findOne({email})
      if(item) return res.status(400).json({message:"email if exite"})
         const newEmploye  = await EmployeModel.create({
         idAdmin,
         name,
         phone,
+        cin,
         email,
         password,
-        isActive
+        isActive,
+        color
     })
     if(!newEmploye) return res.status(404).json({message:"Not Found"})
      res.status(201).json(newEmploye)

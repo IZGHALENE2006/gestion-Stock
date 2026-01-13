@@ -7,9 +7,11 @@ const ShemaEmploye = new mongoose.Schema(
         idAdmin:Object,
         name:String,
         phone:String,
+        cin:String,
         email:String,
         password:String,
         isActive:Boolean,
+        color:String,
         action:{
             delete:{
                 type:Boolean,

@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { IoSearchOutline } from "react-icons/io5";
+import AddEmploye from "./AddEmploye";
 
 export default function EmployeeSearch() {
-      const [deleteopen , setdeleteopen] = useState(false)
-    
+const[open,setopne]=useState(false)
   return (
     <div className="mb-7 w-full p-4 px-8 bg-[#1e293b] border border-gray-600 rounded-xl flex justify-between items-center gap-6">
     
@@ -31,7 +31,7 @@ export default function EmployeeSearch() {
     
       {/* RIGHT */}
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => setopne(true)}
         className="px-5 py-2 bg-[#2C74B3] text-white rounded-lg text-sm
                    hover:bg-white hover:text-[#2C74B3] transition"
       >
@@ -41,7 +41,7 @@ export default function EmployeeSearch() {
     
 
 
-
+<AddEmploye open={open} onClose={()=>setopne(false)} />
 
 
 

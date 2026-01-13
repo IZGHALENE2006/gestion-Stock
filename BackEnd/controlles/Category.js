@@ -1,7 +1,6 @@
 
 import CategoryModel from '../models/Category.js'
-import productModel from '../models/productModel.js';
-import ProductModel from '../models/productModel.js';
+
 
 //Add New Category
 export const AddCategory = async(req,res)=>{
