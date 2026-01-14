@@ -87,7 +87,7 @@ const [employees, setEmployees] = useState([
     }, containerRef);
     
     return () => ctx.revert();
-  }, [employees]);
+  }, [Employe]);
 
   const handleDelete = (id) => {
     const target = containerRef.current.querySelector(`[data-id='${id}']`);
@@ -115,7 +115,7 @@ const [employees, setEmployees] = useState([
         ref={containerRef} 
         className="flex flex-wrap justify-center gap-8 max-w-6xl w-full"
       >
-        {employees.map((emp) => (
+        {Employe.map((emp) => (
           <div key={emp.id} className="card-wrapper" data-id={emp.id}>
              <EmployeeCard employee={emp} />
           </div>
