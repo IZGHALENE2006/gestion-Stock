@@ -6,19 +6,20 @@ import {
 } from "react-icons/io5";
 import { useSelector ,useDispatch} from 'react-redux';
 import { NavLink, useNavigate } from 'react-router';
-import { logoutAdmin } from '../../slices/SliceLoginAdmin';
-import { GetAdmin } from '../../slices/SliceLoginAdmin';
+import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const {admin,loading,error,token} = useSelector((state)=> state.LoginAdmin);
+const { user, role,token } = useSelector(state => state.LoginAdmin);
 
+
+   
   
 const dispatch = useDispatch()
 const nav  =  useNavigate()
 useEffect(()=>{
  if(token){
-   dispatch(GetAdmin())
+   dispatch(getMe())
  }
 },[dispatch,token])
 
@@ -57,7 +58,8 @@ useEffect(()=>{
           <NavItem to="/Home/Categories" icon={<IoPricetagsOutline  size={22} />} label="Categories" expanded={isExpanded} />
          
           <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
-          <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
+{role=='admin'&&          <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
+}
           <NavItem to="/Home/sell" icon={<IoCartOutline size={22} />} label="Sell" expanded={isExpanded} />
           <NavItem to="/Home/profits" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
           <NavItem to="/Home/history" icon={<IoCalendarOutline size={22} />} label="History" expanded={isExpanded} />
@@ -70,8 +72,8 @@ useEffect(()=>{
               <IoPersonOutline size={35} className='mt-3.5'/>
             </div>
             <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-sm font-medium whitespace-nowrap">  {admin?.name || "Admin"}</p>
-              <p className="text-xs text-gray-500">Online</p>
+              <p className="text-sm font-medium whitespace-nowrap">  {user?.name || "user"}</p>
+              <p className="text-xs text-gray-500">{role}</p>
             </div>
           </div>
 

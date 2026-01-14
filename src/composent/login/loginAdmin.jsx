@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { IoIosLogIn } from "react-icons/io";
 import { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import { LoginAdmine } from "../../slices/SliceLoginAdmin";
+import { Loginuser } from "../../slices/SliceLoginAdmin";
 function LoginAdmin() {
   const Dispatch = useDispatch()
   const Nav = useNavigate()
@@ -20,7 +20,7 @@ function Login(e){
   if (!infoAdmin.email || !infoAdmin.password) {
     return alert("عمر الإيميل و الباسوورد");
   }
-     Dispatch(LoginAdmine({
+     Dispatch(Loginuser({
       role:'admin',
       data:{
         email:infoAdmin.email,

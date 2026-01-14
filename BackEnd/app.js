@@ -7,6 +7,8 @@ import ProductRoute from './Routes/ProductRoute.js'
 import CategoryRoute from './Routes/CategoryRoute.js'
 //imoprt Employe
 import EmployeRoute from './Routes/EmployeRoute.js'
+//import getme
+import GetMeRoute from './Routes/getMeRoute.js'
 const app = express()
 
  app.use(cors())
@@ -16,6 +18,7 @@ const app = express()
    app.use('/Product',ProductRoute)
    app.use('/Category',CategoryRoute)
    app.use('/Employe',EmployeRoute)
+   app.use('/user',GetMeRoute)
 
 
 export default app

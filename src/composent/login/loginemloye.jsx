@@ -1,8 +1,35 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaUser } from "react-icons/fa";
-
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Loginuser } from "../../slices/SliceLoginAdmin";
 function LoginEmploye() {
+  const dispatch = useDispatch()
+  const Nav = useNavigate()
 
+    const [infoEmp,setInfoEmp] = useState({email:"",password:""})
+ function HandeleLohinEmp(e){
+         e.preventDefault()
+       
+         if(infoEmp.email==''||infoEmp.password==''){
+  alert("svp Entre voter info")
+         }else{
+          dispatch(Loginuser({
+            role:"Employe",
+                data:{
+        email:infoEmp.email,
+        password:infoEmp.password
+      }
+          }))
+          .unwrap().then(()=>{
+             Nav('/Home/Dashboard')
+          }).catch((err)=>{
+          console.log(err);
+          
+          })
+        
+         }
+ }
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       
@@ -15,13 +42,14 @@ function LoginEmploye() {
         </h1>
 
         {/* Form */}
-        <form className="flex flex-col gap-6" >
+        <form className="flex flex-col gap-6" onSubmit={HandeleLohinEmp} >
           
           <input
             type="email"
             placeholder="Employee Email"
             className="w-full px-4 py-3 rounded-lg border
                        focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
+                       onChange={(e)=>setInfoEmp({...infoEmp,email:e.target.value})}
 
           />
 
@@ -30,7 +58,9 @@ function LoginEmploye() {
             placeholder="Password"
             className="w-full px-4 py-3 rounded-lg border
                        focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
-          />
+                       onChange={(e)=>setInfoEmp({...infoEmp,password:e.target.value})}
+         
+         />
 
 
           {/* Button */}

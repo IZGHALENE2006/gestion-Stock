@@ -1,4 +1,6 @@
 import EmployeModel from '../models/EmployeModele.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 //Add Employe 
 
@@ -44,43 +46,61 @@ if (cinExist) {
 }
 
 //LoginEmploye 
-export const LoginEmploye = async(req,res)=>{
-    const {email,password} = req.body
-       const Employes = await EmployeModel.findOne({email})
-     if (!Employes) return res.status(404).json({message: "Email incorrect"} )
-    const isMatch  = await bcrypt.compare(password,Employes.password)   
-        if(!isMatch) return res.status(404).json({ message: "Password incorrect" });
+export const LoginEmploye = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-        if(Employes.isActive==false){
-            res.status(404).json("Votre compte a été temporairement suspendu par l’administrateur")
-        }   
-        //create Token
-        const Token = jwt.sign(
-            {
-                id:Employes._id,
-                role:Employes.role
-            },
-            process.env.JWT_SECRET,
-            {expiresIn:"1d"}
-        )
-        
-  
-        res.json(
-            {
-                Token,
-                Employe:{
-                    id:Employes._id,
-                    name:Employes.name,
-                    email:Employes.email,
-                     role:Employes.role   
-                }
-            }
-        )
-}
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email et password obligatoires" });
+    }
+
+    const employe = await EmployeModel.findOne({ email });
+    if (!employe) {
+      return res.status(404).json({ message: "Email incorrect" });
+    }
+
+    const isMatch = await bcrypt.compare(password, employe.password);
+    if (!isMatch) {
+      return res.status(404).json({ message: "Password incorrect" });
+    }
+
+    if (!employe.isActive) {
+      return res.status(403).json({
+        message: "Votre compte a été temporairement suspendu"
+      });
+    }
+
+    const Token = jwt.sign(
+      { id: employe._id, role: employe.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.json({
+      Token,
+      user: {
+        id: employe._id,
+        name: employe.name,
+        email: employe.email,
+        role: employe.role
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 //Get All employe
 
 export const AllEmploye = async(req,res)=>{
     const AllEmp = await EmployeModel.find({idAdmin:req.user.id})
     res.status(200).json(AllEmp)
+}
+
+//Get Employe
+export const getuserFromToken =async (req,res)=>{
+    const Emp =await EmployeModel.findById(req.user.id).select("-password")
+    res.json(Emp)
 }

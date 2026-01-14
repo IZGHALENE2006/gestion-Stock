@@ -31,7 +31,7 @@ export const LoginAdmin = async(req,res)=>{
         res.json(
             {
                 Token,
-                admin:{
+                user:{
                     id:Admins._id,
                     name:Admins.name,
                     email:Admins.email,

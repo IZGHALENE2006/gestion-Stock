@@ -3,9 +3,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 //Login Admin 
-export const LoginAdmine = createAsyncThunk('LoginAdmin',async({role,data},{rejectWithValue})=>{
+export const Loginuser = createAsyncThunk('LoginAdmin',async({role,data},{rejectWithValue})=>{
     try{
-        const res = await axios.post('http://localhost:7000/aip/adimn/Login',data)
+      const url = role ==='admin'?"http://localhost:7000/aip/adimn/Login":"http://localhost:7000/Employe/Login"
+        const res = await axios.post(url,data)
         return res.data
     }catch(error){
           return rejectWithValue(
@@ -17,26 +18,34 @@ export const LoginAdmine = createAsyncThunk('LoginAdmin',async({role,data},{reje
 
 })
 //Login Admin 
-export const GetAdmin = createAsyncThunk('getAdmin',async(_,{rejectWithValue})=>{
-  const  token = localStorage.getItem('token')
-    try{
-        const res = await axios.get('http://localhost:7000/aip/adimn/GetAdmin',{
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        })
-        return res.data
-    }catch(error){
-          return rejectWithValue(
-            error.response?.data?.message || "Server error"
-          ) 
+export const getMe = createAsyncThunk(
+  "auth/getMe",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
 
+      const res = await axios.get(
+        "http://localhost:7000/user/getMe",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data; // { role, user }
+
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Server error"
+      );
     }
+  }
+);
 
-
-})
 const initialState = {
   user: "",
+  role: "",
   token: localStorage.getItem("token") || null,
   loading: false,
   error: null
@@ -48,7 +57,7 @@ const LoginAdminSlice = createSlice(
         initialState:initialState,
          reducers:{
           logoutAdmin:(state)=>{
-           state.admin = null;
+           state.user = null;
            state.token = null;
            state.error = null;
            localStorage.removeItem("token");
@@ -56,24 +65,25 @@ const LoginAdminSlice = createSlice(
          },
          extraReducers:(bulder)=>{
           bulder
-          .addCase(LoginAdmine.pending,(state,action)=>{
+          .addCase(Loginuser.pending,(state,action)=>{
             state.loading = true
             state.error= null
           })
-          .addCase(LoginAdmine.fulfilled,(state,action)=>{
+          .addCase(Loginuser.fulfilled,(state,action)=>{
             state.loading = false
             state.error = null
             state.token = action.payload.Token
-            state.user = action.payload.admin.role
+            state.user = action.payload
             localStorage.setItem('token',action.payload.Token)
           })
-           .addCase(LoginAdmine.rejected,(state,action)=>{
+           .addCase(Loginuser.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload
         
           })
-          bulder.addCase(GetAdmin.fulfilled,(state,action)=>{
-            state.admin = action.payload
+          bulder.addCase(getMe.fulfilled,(state,action)=>{
+            state.user = action.payload.user
+            state.role = action.payload.role
       
           })
          }

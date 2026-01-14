@@ -41,7 +41,7 @@ function HandelAddEmploye() {
       onClose(); // ✅ تسد غير ملي تنجح العملية
     })
     .catch((err) => {
-      toast.error(error|| "Server error", {
+      toast.error(error, {
         duration: 3000,
       });
     });
