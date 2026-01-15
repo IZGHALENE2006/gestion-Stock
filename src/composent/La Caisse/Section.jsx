@@ -1,14 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import { IoSearchOutline, IoCartOutline } from "react-icons/io5";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import gsap from "gsap";
 import { useDispatch, useSelector } from "react-redux";
 import { getMe } from "../../slices/SliceLoginAdmin";
-import LiveClock from "./DateTime"
-export default function CaisseSection({ cart = [] }) {
-  const { user, role, token } = useSelector((state) => state.LoginAdmin);
-  const dispatch = useDispatch();
+import LiveClock from "./DateTime";
 
+// Move static data outside to prevent recreation on re-render
+const CASH_VALUES = [
+  { label: "20 DH", value: 20, img: "/20dh.png", color: "#661a99" },
+  { label: "50 DH", value: 50, img: "/50dh.png", color: "#128512" },
+  { label: "100 DH", value: 100, img: "/100dh.png", color: "#994d1a" },
+  { label: "200 DH", value: 200, img: "/200dh.png", color: "#1a8099" },
+];
+
+const CaisseSection = ({ cart = [] }) => {
+  const { user, token } = useSelector((state) => state.LoginAdmin);
+  const dispatch = useDispatch();
   const [amountPaid, setAmountPaid] = useState("");
   const sectionRef = useRef(null);
 
@@ -18,101 +26,90 @@ export default function CaisseSection({ cart = [] }) {
     }
   }, [token, dispatch, user]);
 
-  const cashValues = [
-    { label: "20 DH", value: 20, img: "/20dh.png", color: "#661a99" },
-    { label: "50 DH", value: 50, img: "/50dh.png", color: "#128512" },
-    { label: "100 DH", value: 100, img: "/100dh.png", color: "#994d1a" },
-    { label: "200 DH", value: 200, img: "/200dh.png", color: "#1a8099" },
-  ];
-
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
   const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
-
-  // Initial Entrance Animation
- 
 
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
     
-    // Amount Pop Animation with Dynamic Color
+    // Efficient GSAP animation
     gsap.fromTo(".amount-display", 
-      { scale: 1.15, color: color }, 
-      { scale: 1, color: "#2C74B3", duration: 0.5, ease: "elastic.out(1, 0.3)" }
+      { scale: 1.1, color: color }, 
+      { scale: 1, color: "#2C74B3", duration: 0.4, ease: "back.out(2)" }
     );
 
-    // Button Feedback
-    gsap.to(target, {
-      scale: 0.92,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 1
-    });
+    gsap.to(target, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
   };
 
   return (
     <div ref={sectionRef} className="ticket-section flex-1 bg-[#1e293b] rounded-2xl border border-slate-700 shadow-xl flex flex-col overflow-hidden">
+      {/* Header */}
       <div className="p-5 border-b border-slate-700 bg-[#2C74B3]/10 flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold uppercase tracking-wider">
-            <span className="font-semibold">La Caisse De : </span>
-             {user?.name || "User"}
-            </h2>
-          <p className="text-xs text-slate-400">{user?.role.toUpperCase()} {" "}• {new Date().toLocaleDateString()}{" "}• <LiveClock /></p>
-             
+            <span className="font-semibold text-slate-400">La Caisse De </span>
+             {user?.name || "Session"}
+          </h2>
+          <div className="text-xs text-slate-400 flex gap-1 items-center">
+            <span className="text-[#2C74B3] font-bold">{user?.role?.toUpperCase()}</span>
+            <span>• {new Date().toLocaleDateString()} •</span>
+            <LiveClock />
+          </div>
         </div>
-        <div className="relative">
-          <IoCartOutline size={30} className="text-[#2C74B3]" />
+        <div className="relative p-2 bg-[#0f172a] rounded-full">
+          <IoCartOutline size={24} className="text-[#2C74B3]" />
           {cart.length > 0 && (
-             <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-bold px-1.5 rounded-full">
+             <span className="absolute -top-1 -right-1 bg-rose-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">
                {cart.length}
              </span>
           )}
         </div>
       </div>
 
+      {/* Search */}
       <div className="p-4">
-        <div className="relative">
-          <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <div className="relative group">
+          <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[#2C74B3] transition-colors" />
           <input 
             type="text" 
-            placeholder="Rechercher des produits..." 
-            className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm" 
+            placeholder="Rechercher des produits (F1)..." 
+            className="w-full bg-[#0f172a] border border-slate-700 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm" 
           />
         </div>
       </div>
 
-      <div className="flex-1 p-4 space-y-2 overflow-y-auto min-h-75 scrollbar-hide">
+      {/* Cart Items */}
+      <div className="flex-1 p-4 space-y-2 overflow-y-auto max-h-[300px] scrollbar-hide">
         {cart.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-slate-500 italic opacity-50">
-            <IoCartOutline size={48} className="mb-2" />
+          <div className="h-full flex flex-col items-center justify-center text-slate-600 italic opacity-50 py-10">
+            <IoCartOutline size={40} className="mb-2" />
             <p>Panier vide</p>
           </div>
         ) : (
           cart.map(item => (
-            <div key={item.id} className="flex justify-between items-center p-3 bg-[#0f172a] rounded-lg border border-slate-700">
-               <span className="font-medium">{item.name}</span>
+            <div key={item.id} className="flex justify-between items-center p-3 bg-[#0f172a]/50 rounded-lg border border-slate-800 hover:border-slate-600 transition-colors">
+               <span className="font-medium text-slate-200">{item.name} <span className="text-xs text-slate-500">x{item.qty}</span></span>
                <span className="font-bold text-[#2C74B3]">{item.price * item.qty} DH</span>
             </div>
           ))
         )}
       </div>
 
+      {/* Payment Inputs */}
       <div className="p-6 bg-[#0f172a]/80 border-t border-slate-700">
         <div className="flex justify-between items-center mb-4">
           <div className="flex-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Espèces Reçues</p>
-            <div className="flex items-center">
-                <input 
-                    type="number" 
-                    value={amountPaid} 
-                    onChange={(e) => setAmountPaid(e.target.value)}
-                    className="no-spinner amount-display bg-transparent text-4xl font-black text-[#2C74B3] outline-none w-full placeholder:opacity-20"
-                    placeholder="0.00"
-                />
-            </div>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Espèces Reçues</p>
+            <input 
+                type="number" 
+                value={amountPaid} 
+                onChange={(e) => setAmountPaid(e.target.value)}
+                className="no-spinner amount-display bg-transparent text-4xl font-black text-[#2C74B3] outline-none w-full placeholder:text-slate-800"
+                placeholder="0.00"
+            />
           </div>
           <div className="text-right pl-4">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Rendu</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Rendu</p>
             <p className={`text-2xl font-black transition-colors duration-300 ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-400'}`}>
               {changeToReturn.toFixed(2)} <span className="text-sm">DH</span>
             </p>
@@ -125,31 +122,22 @@ export default function CaisseSection({ cart = [] }) {
         </div>
       </div>
 
-      <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-slate-700 bg-slate-800/30">
-        {cashValues.map((cash) => (
+      {/* Quick Cash Buttons */}
+      <div className="p-4 grid grid-cols-4 gap-3 border-t border-slate-700 bg-slate-800/20">
+        {CASH_VALUES.map((cash) => (
           <button
             key={cash.value}
             onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
-            className="cash-btn relative overflow-hidden h-20 rounded-xl border border-slate-700 transition-all duration-300 group bg-slate-900"
-            style={{ "--hover-color": cash.color }}
-            onMouseEnter={(e) => e.currentTarget.style.borderColor = cash.color}
-            onMouseLeave={(e) => e.currentTarget.style.borderColor = ""}
+            className="cash-btn relative overflow-hidden h-16 rounded-xl border border-slate-700 transition-all duration-200 group bg-slate-900"
           >
             <div
-              className="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 ease-out scale-110 group-hover:scale-125"
+              className="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-500 opacity-40 group-hover:opacity-40 group-hover:scale-110"
               style={{ backgroundImage: `url(${cash.img})` }}
             />
-
-            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-colors duration-300" />
-
-            <span className="relative z-10 text-lg font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase">
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors" />
+            <span className="relative z-10 text-sm font-black text-white drop-shadow-md uppercase">
               {cash.label}
             </span>
-            
-            <div 
-              className="absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity bg-linear-to-b pointer-events-none" 
-              style={{ backgroundImage: `linear-gradient(to top, ${cash.color}66, transparent)` }}
-            />
           </button>
         ))}
       </div>
@@ -158,19 +146,16 @@ export default function CaisseSection({ cart = [] }) {
         <button 
             onClick={() => {
                 if(totalOrder === 0) return toast.error("Le panier est vide");
-                toast.success("Vente enregistrée avec succès");
+                toast.success("Vente enregistrée");
                 setAmountPaid("");
             }} 
-            className="
-            bg-linear-to-r from-[#2C74B3] via-[#fffcf662] via-[#fffcf662] to-[#2C74B3]
-                bg-size-[300%_auto]
-                transition-all duration-1000 ease-in-out
-                hover:bg-right
-            w-full bg-[#2C74B3] hover:bg-[#3b82f6] py-5 rounded-2xl font-black text-lg tracking-widest active:scale-[0.98] shadow-xl shadow-blue-500/20"
+            className="w-full bg-[#2C74B3] hover:bg-[#3b82f6] py-4 rounded-xl font-black text-white tracking-widest active:scale-[0.98] shadow-lg transition-all"
         >
             CONFIRMER LA VENTE
         </button>
       </div>
     </div>
   );
-}
+};
+
+export default memo(CaisseSection);

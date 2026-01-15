@@ -1,5 +1,11 @@
 .CaisseCard {
     overflow: hidden;
+    font-family: "Saira", sans-serif;
+
+}
+.caise{
+        font-family: "Saira", sans-serif;
+
 }
 
 .CaisseCard::before {
