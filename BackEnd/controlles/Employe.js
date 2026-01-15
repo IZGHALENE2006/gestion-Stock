@@ -100,8 +100,14 @@ export const AllEmploye = async(req,res)=>{
     res.status(200).json(AllEmp)
 }
 
-//Get Employe
-export const getuserFromToken =async (req,res)=>{
-    const Emp =await EmployeModel.findById(req.user.id).select("-password")
-    res.json(Emp)
+//Delete Employe 
+export const DeleteEmploye = async(req,res)=>{
+       const {id} = req.params
+      try{
+         const DeleteEmploye = await EmployeModel.findByIdAndDelete(id)
+       if(!DeleteEmploye) return res.status(404).json({message:"Not Found"})
+        res.json(DeleteEmploye)
+      }catch(err){
+             res.status(500).json({message:err.message})
+      }
 }

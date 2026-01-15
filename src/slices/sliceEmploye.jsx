@@ -36,6 +36,28 @@ export const GetAllEmploye = createAsyncThunk("GetAllEmploye",async(_,{rejectWit
     )
    }
 })
+
+//DeleteEmploye
+export const DeleteEmploye = createAsyncThunk("DeleteEmploye",async(id,{rejectWithValue})=>{
+   const Token = localStorage.getItem("token")
+   const iditem  = id
+   console.log(iditem);
+   
+   
+   try{
+        const res = await axios.delete(`http://localhost:7000/Employe/Delete/${iditem}`,{
+        headers:{
+            Authorization:`Bearer ${Token}`
+        }
+    })
+    return res.data
+   }catch(err){
+    return rejectWithValue(
+        err.response?.data?.message || "Server error"
+          
+    )
+   }
+})
 const initialstate = {
     Employe :[],
     loading:false,
@@ -75,6 +97,23 @@ const SliceEmploye = createSlice(
             state.Employe =action.payload
           })
           .addCase(GetAllEmploye.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.payload
+           
+          })
+
+           //DeleteEmploye
+               bulder
+          .addCase(DeleteEmploye.pending,(state)=>{
+            state.loading = true
+            state.error = null
+          })
+           .addCase(DeleteEmploye.fulfilled,(state,action)=>{
+            state.loading = false
+            state.error = null
+            state.Employe =state.Employe.filter((t)=>t._id!==action.payload._id)
+          })
+          .addCase(DeleteEmploye.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload
            
