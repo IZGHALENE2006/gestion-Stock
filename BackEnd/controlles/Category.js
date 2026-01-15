@@ -18,7 +18,7 @@ try{
 }
 //All Category
 export const GetCategory = async(req,res)=>{
-    const Categoreis = await CategoryModel.find({idAdmin:req.user.id})
+    const Categoreis = await CategoryModel.find({idAdmin:req.user.idAdmin})
     res.json(Categoreis)
 }
 

@@ -24,12 +24,12 @@ const {Employe} = useSelector((state)=>state.Employe)
 
 // map ayoube {Employe}
 
-const [employees, setEmployees] = useState([
-    { id: 1, name: "Alice Zhang" , color : "#2C74B3", role : "delete",  age: 28 },
-    { id: 2, name: "Bob Smith",color : "#e9cb24" , role : "Add",  age: 34 },
-    { id: 3, name: "Charlie Day", color : "#24e9a7" , role : "Updata",  age: 41 },
-    { id: 4, name: "Diana Prince",color : "#e97d24", role : "delete",  age: 30 },
-  ]);
+//Logic delete 
+const [iddelete,setiddelete] = useState("")
+function Handelegetiddletecard(id){
+setiddelete(id)
+}
+console.log(iddelete);
 
   const containerRef = useRef(null);
   const deleteZoneRef = useRef(null);
@@ -74,12 +74,12 @@ const [employees, setEmployees] = useState([
             if (this.hitTest(deleteZoneRef.current, "50%")) {
               handleDelete(this.target.getAttribute('data-id'));
               
-              // Back End (Maehdi)
-              console.log(this.target.getAttribute('data-'));
+              // Back End (Maehdi)  
               
             } else {
               gsap.to(this.target, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.75)" });
               card.style.zIndex = 1;
+
             }
           }
         });
@@ -116,7 +116,7 @@ const [employees, setEmployees] = useState([
         className="flex flex-wrap justify-center gap-8 max-w-6xl w-full"
       >
         {Employe.map((emp) => (
-          <div key={emp.id} className="card-wrapper" data-id={emp.id}>
+          <div key={emp.id} className="card-wrapper" data-id={emp.id} onClick={()=>Handelegetiddletecard(emp._id)}>
              <EmployeeCard employee={emp} />
           </div>
         ))}

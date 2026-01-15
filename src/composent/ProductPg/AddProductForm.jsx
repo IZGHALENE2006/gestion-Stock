@@ -64,51 +64,64 @@ export default function AddProductForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await Dispatch(AddProduct(formData)).unwrap();
-      setFormData({
-        name: "", prix_achat: "", prix_vente: "",
-        categorie: "", quantite: "", barcode: generateEAN13(), 
-        fournisseur: "", datecreate: new Date(), status: true
-      });
-      
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add product");
-      toast.error('Failed to add product.', {
-      style: {
-        border: '1px solid #e22620',
-        padding: '16px',
-        color: '#e22620',
-        backgroundColor : "#fffffe",
-        backdropFilter : "blur(10px)",
-      },
-      iconTheme: {
-        primary: '#e22620',
-        secondary: '#FFFAEE',
-      },
+  try {
+    await Dispatch(AddProduct(formData)).unwrap();
+
+    setFormData({
+      name: "",
+      prix_achat: "",
+      prix_vente: "",
+      categorie: "",
+      quantite: "",
+      barcode: generateEAN13(),
+      fournisseur: "",
+      datecreate: new Date(),
+      status: true
     });
 
-    } finally {
-      setIsSubmitting(false);
-    toast.success('The Product Added Succefuly', {
+    toast.success('The Product Added Successfully', {
       style: {
         border: '1px solid #00d435',
         padding: '16px',
         color: '#00d435',
-        backgroundColor : "#fffffe",
-        backdropFilter : "blur(10px)",
+        backgroundColor: "#fffffe",
+        backdropFilter: "blur(10px)",
       },
       iconTheme: {
         primary: '#00d435',
         secondary: '#FFFAEE',
       },
     });
-    }
-  };
+
+  } catch (err) {
+    console.error(err);
+
+    // ❌ ERROR TOAST
+    toast.error(
+      err?.message || 'Failed to add product.',
+      {
+        style: {
+          border: '1px solid #e22620',
+          padding: '16px',
+          color: '#e22620',
+          backgroundColor: "#fffffe",
+          backdropFilter: "blur(10px)",
+        },
+        iconTheme: {
+          primary: '#e22620',
+          secondary: '#FFFAEE',
+        },
+      }
+    );
+
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const profit = (Number(formData.prix_vente) - Number(formData.prix_achat)).toFixed(2);
 

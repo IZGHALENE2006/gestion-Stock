@@ -10,7 +10,7 @@ import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-const { user, role,token } = useSelector(state => state.LoginAdmin);
+const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
 
 
    

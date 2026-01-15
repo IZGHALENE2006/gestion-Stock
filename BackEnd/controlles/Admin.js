@@ -23,7 +23,8 @@ export const LoginAdmin = async(req,res)=>{
         //create Token
         const Token = jwt.sign(
             { id:Admins._id,
-                role:Admins.role  
+                role:Admins.role,
+                 idAdmin: Admins._id
              },
             process.env.JWT_SECRET,
             { expiresIn:"1d" })
@@ -33,7 +34,7 @@ export const LoginAdmin = async(req,res)=>{
                 Token,
                 user:{
                     id:Admins._id,
-                    name:Admins.name,
+                      name:Admins.name,
                     email:Admins.email,
                      role:Admins.role   
                 }

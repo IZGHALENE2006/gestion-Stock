@@ -13,7 +13,10 @@ import UpdateCategoryForma from "./UpdateCategoryForma";
 function Categories() {
   const Dispatch = useDispatch();
   const { Category } = useSelector((state) => state.category);
-
+  //Get user
+  const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
+  console.log(role);
+  
   useEffect(() => {
     Dispatch(GetAllCatefory());
   }, [Dispatch]);
@@ -68,9 +71,10 @@ function Categories() {
             />
           </div>
 
-          <button
+     <button
             className="flex items-center gap-2 px-5 py-2 bg-[#2C74B3] rounded-lg text-sm hover:bg-white hover:text-[#2C74B3] transition"
             onClick={() => setOpen(true)}
+            disabled={role=='Employe'?true:false}
           >
             <IoAddOutline size={18} />
             Add Category

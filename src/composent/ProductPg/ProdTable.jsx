@@ -54,7 +54,9 @@ const BarcodeDisplay = ({ value }) => {
   }, [value]);
   return <svg ref={barcodeRef} className="mx-auto"></svg>;
 };
-
+//Get user 
+// const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
+// const Admin =user==='admin'
 export default function ProdTable() {
   const Dispatch = useDispatch();
   const printRef = useRef();
@@ -68,7 +70,7 @@ export default function ProdTable() {
 const handlePrint = useReactToPrint({
   contentRef: printRef, // Use contentRef instead of content callback
   documentTitle: `Barcodes_${selectedProduct?.name}`,
-});
+}); 
 
   const InfoItem = ({ icon, label, value, subValue, subColor = "text-gray-400" }) => (
     <div className="flex gap-3">
@@ -146,8 +148,10 @@ function handleopenUpdate(id){
                     <span style={{ color: isLowStock ? "#ff4d4d" : "azure" }}>{item.quantite}</span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-3" onClick={()=>handleopenUpdate(item._id)}>
-                      <CiEdit size={22} className="text-sky-500 cursor-pointer" />
+                    <div className="flex justify-center gap-3" >
+                      <CiEdit size={22} className="text-sky-500 cursor-pointer"
+                      onClick={()=>handleopenUpdate(item._id)}
+                      />
                       <IoInformationCircleOutline
                         size={22}
                         className="text-amber-500 cursor-pointer hover:scale-110"

@@ -1,7 +1,9 @@
 import { IoCreateOutline, IoTrashOutline, IoInformationCircleOutline, IoCalendarOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 function CardCategories(props) {
   const { name, Datee,btn ,id,update} = props;
+  const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
 
   // Format Date to a readable format
   const formattedDate = new Date(Datee).toLocaleDateString("fr-FR", {
@@ -29,6 +31,7 @@ function CardCategories(props) {
       </p>
 
       {/* Actions */}
+{role=="admin"&&
       <div className="flex items-center gap-4">
         <button className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition"
         onClick={()=>update(id)}
@@ -45,7 +48,7 @@ function CardCategories(props) {
         </button>
 
     
-      </div>
+      </div>}
     </div>
   );
 }

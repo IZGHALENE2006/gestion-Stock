@@ -6,7 +6,7 @@ export const CreateProduct = async (req, res) => {
         const { name, quantite, barcode, prix_achat, prix_vente, categorie, fournisseur, datecreate, status } = req.body;
 
         const newProduct = await ProductModel.create({
-            idAdmin: req.user.id,
+            idAdmin: req.user.idAdmin,
             name,
             quantite: Number(quantite), 
             barcode,
@@ -27,7 +27,7 @@ export const CreateProduct = async (req, res) => {
 //get All Product
 export const AllProduct = async (req, res) => {
     try {
-        const products = await ProductModel.find({ idAdmin: req.user.id });
+        const products = await ProductModel.find( {idAdmin: req.user.idAdmin});
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });

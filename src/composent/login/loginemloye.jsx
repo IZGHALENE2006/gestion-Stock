@@ -1,11 +1,15 @@
 import { Link, useNavigate } from "react-router";
 import { FaUser } from "react-icons/fa";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "../../slices/SliceLoginAdmin";
+
+import SuspendedDialog from "../Dialog/SuspendedDialog";
 function LoginEmploye() {
   const dispatch = useDispatch()
   const Nav = useNavigate()
+const [showDialog, setShowDialog] = useState(false);
+const { user, role,token,loading,error } = useSelector(state => state.LoginAdmin);
 
     const [infoEmp,setInfoEmp] = useState({email:"",password:""})
  function HandeleLohinEmp(e){
@@ -24,8 +28,10 @@ function LoginEmploye() {
           .unwrap().then(()=>{
              Nav('/Home/Dashboard')
           }).catch((err)=>{
-          console.log(err);
-          
+         
+          if(err=='Votre compte a été temporairement suspendu'){
+            setShowDialog(true)
+          }
           })
         
          }
@@ -71,15 +77,21 @@ function LoginEmploye() {
               hover:bg-[#2C74B3] hover:shadow-lg
             "
           >
-            Login
+          {loading?'Login...':"Login"}
           </button>
-
+          {error&&<span className="text-red-500">{error}</span>}
           {/* Admin switch */}
           <Link  to='/LoginAdmin'className="text-sm text-center text-[#2C74B3] hover:underline">
             Login as Admin?
           </Link>
+
         </form>
       </div>
+   <SuspendedDialog
+  open={showDialog} 
+  onClose={() => setShowDialog(false)} 
+/>
+
     </div>
   );
 }
