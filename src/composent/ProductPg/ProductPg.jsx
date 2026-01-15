@@ -10,8 +10,8 @@ import { useSelector } from "react-redux";
 
 export default function ProductPg() {
   const { Produts, loading } = useSelector((state) => state.Product);
-  const { user } = useSelector((state) => state.LoginAdmin);
 
+  const { user, role,token, } = useSelector(state => state.LoginAdmin);
  
   const Total = Produts.reduce((somme, item) => {
     return somme += item.prix_achat;
@@ -68,7 +68,18 @@ export default function ProductPg() {
           <div>
             <h1 className="text-slate-400 text-sm font-medium">Total Inventory Value</h1>
             <h1 className="text-3xl font-bold text-emerald-400">
-              {Total.toLocaleString()} <span className="text-sm font-normal text-slate-400">dh</span>
+            {role === 'admin' ? (
+  <>
+    {Total.toLocaleString()}
+    <span className="text-sm font-normal text-slate-400"> dh</span>
+  </>
+) : (
+  <div className="flex justify-center items-center gap-2">
+   <div className="mt-2">****</div> <div>dh</div>
+     
+  </div>
+)}
+
             </h1>
           </div>
         </div>

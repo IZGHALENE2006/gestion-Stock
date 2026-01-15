@@ -15,6 +15,7 @@ export default function ProductList() {
        Dispatch(GetAllCatefory());
      }, [Dispatch]);
   const Categories = ["categorie1","categorie2","categorie3","categorie4"]
+  const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
 
 
 
@@ -78,13 +79,14 @@ export default function ProductList() {
   </div>
 
   {/* RIGHT */}
+{role=='admin'&&
   <button
     onClick={() => setOpen(true)}
     className="px-5 py-2 bg-[#2C74B3] text-white rounded-lg text-sm
                hover:bg-white hover:text-[#2C74B3] transition"
   >
     + Add Product
-  </button>
+  </button> }
 
 </div>
 

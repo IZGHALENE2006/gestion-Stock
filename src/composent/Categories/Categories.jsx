@@ -59,8 +59,8 @@ function Categories() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col md:flex-row items-center gap-4 bg-[#1e293b] border border-slate-700 rounded-2xl p-5">
-          <div className="flex items-center bg-[#0f172a] border border-slate-600 rounded-lg overflow-hidden w-full md:w-2/3">
+        <div className="flex-1 flex flex-col md:flex-row items-center gap-4 bg-[#1e293b] border border-slate-700 rounded-2xl p-5 ">
+          <div className={`flex items-center bg-[#0f172a] border border-slate-600 rounded-lg overflow-hidden w-full md:${role=='admin'?"w-2/3":"w-3/3"}`}>
             <span className="px-3 text-slate-400">
               <IoSearchOutline />
             </span>
@@ -71,14 +71,16 @@ function Categories() {
             />
           </div>
 
+   {role=='admin'&&
      <button
             className="flex items-center gap-2 px-5 py-2 bg-[#2C74B3] rounded-lg text-sm hover:bg-white hover:text-[#2C74B3] transition"
             onClick={() => setOpen(true)}
-            disabled={role=='Employe'?true:false}
+                
           >
             <IoAddOutline size={18} />
             Add Category
           </button>
+   }
         </div>
       </div>
 

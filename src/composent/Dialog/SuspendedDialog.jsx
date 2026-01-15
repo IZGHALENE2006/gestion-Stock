@@ -1,4 +1,5 @@
 import { IoCloseOutline } from "react-icons/io5";
+import { FaLock } from "react-icons/fa";
 
 export default function SuspendedDialog({ open, onClose }) {
   if (!open) return null;
@@ -17,7 +18,7 @@ export default function SuspendedDialog({ open, onClose }) {
 
         {/* Title */}
         <h2 className="text-xl font-bold text-red-600 mb-3">
-          🔒 Compte suspendu
+          <FaLock /> Compte suspendu
         </h2>
 
         {/* Message */}

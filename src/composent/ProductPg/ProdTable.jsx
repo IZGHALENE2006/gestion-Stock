@@ -12,6 +12,7 @@ import {
   HiOutlineTrendingUp
 } from "react-icons/hi";
 import { FaPrint } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 
 import toast, { Toaster } from 'react-hot-toast';
 import { useReactToPrint } from "react-to-print";
@@ -114,6 +115,7 @@ function handleopenUpdate(id){
   useEffect(() => {
     Dispatch(GetAllProduct());
   }, [Dispatch]);
+  const { user, role,token } = useSelector(state => state.LoginAdmin);
 
   if (loading) return <p className="p-10 text-center">Loading...</p>;
 
@@ -148,21 +150,36 @@ function handleopenUpdate(id){
                     <span style={{ color: isLowStock ? "#ff4d4d" : "azure" }}>{item.quantite}</span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-3" >
-                      <CiEdit size={22} className="text-sky-500 cursor-pointer"
-                      onClick={()=>handleopenUpdate(item._id)}
-                      />
-                      <IoInformationCircleOutline
-                        size={22}
-                        className="text-amber-500 cursor-pointer hover:scale-110"
-                        onClick={() => HandleOpenInfo(item)}
-                      />
-                      <MdDeleteOutline
-                        size={22}
-                        className="text-red-500 cursor-pointer"
-                        onClick={() => HandleOpenDelete(item._id)}
-                      />
-                    </div>
+               {role === "admin" ? (
+    <div className="flex justify-center gap-3">
+      <CiEdit
+        size={22}
+        className="text-sky-500 cursor-pointer hover:scale-110 transition"
+        onClick={() => handleopenUpdate(item._id)}
+      />
+
+      <IoInformationCircleOutline
+        size={22}
+        className="text-amber-500 cursor-pointer hover:scale-110 transition"
+        onClick={() => HandleOpenInfo(item)}
+      />
+
+      <MdDeleteOutline
+        size={22}
+        className="text-red-500 cursor-pointer hover:scale-110 transition"
+        onClick={() => HandleOpenDelete(item._id)}
+      />
+    </div>
+  ) : (
+    <div className="flex justify-center items-center text-gray-400">
+      <span
+        className="text-xl cursor-not-allowed"
+        title="Accès réservé à l’admin"
+      >
+        <FaLock />
+      </span>
+    </div>
+  )}
                   </td>
                 </tr>
               );
