@@ -1,8 +1,6 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { MdDeleteForever, MdDeleteOutline, MdPrint } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
-import { DeleteProduit, GetAllProduct } from "../../slices/SliceProduct";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef, forwardRef } from "react";
 import ConfirmDelete from "../Dialog/ConfirmDelete";
 import Dialog from "../Dialog/Dialog";
@@ -17,6 +15,8 @@ import { FaLock } from "react-icons/fa";
 import toast, { Toaster } from 'react-hot-toast';
 import { useReactToPrint } from "react-to-print";
 import JsBarcode from "jsbarcode";
+import { useDispatch, useSelector } from "react-redux";
+import { DeleteProduit, GetAllProduct } from "../../slices/SliceProduct";
 import UpdateProduit from "./updateProduit";
 
 // Separate component for the printable area to avoid style conflicts

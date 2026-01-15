@@ -5,7 +5,7 @@
 }
 .caise{
         font-family: "Saira", sans-serif;
-
+        overflow: hidden;
 }
 
 .CaisseCard::before {

@@ -7,8 +7,28 @@ import CaisseSection from "./Section";
 import RightSidebar from "./RightSidebar";
 
 function LaCaisse() {
-  const [cart] = useState([]); // In a real app, this would come from context/Redux
-  const containerRef = useRef(null);
+  
+const [cart, setCart] = useState([]);
+
+  const handleAddToCart = (product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product._id);
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.id === product._id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [
+        ...prevCart,
+        {
+          id: product._id,
+          name: product.name,
+          price: product.prix_vente,
+          qty: 1,
+        },
+      ];
+    });
+  };  const containerRef = useRef(null);
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
@@ -16,7 +36,6 @@ function LaCaisse() {
         y: 20, 
         opacity: 0, 
         duration: 0.5, 
-        stagger: 0.05, 
         ease: "power2.out" 
       });
       gsap.from(".ticket-section", { 
@@ -28,17 +47,14 @@ function LaCaisse() {
       });
     }, containerRef);
     
-    return () => ctx.revert(); // Cleanup is crucial for performance
+    return () => ctx.revert(); 
   }, []);
 
-  // Memoize static sidebars if they don't depend on changing state
-  const memoizedSidebar = useMemo(() => <RightSidebar />, []);
-
+  const clearCart = () => setCart([]);
   return (
     <div ref={containerRef} className="caise p-6 bg-[#0f172a] min-h-screen text-white flex flex-col gap-6 font-sans antialiased">
       <Toaster position="top-center" />
       
-      {/* Dashboard Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <TopCard className="stat-card" title="Commandes" value="2" color="text-blue-400" icon={<IoCartOutline size={22}/>} />
         <TopCard className="stat-card" title="CA Total" value="68 DH" color="text-green-400" icon={<IoCashOutline size={22}/>} />
@@ -47,8 +63,8 @@ function LaCaisse() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 flex-1">
-        <CaisseSection cart={cart} />
-        {memoizedSidebar}
+        <CaisseSection cart={cart} onAddToCart={handleAddToCart} onClearCart={clearCart} />
+        <RightSidebar panierItems={cart}/>
       </div>
     </div>
   );

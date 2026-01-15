@@ -4,18 +4,23 @@ import toast, { Toaster } from "react-hot-toast";
 import gsap from "gsap";
 import { useDispatch, useSelector } from "react-redux";
 import { getMe } from "../../slices/SliceLoginAdmin";
+import { GetAllProduct } from "../../slices/SliceProduct";
 import LiveClock from "./DateTime"
-export default function CaisseSection({ cart = [] }) {
-  const { user, role, token } = useSelector((state) => state.LoginAdmin);
-  const dispatch = useDispatch();
+import ProductCard from "./ProductCard";
 
+export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
+  const { user, token } = useSelector((state) => state.LoginAdmin);
+  const { Produts, loading } = useSelector((state) => state.Product); 
+  const dispatch = useDispatch();
   const [amountPaid, setAmountPaid] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); 
   const sectionRef = useRef(null);
 
   useEffect(() => {
     if (token && !user) {
       dispatch(getMe());
     }
+    dispatch(GetAllProduct());
   }, [token, dispatch, user]);
 
   const cashValues = [
@@ -25,22 +30,30 @@ export default function CaisseSection({ cart = [] }) {
     { label: "200 DH", value: 200, img: "/200dh.png", color: "#1a8099" },
   ];
 
+  const filteredProducts = Produts?.filter(p => 
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    p.barcode?.includes(searchTerm)
+  );
+
+
+  function Khless() {
+      if(cart.length === 0) return toast.error("Le panier est vide"); 
+      if(changeToReturn < 0) return toast.error("Montant insuffisant"); 
+      toast.success("Vente enregistrée avec succès");
+      setAmountPaid("");
+      // BackEnd Mehdi....
+  }
+
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
   const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
 
-  // Initial Entrance Animation
- 
-
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
-    
-    // Amount Pop Animation with Dynamic Color
     gsap.fromTo(".amount-display", 
       { scale: 1.15, color: color }, 
       { scale: 1, color: "#2C74B3", duration: 0.5, ease: "elastic.out(1, 0.3)" }
     );
 
-    // Button Feedback
     gsap.to(target, {
       scale: 0.92,
       duration: 0.1,
@@ -54,17 +67,16 @@ export default function CaisseSection({ cart = [] }) {
       <div className="p-5 border-b border-slate-700 bg-[#2C74B3]/10 flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold uppercase tracking-wider">
-            <span className="font-semibold">La Caisse De : </span>
-             {user?.name || "User"}
-            </h2>
-          <p className="text-xs text-slate-400">{user?.role.toUpperCase()} {" "}• {new Date().toLocaleDateString()}{" "}• <LiveClock /></p>
-             
+            <span className="font-semibold text-white">La Caisse De : </span>
+            <span className="text-white">{user?.name || "User"}</span>
+          </h2>
+          <p className="text-xs text-slate-400">{user?.role?.toUpperCase()} {" "}• {new Date().toLocaleDateString()}{" "}• <LiveClock /></p>
         </div>
         <div className="relative">
           <IoCartOutline size={30} className="text-[#2C74B3]" />
-          {cart.length > 0 && (
-             <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-bold px-1.5 rounded-full">
-               {cart.length}
+          {Produts.length > 0 && (
+             <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-bold px-1.5 rounded-full text-white">
+               {Produts.length}
              </span>
           )}
         </div>
@@ -76,24 +88,43 @@ export default function CaisseSection({ cart = [] }) {
           <input 
             type="text" 
             placeholder="Rechercher des produits..." 
-            className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm text-white" 
           />
         </div>
       </div>
 
-      <div className="flex-1 p-4 space-y-2 overflow-y-auto min-h-75 scrollbar-hide">
-        {cart.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-slate-500 italic opacity-50">
+      <div className="flex-1 p-4 space-y-2 max-h-120 min-h-75 overflow-y-scroll">
+        {searchTerm.length > 0 ? (
+          filteredProducts?.map((product) => (
+            <div 
+              key={product._id} 
+              onClick={() => { onAddToCart(product); setSearchTerm(""); }}
+              className="flex justify-between items-center p-3 bg-slate-800 hover:bg-[#2C74B3]/20 rounded-lg border border-slate-600 cursor-pointer transition-colors"
+            >
+                <div className="flex flex-col">
+                 <span className="font-medium text-white">{product.name}</span>
+                 <span className="text-[10px] text-slate-400">Stock: {product.quantite}</span>
+                </div>
+                <span className="font-bold text-[#2C74B3]">{product.prix_vente} DH</span>
+            </div>
+          ))
+        ) : Produts.length === 0 ? ( 
+          <div className="h-full overflow-y-scroll flex flex-col items-center justify-center text-slate-500 italic opacity-50">
             <IoCartOutline size={48} className="mb-2" />
             <p>Panier vide</p>
           </div>
         ) : (
-          cart.map(item => (
-            <div key={item.id} className="flex justify-between items-center p-3 bg-[#0f172a] rounded-lg border border-slate-700">
-               <span className="font-medium">{item.name}</span>
-               <span className="font-bold text-[#2C74B3]">{item.price * item.qty} DH</span>
-            </div>
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+             {Produts?.map((item, index) => (
+               <ProductCard 
+                 key={item._id} 
+                 item={item} 
+                 click={() => onAddToCart(item)} 
+               />
+             ))}
+          </div>
         )}
       </div>
 
@@ -139,13 +170,10 @@ export default function CaisseSection({ cart = [] }) {
               className="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 ease-out scale-110 group-hover:scale-125"
               style={{ backgroundImage: `url(${cash.img})` }}
             />
-
             <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-colors duration-300" />
-
             <span className="relative z-10 text-lg font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase">
               {cash.label}
             </span>
-            
             <div 
               className="absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity bg-linear-to-b pointer-events-none" 
               style={{ backgroundImage: `linear-gradient(to top, ${cash.color}66, transparent)` }}
@@ -157,20 +185,14 @@ export default function CaisseSection({ cart = [] }) {
       <div className="p-4 pt-0">
         <button 
             onClick={() => {
-                if(totalOrder === 0) return toast.error("Le panier est vide");
-                toast.success("Vente enregistrée avec succès");
-                setAmountPaid("");
+              Khless()
             }} 
-            className="
-            bg-linear-to-r from-[#2C74B3] via-[#fffcf662] via-[#fffcf662] to-[#2C74B3]
-                bg-size-[300%_auto]
-                transition-all duration-1000 ease-in-out
-                hover:bg-right
-            w-full bg-[#2C74B3] hover:bg-[#3b82f6] py-5 rounded-2xl font-black text-lg tracking-widest active:scale-[0.98] shadow-xl shadow-blue-500/20"
+            className="bg-linear-to-r from-[#2C74B3] via-[#fffcf662] to-[#2C74B3] bg-size-[300%_auto] transition-all duration-1000 ease-in-out hover:bg-right w-full py-5 rounded-2xl font-black text-lg tracking-widest active:scale-[0.98] shadow-xl shadow-blue-500/20 text-white"
         >
             CONFIRMER LA VENTE
         </button>
       </div>
+      <Toaster />
     </div>
   );
 }
