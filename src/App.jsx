@@ -10,6 +10,7 @@ import ProductPg from './composent/ProductPg/ProductPg'
 import Categories from './composent/Categories/Categories'
 import EmployeesPage from './composent/employe/employe'
 import {EmployeeDashboard} from "./composent/employe/EmployeeDashboard"
+import Caisse from "./composent/La Caisse/Caisse"
 function App() {
  
 
@@ -27,7 +28,7 @@ function App() {
         <Route path='Categories' element={<Categories/>}/>
         <Route path='products' element={  <ProductPg />} />
         <Route path='Dashboard' element={""} />
-        <Route path='sell' element={""} />
+        <Route path='Caisse' element={<Caisse />} />
         <Route path='profits' element={""} />
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>
