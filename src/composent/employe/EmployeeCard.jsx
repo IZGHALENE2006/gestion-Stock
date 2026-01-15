@@ -15,6 +15,7 @@ import {
 } from "react-icons/io5";
 
 export const EmployeeCard = ({ employee }) => {
+  const [activeStatus, setActiveStatus] = useState(employee.isActive);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   
@@ -129,41 +130,77 @@ export const EmployeeCard = ({ employee }) => {
         </div>
 
         <div className="absolute inset-0 bg-white rounded-3xl p-6 flex flex-col shadow-2xl" style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden" }}>
-          <div className="flex items-center gap-2 mb-6">
-            <IoPencil className="text-slate-400" />
-            <h4 className="text-slate-800 text-xs font-black uppercase tracking-widest">Update Profile</h4>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
-           {[
-  { label: "Name", val: employee.name, icon: <IoPersonOutline />, type: "text" },
-  { label: "Email", val: employee.email, icon: <IoMailOutline />, type: "email" },
-  { label: "Phone", val: employee.phone, icon: <IoCallOutline />, type: "tel" },
-  { label: "CIN", val: employee.cin, icon: <IoFingerPrintOutline />, type: "text" },
-  { label: "Password", val: employee.password, icon: <IoEyeOffOutline />, type: "password" }
-].map((f, i) => (
-  <div key={i} className="group">
-    <label className="text-[9px] text-slate-400 font-bold uppercase flex items-center gap-1 mb-1">
-      {f.icon} {f.label}
-    </label>
-    <input 
-      type={f.type} 
-      onPointerDown={stopProp}
-      className="w-full border-b-2 border-slate-100 py-1 text-slate-800 text-sm font-semibold outline-none focus:border-slate-800 transition-colors" 
-      defaultValue={f.val} 
-    />
+  <div className="flex items-center gap-2 mb-6">
+    <IoPencil className="text-slate-400" />
+    <h4 className="text-slate-800 text-xs font-black uppercase tracking-widest">Update Profile</h4>
   </div>
-))}
-          </div>
+  
+  <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+    {/* Standard Inputs */}
+    {[
+      { label: "Name", val: employee.name, icon: <IoPersonOutline />, type: "text" },
+      { label: "Role", val: employee.role, icon: <IoPencil />, type: "text" }, // Added Role
+      { label: "Email", val: employee.email, icon: <IoMailOutline />, type: "email" },
+      { label: "Phone", val: employee.phone, icon: <IoCallOutline />, type: "tel" },
+      { label: "CIN", val: employee.cin, icon: <IoFingerPrintOutline />, type: "text" },
+      { label: "Password", val: employee.password, icon: <IoEyeOffOutline />, type: "password" }
+    ].map((f, i) => (
+      <div key={i} className="group">
+        <label className="text-[9px] text-slate-400 font-bold uppercase flex items-center gap-1 mb-1">
+          {f.icon} {f.label}
+        </label>
+        <input 
+          type={f.type} 
+          onPointerDown={stopProp}
+          className="w-full border-b-2 border-slate-100 py-1 text-slate-800 text-sm font-semibold outline-none focus:border-slate-800 transition-colors" 
+          defaultValue={f.val} 
+        />
+      </div>
+    ))}
 
-          <button 
-            onPointerDown={toggleFlip} 
-            className="mt-6 w-full py-4 text-white rounded-2xl text-xs font-bold shadow-lg hover:brightness-110 transition-all"
-            style={{ backgroundColor: employee.color }}
-          >
-            CONFIRM CHANGES
-          </button>
-        </div>
+    {/* Status Toggle (Active/Inactive) */}
+<div className="group pt-2">
+  <label className="text-[9px] text-slate-400 font-bold uppercase flex items-center gap-1 mb-2">
+    <IoCheckmarkCircleOutline /> Account Status
+  </label>
+  
+  <div 
+    className="flex items-center gap-3 cursor-pointer select-none"
+    onPointerDown={(e) => {
+      stopProp(e);
+      setActiveStatus(!activeStatus);
+    }}
+  >
+    {/* The Switch Track */}
+    <div 
+      className="relative w-11 h-6 rounded-full transition-colors duration-200"
+      style={{ 
+        backgroundColor: activeStatus ? employee.color : '#cbd5e1' 
+      }}
+    >
+      {/* The White Knob */}
+      <div 
+        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${
+          activeStatus ? 'translate-x-5' : 'translate-x-0'
+        }`}
+      />
+    </div>
+    
+    <span className="text-sm font-bold text-slate-700">
+      {activeStatus ? "Active" : "Offline"}
+    </span>
+  </div>
+</div>
+  </div>
+
+  <button 
+    onPointerDown={toggleFlip} 
+    className="mt-6 w-full py-4 text-white rounded-2xl text-xs font-bold shadow-lg hover:brightness-110 transition-all"
+    style={{ backgroundColor: employee.color }}
+  >
+    CONFIRM CHANGES
+  </button>
+</div>
       </div>
     </div>
   );
