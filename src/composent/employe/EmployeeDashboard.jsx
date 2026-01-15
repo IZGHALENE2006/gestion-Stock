@@ -3,154 +3,158 @@ import { gsap } from 'gsap';
 import { Draggable } from 'gsap/dist/Draggable';
 import { IoTrashOutline } from "react-icons/io5";
 import { EmployeeCard } from "./EmployeeCard";
-import "./emp.css"
-import EmployeeSearch from "./EmployeeSearch"
+import "./emp.css";
+import EmployeeSearch from "./EmployeeSearch";
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteEmploye, GetAllEmploye } from '../../slices/sliceEmploye';
+
 gsap.registerPlugin(Draggable);
 
 export const EmployeeDashboard = () => {
+  const dispatch = useDispatch();
+
   
-  const [deleteopen , setdeleteopen] = useState(false)
-//Get Dispatch
- const dispatch = useDispatch()
-//get state 
-
-useEffect(()=>{
-  dispatch(GetAllEmploye())
-},[dispatch])
-//List Enploye
-const {Employe} = useSelector((state)=>state.Employe)
-
-// map ayoube {Employe}
-
-//Logic delete 
-const [iddelete,setiddelete] = useState("")
-// function Handelegetiddletecard(id){
-// setiddelete(id)
-// }
-
-
-// function HandledeleteEmp(){
-//   dispatch(DeleteEmploye(iddelete))
-  
-// }
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   const containerRef = useRef(null);
   const deleteZoneRef = useRef(null);
 
+  const { Employe } = useSelector(state => state.Employe);
+
+  useEffect(() => {
+    dispatch(GetAllEmploye());
+  }, [dispatch]);
+
+  function confirmDelete() {
+    if (!pendingDelete) return;
+    gsap.to(pendingDelete.target, {
+      scale: 0,
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        dispatch(DeleteEmploye(pendingDelete.id));
+        setPendingDelete(null);
+        setConfirmOpen(false);
+      },
+    });
+  }
+
+  function cancelDelete() {
+    if (pendingDelete?.target) {
+      gsap.to(pendingDelete.target, {
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotate: "0deg",
+        opacity: 1,
+        duration: 0.4,
+        ease: "elastic.out(1, 0.75)",
+      });
+      pendingDelete.target.style.zIndex = 1;
+    }
+    setPendingDelete(null);
+    setConfirmOpen(false);
+  }
+
   useLayoutEffect(() => {
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".card-wrapper");
-      
-      cards.forEach((card) => {
+
+      cards.forEach(card => {
         Draggable.create(card, {
           type: "x,y",
           edgeResistance: 0.5,
-          dragClickables: false, 
-       onDragStart: function () {
-  const id = this.target.getAttribute("data-id");
-  setiddelete(id);
-
-  gsap.to(deleteZoneRef.current, {
-    scale: 1,
-    opacity: 1,
-    duration: 0.3,
-    bottom: "0px",
-    right: "0px",
-  });
-
-  this.target.style.zIndex = 50;
-},
-
-          onDrag: function() {
+          dragClickables: false,
+          onDragStart: function () {
+            gsap.to(deleteZoneRef.current, {
+              scale: 1,
+              opacity: 1,
+              duration: 0.3
+            });
+            this.target.style.zIndex = 50;
+          },
+          onDrag: function () {
             if (this.hitTest(deleteZoneRef.current, "50%")) {
-              gsap.to(deleteZoneRef.current, {  scale: 1});
-              setdeleteopen(false)
-              gsap.to(this.target,{
-                scale : 0.6,
-                rotate : "30deg",
-                opacity : .3
-              })
-                   
-
-              
+              setDeleteOpen(false);
+              gsap.to(this.target, { scale: 0.6, rotate: "30deg", opacity: 0.3 });
             } else {
-              gsap.to(deleteZoneRef.current, {  scale: 1  });
-              setdeleteopen(true)
-
-              gsap.to(this.target,{
-                scale : 1,
-                rotate : "0deg",
-                opacity : 1
-
-              })
+              setDeleteOpen(true);
+              gsap.to(this.target, { scale: 1, rotate: "0deg", opacity: 1 });
             }
           },
-       onDragEnd: function () {
-  gsap.to(deleteZoneRef.current, {
-    bottom: "-65px",
-    right: "-65px",
-    opacity: 0,
-  });
+          onDragEnd: function () {
+            gsap.to(deleteZoneRef.current, { scale: 0.75, opacity: 0.7, duration: 0.3 });
 
-  if (this.hitTest(deleteZoneRef.current, "50%")) {
-    dispatch(DeleteEmploye(this.target.getAttribute("data-id")));
-    console.log(this.target.getAttribute("data-id"));
-
-  } else {
-    gsap.to(this.target, {
-      x: 0,
-      y: 0,
-      duration: 0.5,
-      ease: "elastic.out(1, 0.75)",
-    });
-    this.target.style.zIndex = 1;
-  }
-}
-
+            if (this.hitTest(deleteZoneRef.current, "50%")) {
+              // Store pending delete and open modal
+              setPendingDelete({
+                id: this.target.getAttribute("data-id"),
+                target: this.target
+              });
+              this.target.style.zIndex = 1;
+              setConfirmOpen(true);
+            } else {
+              gsap.to(this.target, {
+                x: 0,
+                y: 0,
+                duration: 0.5,
+                ease: "elastic.out(1, 0.75)"
+              });
+              this.target.style.zIndex = 1;
+            }
+          }
         });
       });
     }, containerRef);
-    
+
     return () => ctx.revert();
   }, [Employe]);
 
-
-
   return (
-    
-
-
-
-
-
-
-
-    <div className="flex flex-col items-center p-2">
-      
+    <div className="flex flex-col items-center p-4">
       <EmployeeSearch />
 
-    
-
-      <div 
-        ref={containerRef} 
-        className="flex flex-wrap justify-center gap-8 max-w-6xl w-full"
-      >
-        {Employe.map((emp) => (
-          <div key={emp.id} className="card-wrapper" data-id={emp._id} >
-             <EmployeeCard employee={emp} />
+      {/* Employee cards */}
+      <div ref={containerRef} className="flex flex-wrap justify-center gap-8 max-w-6xl w-full">
+        {Employe.map(emp => (
+          <div key={emp._id} className="card-wrapper" data-id={emp._id}>
+            <EmployeeCard employee={emp} />
           </div>
         ))}
       </div>
 
-      <div 
-      id='deletezone'
-        ref={deleteZoneRef} 
-        className="fixed p-5 -bottom-45 -right-45 w-70 h-70 flex items-end justify-end opacity-0 transition-colors pointer-events-none"
+      {/* Trash zone */}
+      <div
+        ref={deleteZoneRef}
+        className={`fixed bottom-5 right-5 w-20 h-20 flex items-center justify-center bg-red-600 rounded-full text-white text-2xl shadow-lg transition-all duration-300 ${deleteOpen ? 'scale-100 opacity-100' : 'scale-75 opacity-70'}`}
       >
-        {deleteopen ? <IoTrashOutline size={30} color="white" />: <IoTrashOutline size={35} color="white" />}
+        <IoTrashOutline />
       </div>
+
+      {confirmOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-[320px] text-center">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">Delete Employee</h2>
+            <p className="text-sm text-gray-500 mb-6">Are you sure you want to delete this employee?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
