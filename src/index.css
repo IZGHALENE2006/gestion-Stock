@@ -20,7 +20,7 @@ body {
     );
 
   background-size: 200% 200%;
-  animation: smoothFlow 25s ease-in-out infinite;
+  /* animation: smoothFlow 25s ease-in-out infinite; */
 }
 
 /* Slow, liquid movement */
