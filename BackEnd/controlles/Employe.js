@@ -111,3 +111,27 @@ export const DeleteEmploye = async(req,res)=>{
              res.status(500).json({message:err.message})
       }
 }
+
+//Update Employe
+ export const  UpdateEmploye = async(req,res)=>{
+    const {id} = req.params
+    const {name,phone,cin,email,password,isActive} = req.body
+try{
+      const user = await EmployeModel.findOne({email,_id:{$ne:id}})
+    if(user) return res.status(400).json({message:"email if exite"})
+    const usercin = await EmployeModel.findOne({cin,_id:{$ne:id}})
+     if(usercin) return res.status(400).json({message:"cin if exite"})
+     
+    const newEmploye = await EmployeModel.findByIdAndUpdate(id,
+      {
+        name,phone,cin,email,password,isActive
+      }
+    )
+     if(!newEmploye) return res.status(404).json({message:"Not Found"})
+      res.status(200).json(newEmploye)
+}catch(err){
+  res.status(500).json({message:err.message})
+}
+   
+   
+ }

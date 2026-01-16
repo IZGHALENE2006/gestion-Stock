@@ -117,7 +117,7 @@ export const EmployeeDashboard = () => {
       <EmployeeSearch />
 
       {/* Employee cards */}
-      <div ref={containerRef} className="flex flex-wrap justify-center gap-8 max-w-6xl w-full">
+      <div ref={containerRef} className="flex flex-wrap justify-start gap-8 max-w-6xl w-full">
         {Employe.map(emp => (
           <div key={emp._id} className="card-wrapper" data-id={emp._id}>
             <EmployeeCard employee={emp} />
