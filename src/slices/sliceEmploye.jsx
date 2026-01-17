@@ -58,6 +58,28 @@ export const DeleteEmploye = createAsyncThunk("DeleteEmploye",async(id,{rejectWi
     )
    }
 })
+//UpdateEmploye
+  export const UpdateEmploye = createAsyncThunk("UpdateEmploye",async(data,{rejectWithValue})=>{
+    const Token = localStorage.getItem("token")
+    const {id}  = data
+  console.log(data);
+  
+    
+    
+    try{
+          const res = await axios.put(`http://localhost:7000/Employe/Update/${id}`,data.newinfoEmp,{
+          headers:{
+              Authorization:`Bearer ${Token}`
+          }
+      })
+      return res.data
+    }catch(err){
+      return rejectWithValue(
+          err.response?.data?.message || "Server error"
+            
+      )
+    }
+})
 const initialstate = {
     Employe :[],
     loading:false,
@@ -114,6 +136,23 @@ const SliceEmploye = createSlice(
             state.Employe =state.Employe.filter((t)=>t._id!==action.payload._id)
           })
           .addCase(DeleteEmploye.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.payload
+           
+          })
+
+             //UpdateEmploye
+               bulder
+          .addCase(UpdateEmploye.pending,(state)=>{
+            state.loading = true
+            state.error = null
+          })
+           .addCase(UpdateEmploye.fulfilled,(state,action)=>{
+            state.loading = false
+            state.error = null
+   const index = state.Employe.findIndex(t => t._id === action.payload._id);
+    if (index !== -1) state.Employe[index] = action.payload;          })
+          .addCase(UpdateEmploye.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload
            

@@ -17,7 +17,7 @@ export default function RightSidebar({ panierItems = [] }) {
   );
 
   return (
-    <div className="w-full lg:w-112.5 flex flex-col gap-6">
+    <div className="w-full lg:w-112.5 flex flex-col gap-6 ">
       <div className="bg-[#1e293b] p-5 rounded-2xl border border-slate-700">
         <h3 className="text-xs font-bold text-slate-400 uppercase mb-4 flex items-center gap-2">
           <IoFlashOutline size={20} className="text-yellow-400" /> Fonctions Système
