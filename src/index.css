@@ -18,7 +18,7 @@ body {
       #09223d,
       #0A2647
     );
-
+    overflow-x: hidden;
   background-size: 200% 200%;
   /* animation: smoothFlow 25s ease-in-out infinite; */
 }
