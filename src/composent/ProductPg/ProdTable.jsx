@@ -125,10 +125,11 @@ function handleopenUpdate(id){
         <table className="w-full text-sm text-left text-gray-300">
           <thead className="text-xs uppercase bg-[#2C74B3] text-white">
             <tr>
-              <th scope="col" className="px-6 py-3">Product name</th>
+              <th scope="col" className="px-6 py-3">Nom Produit</th>
               <th scope="col" className="px-6 py-3">Status</th>
-              <th scope="col" className="px-6 py-3">Buy Price</th>
-              <th scope="col" className="px-6 py-3">Category</th>
+              <th scope="col" className="px-6 py-3">Prix_achat</th>
+              <th scope="col" className="px-6 py-3">Prfite</th>
+              <th scope="col" className="px-6 py-3">Categorie</th>
               <th scope="col" className="px-6 py-3">Quantity</th>
               <th scope="col" className="px-6 py-3 text-center">Actions</th>
             </tr>
@@ -136,6 +137,7 @@ function handleopenUpdate(id){
           <tbody>
             {Produts && Produts.map((item, index) => {
               const isLowStock = item.quantite < 10;
+             
               return (
                 <tr key={item._id || index} className="border-b border-gray-500 hover:bg-[#2C74B3]/35 transition-colors">
                   <td className="px-6 py-4 font-medium text-white">{item.name}</td>
@@ -145,6 +147,7 @@ function handleopenUpdate(id){
                     </span>
                   </td>
                   <td className="px-6 py-4">{item.prix_achat ? item.prix_achat.toFixed(2) : "0.00"} Dh</td>
+                  <td className="px-6 py-4">{item.profite ? item.profite.toFixed(2) : "0.00"} Dh</td>
                   <td className="px-6 py-4">{item.categorie}</td>
                   <td className="px-6 py-4 font-bold">
                     <span style={{ color: isLowStock ? "#ff4d4d" : "azure" }}>{item.quantite}</span>

@@ -32,11 +32,31 @@ const ShemaEmploye = new mongoose.Schema(
        datecreate:{
         type:Date,
         default:new Date()
-       }
+       },
+           ventes:[
+                        {
+                       
+                           idProduct :{
+                            type:mongoose.Schema.Types.ObjectId,
+                            ref:"Products"
+                           },
+                           name:String,
+                           nameEmp:String,
+
+                           price:Number,
+
+                           quantite:Number,
+                           profite : Number,
+                           DateVante :{
+                            type:Date,
+                            default:Date.now
+
+                           }
+       
+                       }
+                   ]
+       
     }
 )
-ShemaEmploye.pre("save", async function () {
-  if (!this.isModified("password")) return;
-  this.password = await bcrypt.hash(this.password, 10);
-});
+
 export default mongoose.model('Employes',ShemaEmploye)

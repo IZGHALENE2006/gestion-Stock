@@ -9,6 +9,9 @@ import CategoryRoute from './Routes/CategoryRoute.js'
 import EmployeRoute from './Routes/EmployeRoute.js'
 //import getme
 import GetMeRoute from './Routes/getMeRoute.js'
+// impotr ventes
+import ventesRoute from './Routes/routeVents.js'
+
 const app = express()
 
  app.use(cors())
@@ -19,6 +22,7 @@ const app = express()
    app.use('/Category',CategoryRoute)
    app.use('/Employe',EmployeRoute)
    app.use('/user',GetMeRoute)
+   app.use('/addVentes',ventesRoute)
 
 
 export default app

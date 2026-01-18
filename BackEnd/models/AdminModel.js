@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { data } from "react-router";
 const AdminShema = new mongoose.Schema(
         {
             name:String,
@@ -8,7 +9,28 @@ const AdminShema = new mongoose.Schema(
             role:{
               type:String,
               default:"admin"
-            }
+            },
+           ventes:[
+                       {
+                       
+                           idProduct:{
+                            type:mongoose.Schema.Types.ObjectId,
+                            ref:"Products"
+                           },
+                           name:String,
+
+                           price:Number,
+                           quantite:Number,
+                           profite : Number,
+                           DateVante :{
+                            type:Date,
+                            default:Date.now
+
+                           }
+       
+                       }
+                   ]
+
         }
 )
 AdminShema.pre("save", async function () {

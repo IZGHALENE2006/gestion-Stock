@@ -7,6 +7,8 @@ import { getMe } from "../../slices/SliceLoginAdmin";
 import { GetAllProduct } from "../../slices/SliceProduct";
 import LiveClock from "./DateTime"
 import ProductCard from "./ProductCard";
+import { addVentes } from "../../slices/SliceLoginAdmin"; 
+import BarcodeScannerWithButton from "../Ventes/BarcodeScannerWithButton";
 
 export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
   const { user, token } = useSelector((state) => state.LoginAdmin);
@@ -36,17 +38,31 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
   );
 
 
-  function Khless() {
-      if(cart.length === 0) return toast.error("Le panier est vide"); 
-      if(changeToReturn < 0) return toast.error("Montant insuffisant"); 
-      toast.success("Vente enregistrée avec succès");
-      setAmountPaid("");
-      // BackEnd Mehdi....
+async function Khless() {
+  if (cart.length === 0) return toast.error("Le panier est vide");
+  if (changeToReturn < 0) return toast.error("Montant insuffisant");
+
+  try {
+
+
+    await dispatch(addVentes({cart})).unwrap();
+    toast.success("Vente enregistrée avec succès");
+    onClearCart();
+    setAmountPaid("");
+  } catch (err) {
+    toast.error(
+      typeof err === "string" ? err : err?.message || "Erreur serveur"
+    );
   }
+}
+
+    
+  
+console.log(cart);
 
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
   const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
-
+  
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
     gsap.fromTo(".amount-display", 
@@ -81,6 +97,8 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           )}
         </div>
       </div>
+{/* ///////////serache */}
+        <BarcodeScannerWithButton/>
 
       <div className="p-4">
         <div className="relative">

@@ -1,6 +1,7 @@
 import EmployeModel from '../models/EmployeModele.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import productModel from '../models/productModel.js'
 
 //Add Employe 
 
@@ -59,8 +60,7 @@ export const LoginEmploye = async (req, res) => {
       return res.status(404).json({ message: "Email incorrect" });
     }
 
-    const isMatch = await bcrypt.compare(password, employe.password);
-    if (!isMatch) {
+    if (employe.password!==password) {
       return res.status(404).json({ message: "Password incorrect" });
     }
 
@@ -135,3 +135,4 @@ try{
    
    
  }
+

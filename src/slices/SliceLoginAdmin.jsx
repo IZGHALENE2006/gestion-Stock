@@ -43,6 +43,26 @@ export const getMe = createAsyncThunk(
   }
 );
 
+    ////////////////////////////@@@@@@@@@@@Add Ventes///////////////////
+    export const addVentes = createAsyncThunk("addVentes",async(data,{rejectWithValue})=>{
+      const Token = localStorage.getItem("token")
+      console.log(data);
+      
+      try{
+            const res = await axios.post("http://localhost:7000/addVentes",data,{
+            headers:{
+                Authorization:`Bearer ${Token}`
+           
+            }
+        })
+        return res.data
+      }catch(err){
+        return rejectWithValue(
+            err.response?.data?.message || "Server error"
+              
+        )
+      }
+    })
 const initialState = {
   user: "",
   role: "",
@@ -86,6 +106,18 @@ const LoginAdminSlice = createSlice(
             state.role = action.payload.role
       
           })
+          bulder
+.addCase(addVentes.fulfilled, (state, action) => {
+  state.loading = false;
+  state.error = null;
+
+  if (state.user?.ventes && action.payload?.lastVentes) {
+    state.user.ventes.push(...action.payload.lastVentes);
+  }
+});
+
+
+
          }
     }
 )

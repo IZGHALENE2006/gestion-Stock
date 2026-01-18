@@ -13,7 +13,7 @@ export default function ProductCard({ item , click }) {
     <div 
     onClick={click}
     className="cursor-pointer group relative overflow-hidden bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-3xl p-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#2C74B3]/10 hover:border-[#2C74B3]/50">
-      
+    
       <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#2C74B3]/10 blur-3xl rounded-full group-hover:bg-[#2C74B3]/20 transition-colors" />
 
       <div className="flex justify-between items-center mb-6">

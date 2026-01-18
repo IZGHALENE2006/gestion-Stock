@@ -12,6 +12,7 @@ export const CreateProduct = async (req, res) => {
             barcode,
             prix_achat,
             prix_vente,
+            profite:Number( prix_vente)-Number(prix_achat),
             categorie,
             fournisseur,
             datecreate,
@@ -59,6 +60,8 @@ export const UpdateProduit = async(req,res)=>{
       
             prix_achat,
             prix_vente,
+            profite:Number( prix_vente)-Number(prix_achat),
+
             categorie,
             fournisseur,
          
