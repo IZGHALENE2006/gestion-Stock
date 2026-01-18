@@ -12,6 +12,8 @@ import EmployeesPage from './composent/employe/employe'
 import {EmployeeDashboard} from "./composent/employe/EmployeeDashboard"
 import Caisse from "./composent/La Caisse/Caisse"
 import Ventes from './composent/Ventes/Ventes'
+import Dashboard from "./composent/Dashboard/Dashboard"
+
 function App() {
  
 
@@ -28,7 +30,7 @@ function App() {
         <Route path='/Home' element={<Home/>}>
         <Route path='Categories' element={<Categories/>}/>
         <Route path='products' element={  <ProductPg />} />
-        <Route path='Dashboard' element={""} />
+        <Route path='Dashboard' element={<Dashboard />} />
         <Route path='Caisse' element={<Caisse />} />
         <Route path='profits' element={<Ventes/>} />
         <Route path='history' element={""} />
