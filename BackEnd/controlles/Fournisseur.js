@@ -1,0 +1,57 @@
+import FournisseurModel from "../models/Fournisseur.js";
+
+// Add New Fournisseur
+export const AddFournisseur = async (req, res) => {
+  const { name, email, phone, address, DateCreate } = req.body;
+
+  try {
+    const NewFournisseur = await FournisseurModel.create({
+      idAdmin: req.user.id,
+      name,
+      email,
+      phone,
+      address,
+      DateCreate,
+    });
+
+    res.status(201).json(NewFournisseur);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+// All Fournisseurs
+export const GetFournisseur = async (req, res) => {
+  const Fournisseurs = await FournisseurModel.find({
+    idAdmin: req.user.id,
+  });
+  res.json(Fournisseurs);
+};
+
+// Delete Fournisseur
+export const DeleteFournisseur = async (req, res) => {
+  const { id } = req.params;
+
+  const DeleteItem = await FournisseurModel.findByIdAndDelete(id);
+  if (!DeleteItem)
+    return res.status(404).json({ message: "Not Found" });
+
+  res.status(201).json(DeleteItem);
+};
+
+// Update Fournisseur
+export const UpdateFournisseur = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, address, status } = req.body;
+
+  const NewItem = await FournisseurModel.findByIdAndUpdate(
+    id,
+    { name, email, phone, address, status },
+    { new: true }
+  );
+
+  if (!NewItem)
+    return res.status(404).json({ message: "Not Found" });
+
+  res.status(201).json(NewItem);
+};
