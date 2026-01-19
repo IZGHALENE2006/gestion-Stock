@@ -1,4 +1,3 @@
-import React, { useState, useRef, useEffect } from "react";
 import { IoSearchOutline, IoCartOutline } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
 import gsap from "gsap";
@@ -8,9 +7,66 @@ import { GetAllProduct } from "../../slices/SliceProduct";
 import LiveClock from "./DateTime"
 import ProductCard from "./ProductCard";
 import { addVentes } from "../../slices/SliceLoginAdmin"; 
-import BarcodeScannerWithButton from "../Ventes/BarcodeScannerWithButton";
 
+//import BareCode
+import { useEffect, useRef, useState } from "react";
+import Quagga from "quagga";
+import { IoCameraOutline, IoClose } from "react-icons/io5";
 export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
+
+  //LogicBarecode@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    const [open, setOpen] = useState(false);
+  const scannerRef = useRef(null);
+const [barcode,setBarecode] = useState('')
+  const startScan = () => {
+    setOpen(true);
+  };
+
+  const stopScan = () => {
+    Quagga.stop();
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+
+ Quagga.init(
+  {
+    inputStream: {
+      type: "LiveStream",
+      target: scannerRef.current,
+      constraints: {
+        facingMode: "user",
+      },
+    },
+    decoder: {
+      readers: ["ean_reader", "code_128_reader"], 
+    },
+    locate: true,
+  },
+  (err) => {
+    if (err) {
+      console.error("Quagga init error:", err);
+      return;
+    }
+    Quagga.start();
+  }
+);
+
+    Quagga.onDetected((result) => {
+      const code = result.codeResult.code;
+      console.log("SCANNED:", code);
+      setSearchTerm(code)
+      stopScan();
+    });
+
+    return () => {
+      stopScan();
+      Quagga.offDetected();
+    };
+  }, [open]);
+  //////////////////@@@@@@@@@@@@@@@@@@@@@@@@2
   const { user, token } = useSelector((state) => state.LoginAdmin);
   const { Produts, loading } = useSelector((state) => state.Product); 
   const dispatch = useDispatch();
@@ -37,6 +93,8 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
     p.barcode?.includes(searchTerm)
   );
 
+  const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
 
 async function Khless() {
   if (cart.length === 0) return toast.error("Le panier est vide");
@@ -45,7 +103,7 @@ async function Khless() {
   try {
 
 
-    await dispatch(addVentes({cart})).unwrap();
+    await dispatch(addVentes({cart,totalOrder,changeToReturn})).unwrap();
     toast.success("Vente enregistrée avec succès");
     onClearCart();
     setAmountPaid("");
@@ -58,10 +116,7 @@ async function Khless() {
 
     
   
-console.log(cart);
 
-  const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
   
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
@@ -98,20 +153,56 @@ console.log(cart);
         </div>
       </div>
 {/* ///////////serache */}
-        <BarcodeScannerWithButton/>
 
-      <div className="p-4">
-        <div className="relative">
-          <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input 
-            type="text" 
-            placeholder="Rechercher des produits..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm text-white" 
-          />
+     <div className="p-4 flex items-center gap-3">
+  
+  {/* input */}
+  <div className="relative flex-1">
+    <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+    <input 
+      type="text" 
+      placeholder="Rechercher des produits..." 
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm text-white" 
+    />
+  </div>
+
+  {/* scanner */}
+  <div className="flex items-center">
+ {/* // Logic BareCode */}
+      <button
+        onClick={startScan}
+        className="h-[48px] bg-green-600 hover:bg-green-700 text-white px-4 rounded-lg flex items-center gap-2"
+      >
+        <IoCameraOutline size={20} />
+      </button>
+
+      {/* Modal */}
+      {open && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
+          <div className="bg-[#0f172a] rounded-xl p-3 w-[360px] relative">
+            
+            {/* Close */}
+            <button
+              onClick={stopScan}
+              className="absolute top-2 right-2 text-white hover:text-red-500"
+            >
+              <IoClose size={22} />
+            </button>
+
+            {/* Camera */}
+            <div
+              ref={scannerRef}
+              className="w-full h-[240px] overflow-hidden rounded-lg"
+            />
+          </div>
         </div>
-      </div>
+      )}
+  </div>
+
+</div>
+
 
       <div className="flex-1 p-4 space-y-2 max-h-120 min-h-75 overflow-y-scroll">
         {searchTerm.length > 0 ? (

@@ -56,12 +56,7 @@ const [cart, setCart] = useState([]);
     <div ref={containerRef} className="caise p-6 bg-[#0f172a] min-h-screen text-white flex flex-col gap-6 font-sans antialiased">
       <Toaster position="top-center" />
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <TopCard className="stat-card" title="Commandes" value="2" color="text-blue-400" icon={<IoCartOutline size={22}/>} />
-        <TopCard className="stat-card" title="CA Total" value="68 DH" color="text-green-400" icon={<IoCashOutline size={22}/>} />
-        <TopCard className="stat-card" title="Payé" value="68 DH" color="text-emerald-400" icon={<IoCheckmarkCircleOutline size={22}/>} />
-        <TopCard className="stat-card" title="Crédit" value="0 DH" color="text-red-400" icon={<IoTimeOutline size={22}/>} />
-      </div>
+
 
       <div className="flex flex-col lg:flex-row gap-6 flex-1">
         <CaisseSection cart={cart} onAddToCart={handleAddToCart} onClearCart={clearCart} />

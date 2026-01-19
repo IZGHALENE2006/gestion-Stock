@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 export const AddVente = async (req, res) => {
   try {
     const ventes = Array.isArray(req.body) ? req.body : req.body.cart;
-
+   
     if (!ventes || ventes.length === 0) {
       return res.status(400).json({ message: "السلة فارغة" });
     }
@@ -33,15 +33,24 @@ export const AddVente = async (req, res) => {
         idProduct: product._id,
         name: product.name,
         nameEmp:user.name,
-        price: Number(item.price || product.prix_vente), // إذا ماجاش السعر استعمل سعر المنتج
+        price: Number(item.price || product.prix_vente), 
         quantite: Number(item.qty),
         profite: totalProfit,
         DateVante: new Date(),
-      };
+      }
+
+      //Add New Facture 
 
       user.ventes.push(nouvelleVente);
       ventesAjoutees.push(nouvelleVente);
-
+       const nouvelleFacture = {
+        name: product.name,
+        price: Number(item.price ||product.prix_vente),
+        quantite: Number(item.qty),
+        TotalPrix: Number(item.price)*Number(item.qty),
+      };
+      
+       user.Facture.Product.push(nouvelleFacture)
       product.quantite = (product.quantite || 0) - Number(item.qty);
       await product.save();
     }
