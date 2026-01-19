@@ -13,6 +13,7 @@ import {EmployeeDashboard} from "./composent/employe/EmployeeDashboard"
 import Caisse from "./composent/La Caisse/Caisse"
 import Ventes from './composent/Ventes/Ventes'
 import Dashboard from "./composent/Dashboard/Dashboard"
+import Fornisseur from "./composent/Fornisseur/Fornisseur"
 
 function App() {
  
@@ -32,6 +33,7 @@ function App() {
         <Route path='products' element={  <ProductPg />} />
         <Route path='Dashboard' element={<Dashboard />} />
         <Route path='Caisse' element={<Caisse />} />
+        <Route path='Fornisseur' element={<Fornisseur />} />
         <Route path='profits' element={<Ventes/>} />
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>

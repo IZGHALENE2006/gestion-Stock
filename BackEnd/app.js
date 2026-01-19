@@ -11,6 +11,7 @@ import EmployeRoute from './Routes/EmployeRoute.js'
 import GetMeRoute from './Routes/getMeRoute.js'
 // impotr ventes
 import ventesRoute from './Routes/routeVents.js'
+import FournisseurRoute from './Routes/FournisseurRoute.js'
 
 const app = express()
 
@@ -23,6 +24,7 @@ const app = express()
    app.use('/Employe',EmployeRoute)
    app.use('/user',GetMeRoute)
    app.use('/addVentes',ventesRoute)
+   app.use('/Fournisseur',FournisseurRoute)
 
 
 export default app
