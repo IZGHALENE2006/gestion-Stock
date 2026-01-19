@@ -2,7 +2,7 @@ import FournisseurModel from "../models/Fournisseur.js";
 
 // Add New Fournisseur
 export const AddFournisseur = async (req, res) => {
-  const { name, email, phone, address, DateCreate } = req.body;
+  const { name, email, phone, Ville, DateCreate } = req.body;
 
   try {
     const NewFournisseur = await FournisseurModel.create({
@@ -10,7 +10,7 @@ export const AddFournisseur = async (req, res) => {
       name,
       email,
       phone,
-      address,
+      Ville,
       DateCreate,
     });
 
@@ -42,11 +42,11 @@ export const DeleteFournisseur = async (req, res) => {
 // Update Fournisseur
 export const UpdateFournisseur = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone, address, status } = req.body;
+  const { name, email, phone, Ville, status } = req.body;
 
   const NewItem = await FournisseurModel.findByIdAndUpdate(
     id,
-    { name, email, phone, address, status },
+    { name, email, phone, Ville, status },
     { new: true }
   );
 

@@ -4,6 +4,7 @@ import LoginAdminSlic from '../slices/SliceLoginAdmin'
 import ProductSlice from '../slices/SliceProduct'
 import ReducerCateroy from '../slices/SilceCategory'
 import ReducerEmploye from '../slices/sliceEmploye'
+import Fournisseur from '../slices/SliceFournisseur'
 export const Store = configureStore(
     {
         reducer:{
@@ -11,7 +12,9 @@ export const Store = configureStore(
          LoginAdmin:LoginAdminSlic,
          Product:ProductSlice,
          category:ReducerCateroy,
-         Employe:ReducerEmploye
+         Employe:ReducerEmploye,
+         Fournisseur: Fournisseur,
+
         }
     }
 )

@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   IoSearchOutline, 
   IoAddOutline, 
   IoPeopleOutline, 
-  IoCloseOutline,
-  IoBusinessOutline,
-  IoStatsChartOutline
 } from "react-icons/io5";
 import FrnCard from './FrnCard';
 import AjouterFrn from './AjouterFrn.jsx';
 import Dialog from '../Dialog/Dialog';
+import { DeleteFournisseur, GetAllFournisseur } from "../../slices/SliceFournisseur.jsx";
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const Fornisseur = () => {
   const [open , setOpen] = useState(false)
-  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const role = "admin"; 
+  const { Fournisseur } = useSelector((state) => state.Fournisseur);
+  console.log(Fournisseur);
+  
+  const Dispatch =  useDispatch();
+  useEffect(() => {
+    Dispatch(GetAllFournisseur());
+  }, [Dispatch]);
 
-  const suppliers = [
-    { id: 1, name: "Global Tech SARL", email: "contact@globaltech.com", phone: "+212 600-112233", address: "Casablanca, Morocco" },
-    { id: 2, name: "Elite Logistics", email: "support@elitelog.ma", phone: "+212 522-445566", address: "Tangier, Morocco" },
-    { id: 3, name: "Nexus Industrial", email: "info@nexus.com", phone: "+212 611-998877", address: "Agadir, Morocco" },
-  ];
-
-  const filteredSuppliers = suppliers.filter(s => 
+  const filteredSuppliers = Fournisseur.filter(s => 
     s.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -39,7 +38,7 @@ const Fornisseur = () => {
             </div>
             <div>
               <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Fournisseurs</p>
-              <h1 className="text-4xl font-black text-white">{suppliers.length}</h1>
+              <h1 className="text-4xl font-black text-white">{Fournisseur.length}</h1>
             </div>
           </div>
 
@@ -68,13 +67,12 @@ const Fornisseur = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredSuppliers.map(s => (
+          {filteredSuppliers.map(f => (
             <FrnCard 
-              key={s.id} 
-              supplier={s} 
-              role={role}
-              onEdit={() => console.log("Edit", s.id)} 
-              onDelete={() => console.log("Delete", s.id)} 
+              key={f.id} 
+              supplier={f} 
+              onEdit={() => console.log("Edit", f.id)} 
+              onDelete={() => console.log("Delete", f.id)} 
             />
           ))}
         </div>

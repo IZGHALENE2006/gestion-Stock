@@ -41,7 +41,7 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
           </h3>
           <p className="text-slate-500 text-xs font-medium flex items-center gap-1 mt-1 uppercase tracking-tighter">
             <IoLocationOutline size={14} className="text-slate-400" />
-            {supplier.address}
+            {supplier.Ville}
           </p>
         </div>
 
@@ -68,7 +68,6 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
           </div>
         </div>
 
-        {role === "admin" && (
           <div className="flex gap-3 mt-6 pt-6 border-t border-slate-700/50">
             <button 
               onClick={onEdit}
@@ -84,7 +83,6 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
               <IoTrashOutline size={18} />
             </button>
           </div>
-        )}
       </div>
     </div>
   );
