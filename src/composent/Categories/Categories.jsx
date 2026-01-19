@@ -49,7 +49,7 @@ function Categories() {
   return (
     <div className="p-6 bg-[#0f172a] min-h-screen text-white flex flex-col">
       <div className="flex flex-col lg:flex-row gap-6 mb-8">
-        <div className="ProductsCard flex-1 min-w-[260px] p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4">
+        <div className="ProductsCard flex-1 min-w-65 p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4">
           <div className="p-3 rounded-xl bg-blue-500/20">
             <IoFileTrayStackedOutline size={36} className="text-blue-400" />
           </div>

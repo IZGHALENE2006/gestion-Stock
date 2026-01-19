@@ -32,7 +32,7 @@ const Fornisseur = () => {
         
         <div className="flex flex-col lg:flex-row gap-6 mb-10">
           
-          <div className="flex-1 min-w-[280px] p-6 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-2xl flex items-center gap-5 group hover:border-blue-500/50 transition-all">
+          <div className="flex-1 min-w-70 p-6 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-2xl flex items-center gap-5 group hover:border-blue-500/50 transition-all">
             <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-400 group-hover:scale-110 transition-transform">
               <IoPeopleOutline size={32} />
             </div>
@@ -42,7 +42,7 @@ const Fornisseur = () => {
             </div>
           </div>
 
-          <div className="flex-[2] flex flex-col md:flex-row items-center gap-4 bg-[#1e293b] border border-slate-700 rounded-2xl p-4 shadow-xl">
+          <div className="flex-2 flex flex-col md:flex-row items-center gap-4 bg-[#1e293b] border border-slate-700 rounded-2xl p-4 shadow-xl">
             <div className="relative flex-1 w-full">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
                 <IoSearchOutline size={20} />
