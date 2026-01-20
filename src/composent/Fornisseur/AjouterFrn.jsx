@@ -19,7 +19,7 @@ export default function AjouterFrn() {
     name: "",
     email: "",
     phone: "",
-    address: "",
+    Ville: "",
     dateCreate: new Date(),
     status: true
   });
@@ -35,7 +35,7 @@ export default function AjouterFrn() {
         name: "",
         email: "",
         phone: "",
-        address: "",
+        Ville: "",
         dateCreate: new Date(),
         status: true
       });
@@ -127,7 +127,7 @@ export default function AjouterFrn() {
             </div>
           </div>
 
-          {/* Address */}
+          {/* Ville */}
           <div className="relative">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
               Adresse
@@ -135,8 +135,8 @@ export default function AjouterFrn() {
             <div className="relative mt-1">
               <IoLocationOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                value={formData.Ville}
+                onChange={(e) => setFormData({ ...formData, Ville: e.target.value })}
                 className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-3 pl-12 pr-4"
                 placeholder="Ville, Pays"
               />

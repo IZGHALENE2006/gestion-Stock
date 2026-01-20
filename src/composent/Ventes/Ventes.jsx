@@ -40,8 +40,16 @@ if (role === "admin") {
   // employé يشوف غير ديالو
   allVentes = user?.ventes || [];
 }
-const Ventes = allVentes
 
+//Logic Ventes oujourdhoui
+const Daye  = new Date().toLocaleDateString() 
+const Ventes = allVentes.filter((t)=> new Date(t.DateVante).toLocaleDateString()===Daye)
+ //Logic Saerche 
+const [ListSearche,setSaerchList] = useState([])
+function HnadleSearcheVetes(e){
+  const Value = e.target.value
+  setSaerchList(Ventes.filter((t)=>t.name.startsWith(Value)))
+}
 
 const TotalProfite = Ventes.reduce((somme,t)=>somme+=t.profite,0)
 const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
@@ -105,6 +113,7 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
       type="text"
       placeholder="Search..."
       className="flex-1 p-2 border rounded-lg bg-[#1e293b] border-slate-700 text-white placeholder-slate-400"
+      onChange={HnadleSearcheVetes}
     />
 
     {/* Print Button */}
@@ -175,9 +184,7 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
             <button className="px-3 py-1 rounded-md bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition">
               Voir
             </button>
-            <button className="px-3 py-1 rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
-              Supprimer
-            </button>
+      
               <button
       onClick={() => console.log("print")}
       className="p-2 rounded-lg bg-[#1e293b] border border-slate-700 hover:border-blue-400 hover:text-blue-400 transition"

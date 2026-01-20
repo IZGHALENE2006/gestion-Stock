@@ -2,7 +2,7 @@ body {
     font-family: "Saira", sans-serif;
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(
+  /* background: radial-gradient(
       circle at 20% 30%,
       rgba(109, 117, 117, 0.45),
       transparent 60%
@@ -17,7 +17,8 @@ body {
       #0A2647,
       #09223d,
       #0A2647
-    );
+    ); */
+    background-color:#0f172a;
     overflow-x: hidden;
   background-size: 200% 200%;
   /* animation: smoothFlow 25s ease-in-out infinite; */

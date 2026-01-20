@@ -12,7 +12,7 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
   const firstLetter = supplier.name ? supplier.name.charAt(0).toUpperCase() : "?";
 
   return (
-    <div className="group relative bg-[#1e293b]/50 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-1 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(44,116,179,0.2)] hover:border-[#2C74B3]/50 overflow-hidden">
+    <div className="group relative bg-[#1e293b]/50 backdrop-blur-xl border border-slate-700/50 rounded-4xl p-1 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(44,116,179,0.2)] hover:border-[#2C74B3]/50 overflow-hidden">
       
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all duration-700" />
 
@@ -20,7 +20,7 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
         
         <div className="flex justify-between items-start mb-6">
           <div className="relative">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2C74B3] to-[#123456] flex items-center justify-center shadow-lg transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 border border-white/10">
+            <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-[#2C74B3] to-[#123456] flex items-center justify-center shadow-lg transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 border border-white/10">
               <span className="text-2xl font-black text-white tracking-tighter">
                 {firstLetter}
               </span>
@@ -41,7 +41,7 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
           </h3>
           <p className="text-slate-500 text-xs font-medium flex items-center gap-1 mt-1 uppercase tracking-tighter">
             <IoLocationOutline size={14} className="text-slate-400" />
-            {supplier.address}
+            {supplier.Ville}
           </p>
         </div>
 
@@ -52,7 +52,7 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
               <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
                 <IoMailOutline size={18} />
               </div>
-              <span className="text-sm text-slate-300 truncate max-w-[140px] font-medium">{supplier.email}</span>
+              <span className="text-sm text-slate-300 truncate max-w-35 font-medium">{supplier.email}</span>
             </div>
             <IoChevronForwardOutline className="text-slate-600 group-hover/row:translate-x-1 transition-transform" />
           </div>
@@ -68,7 +68,6 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
           </div>
         </div>
 
-        {role === "admin" && (
           <div className="flex gap-3 mt-6 pt-6 border-t border-slate-700/50">
             <button 
               onClick={onEdit}
@@ -84,7 +83,6 @@ const SupplierCard = ({ supplier, onEdit, onDelete, role }) => {
               <IoTrashOutline size={18} />
             </button>
           </div>
-        )}
       </div>
     </div>
   );
