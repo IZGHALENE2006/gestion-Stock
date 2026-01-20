@@ -40,8 +40,26 @@ if (role === "admin") {
   // employé يشوف غير ديالو
   allVentes = user?.ventes || [];
 }
-const Ventes = allVentes
 
+//Logic Ventes oujourdhoui
+const Daye  = new Date().toLocaleDateString() 
+const Ventes = allVentes.filter((t)=> new Date(t.DateVante).toLocaleDateString()===Daye)
+ //Logic Saerche 
+const [ListSearche,setSaerchList] = useState([])
+function HnadleSearcheVetes(e) {
+  const value = e.target.value.toLowerCase();
+
+  if (value === "") {
+    setSaerchList([]);
+    return;
+  }
+
+  setSaerchList(
+    Ventes.filter((t) =>
+      t.name?.toLowerCase().includes(value)
+    )
+  );
+}
 
 const TotalProfite = Ventes.reduce((somme,t)=>somme+=t.profite,0)
 const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
@@ -81,7 +99,10 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
       {/* Employee Selection/Search */}
       <div className="flex gap-4 items-center">
         <div className="flex-1">
+{role=='admin'&&
+<>
           <label className="block text-slate-400 mb-1">Select Employee</label>
+
  <div className="relative">
   <FaRegUserCircle className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
   
@@ -94,6 +115,8 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
     ))}
   </select>
 </div>
+</>
+}
 
         </div>
 <div className="flex-1">
@@ -105,6 +128,7 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
       type="text"
       placeholder="Search..."
       className="flex-1 p-2 border rounded-lg bg-[#1e293b] border-slate-700 text-white placeholder-slate-400"
+      onChange={HnadleSearcheVetes}
     />
 
     {/* Print Button */}
@@ -137,62 +161,68 @@ const TotalVentes = Ventes.reduce((somme,t)=>somme+=Number(t.quantite||0),0)
     </thead>
 
     {/* Body */}
-    <tbody>
-     {Ventes?.map((t)=>{
-      return(
-              <tr className="border-b border-slate-700 hover:bg-slate-700/30 transition">
-<td className="px-4 py-3">
-  <div className="flex items-center gap-2 text-slate-300">
-    
-    {t.nameEmp ? (
-      <>
-        <FaRegUserCircle className="text-slate-400" />
-        <span>{t.nameEmp}</span>
-      </>
-    ) : (
-      <>
-        <FaUserTie className="text-amber-400" />
-        <div className="flex flex-col leading-tight">
-          <span>{user.name}</span>
-          <span className="text-xs text-amber-400">admin</span>
-        </div>
-      </>
-    )}
-
-  </div>
-</td>
-
+<tbody>
+  {(ListSearche.length === 0 ? Ventes : ListSearche).length === 0 ? (
+    <tr>
+      <td colSpan="7" className="text-center py-6 text-slate-400">
+        Aucune vente trouvée
+      </td>
+    </tr>
+  ) : (
+    (ListSearche.length === 0 ? Ventes : ListSearche).map((t) => (
+      <tr
+        key={t._id}
+        className="border-b border-slate-700 hover:bg-slate-700/30 transition"
+      >
+        <td className="px-4 py-3">
+          <div className="flex items-center gap-2 text-slate-300">
+            {t.nameEmp ? (
+              <>
+                <FaRegUserCircle className="text-slate-400" />
+                <span>{t.nameEmp}</span>
+              </>
+            ) : (
+              <>
+                <FaUserTie className="text-amber-400" />
+                <div className="flex flex-col leading-tight">
+                  <span>{user.name}</span>
+                  <span className="text-xs text-amber-400">admin</span>
+                </div>
+              </>
+            )}
+          </div>
+        </td>
 
         <td className="px-4 py-3">{t.name}</td>
         <td className="px-4 py-3">{t.price} dh</td>
         <td className="px-4 py-3">{t.quantite}</td>
-        <td className="px-4 py-3 text-emerald-400 font-medium">+{t.profite} dh</td>
-        <td className="px-4 py-3">{String(t.DateVante).split("T")[0]}</td>
+        <td className="px-4 py-3 text-emerald-400 font-medium">
+          +{t.profite} dh
+        </td>
+        <td className="px-4 py-3">
+          {String(t.DateVante).split("T")[0]}
+        </td>
 
-        {/* Actions */}
         <td className="px-4 py-3">
           <div className="flex justify-center gap-2">
-            <button className="px-3 py-1 rounded-md bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition">
+            <button className="px-3 py-1 rounded-md bg-blue-500/20 text-blue-400">
               Voir
             </button>
-            <button className="px-3 py-1 rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
-              Supprimer
+
+            <button
+              onClick={() => console.log("print")}
+              className="p-2 rounded-lg bg-[#1e293b] border border-slate-700 hover:border-blue-400 hover:text-blue-400 transition"
+            >
+              <FaPrint size={18} />
             </button>
-              <button
-      onClick={() => console.log("print")}
-      className="p-2 rounded-lg bg-[#1e293b] border border-slate-700 hover:border-blue-400 hover:text-blue-400 transition"
-    >
-      <FaPrint size={18} />
-    </button>
           </div>
         </td>
       </tr>
-      )
-     })}
+    ))
+  )}
+</tbody>
 
 
-  
-    </tbody>
   </table>
 </div>
 

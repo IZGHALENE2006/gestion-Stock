@@ -1,6 +1,6 @@
 import pywhatkit as kit
 
 kit.sendwhatmsg_instantly(
-    "+212669976382",
+    "+212610734942",
     "hi 👋"
 )

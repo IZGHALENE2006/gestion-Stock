@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import NavRow from "./NavEmploye";
+import NaveProfite from "./NaveProfite";
 
-export default function EmployeesPage() {
+export default function Profite() {
   return (
     <div className="flex flex-col gap-4 p-4">
-      <NavRow />
+      <NaveProfite />
       <div>
         {/* هاد المكان غادي يبدل على حسب الروت اللي مختار */}
         <Outlet />

@@ -82,7 +82,7 @@ export default function Dashboard() {
     labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
     datasets: [{
       label: "Profit",
-      data: [12000, 19000, 0, 0, 0, 0, 0],
+      data: [12000, 19000, 0, 0, 0, 0, 5000],
       borderColor: "#2C74B3",
       backgroundColor: "rgba(44, 116, 179, 0.1)",
       fill: true,
