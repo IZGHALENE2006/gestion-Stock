@@ -62,7 +62,7 @@ useEffect(()=>{
 }
           <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Fornisseur" expanded={isExpanded} />
           <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Caisse" expanded={isExpanded} />
-          <NavItem to="/Home/profits" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
+          <NavItem to={"/Home/Profit/Ventes"||"/Home/Profit/Facture"} icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
           <NavItem to="/Home/history" icon={<IoCalendarOutline size={22} />} label="History" expanded={isExpanded} />
         </nav>
 

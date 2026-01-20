@@ -11,9 +11,11 @@ import Categories from './composent/Categories/Categories'
 import EmployeesPage from './composent/employe/employe'
 import {EmployeeDashboard} from "./composent/employe/EmployeeDashboard"
 import Caisse from "./composent/La Caisse/Caisse"
-import Ventes from './composent/Ventes/Ventes'
 import Dashboard from "./composent/Dashboard/Dashboard"
 import Fornisseur from "./composent/Fornisseur/Fornisseur"
+import Profite from './composent/Ventes/Profit'
+import Ventes from './composent/Ventes/Ventes'
+import FactureVentes from './composent/Ventes/Facture'
 
 function App() {
  
@@ -34,7 +36,10 @@ function App() {
         <Route path='Dashboard' element={<Dashboard />} />
         <Route path='Caisse' element={<Caisse />} />
         <Route path='Fornisseur' element={<Fornisseur />} />
-        <Route path='profits' element={<Ventes/>} />
+        <Route path="profit" element={<Profite/>}>
+            <Route path='Ventes' element={<Ventes/>}/>
+            <Route path='Facture' element={<FactureVentes/>}/>
+        </Route>
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>
         <Route path="EmployeeDashboard" element={<EmployeeDashboard/>} />

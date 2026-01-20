@@ -23,6 +23,7 @@ export const AddVente = async (req, res) => {
 
     const facture = {
       Product: [],
+
       TotalQauntite: 0,
       TotalPrix: 0,
       totalOrder: Number(totalOrder),
@@ -56,7 +57,6 @@ export const AddVente = async (req, res) => {
         quantite: qty,
         TotalPrix: price * qty,
       });
-
       facture.TotalQauntite += qty;
       facture.TotalPrix += price * qty;
 
