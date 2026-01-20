@@ -12,6 +12,9 @@ import { addVentes } from "../../slices/SliceLoginAdmin";
 import { useEffect, useRef, useState } from "react";
 import Quagga from "quagga";
 import { IoCameraOutline, IoClose } from "react-icons/io5";
+import FacturePrint from "../Facture/FacturePrintachat";
+import { useReactToPrint } from "react-to-print";
+
 export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
 
   //LogicBarecode@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -95,27 +98,33 @@ const [barcode,setBarecode] = useState('')
 
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
   const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
-
+const [Facture,setFacture] = useState(null)
 async function Khless() {
   if (cart.length === 0) return toast.error("Le panier est vide");
   if (changeToReturn < 0) return toast.error("Montant insuffisant");
 
-  try {
+try {
+  const res = await dispatch(
+    addVentes({ cart, totalOrder, changeToReturn })
+  ).unwrap();
 
+  toast.success("Vente enregistrée avec succès");
 
-    await dispatch(addVentes({cart,totalOrder,changeToReturn})).unwrap();
-    toast.success("Vente enregistrée avec succès");
-    onClearCart();
-    setAmountPaid("");
-  } catch (err) {
-    toast.error(
-      typeof err === "string" ? err : err?.message || "Erreur serveur"
-    );
-  }
-}
+  setFacture(res.facture); 
+  onClearCart();
+  setAmountPaid("");
 
+} catch (err) {
+  toast.error(
+    typeof err === "string" ? err : err?.message || "Erreur serveur"
+  );
+}}
     
-  
+useEffect(() => {
+  if(Facture){
+    handlePrint();
+  }
+}, [Facture])  
 
   
   const handleQuickPay = (val, target, color) => {
@@ -132,6 +141,13 @@ async function Khless() {
       repeat: 1
     });
   };
+
+  //Logic Print
+  const printRef = useRef();
+
+const handlePrint = useReactToPrint({
+  contentRef: printRef,
+});
 
   return (
     <div ref={sectionRef} className="ticket-section flex-1 bg-[#1e293b] rounded-2xl border border-slate-700 shadow-xl flex flex-col overflow-hidden">
@@ -302,6 +318,9 @@ async function Khless() {
         </button>
       </div>
       <Toaster />
+      <div style={{ display: "none" }}>
+  <FacturePrint ref={printRef} facture={Facture} user={user} />
+</div>
     </div>
   );
 }

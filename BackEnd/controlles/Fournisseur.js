@@ -9,7 +9,7 @@ export const AddFournisseur = async (req, res) => {
       idAdmin: req.user.id,
       name,
       email,
-      phone,
+      phone,  
       address,
       DateCreate,
     });

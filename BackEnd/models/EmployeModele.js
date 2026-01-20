@@ -69,7 +69,12 @@ const ShemaEmploye = new mongoose.Schema(
                       TotalQauntite:Number,
                       TotalPrix:Number,
                       totalOrder:Number,
-                      PrixReture:Number
+                      PrixReture:Number,
+                     DateFacture :{
+                            type:Date,
+                            default:Date.now
+
+                           }
                     }
                    ]
 
