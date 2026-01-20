@@ -6,7 +6,6 @@ export default function Profite() {
     <div className="flex flex-col gap-4 p-4">
       <NaveProfite />
       <div>
-        {/* هاد المكان غادي يبدل على حسب الروت اللي مختار */}
         <Outlet />
       </div>
     </div>

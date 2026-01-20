@@ -23,7 +23,7 @@ export const AddVente = async (req, res) => {
 
     const facture = {
       Product: [],
-
+      nameEmp: user.name,
       TotalQauntite: 0,
       TotalPrix: 0,
       totalOrder: Number(totalOrder),
@@ -44,7 +44,6 @@ export const AddVente = async (req, res) => {
       user.ventes.push({
         idProduct: product._id,
         name: product.name,
-        nameEmp: user.name,
         price,
         quantite: qty,
         profite: (product.prix_vente - product.prix_achat) * qty,
@@ -59,6 +58,7 @@ export const AddVente = async (req, res) => {
       });
       facture.TotalQauntite += qty;
       facture.TotalPrix += price * qty;
+       facture.nameEmp=user.name
 
       product.quantite -= qty;
       await product.save();

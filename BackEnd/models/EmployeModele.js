@@ -65,7 +65,7 @@ const ShemaEmploye = new mongoose.Schema(
                           TotalPrix:Number
                         }
                       ],
-                        nmaeEmp:String,
+                        nameEmp:String,
                       TotalQauntite:Number,
                       TotalPrix:Number,
                       totalOrder:Number,
