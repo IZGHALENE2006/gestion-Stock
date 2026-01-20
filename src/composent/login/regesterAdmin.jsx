@@ -1,104 +1,48 @@
-  import { Link, useNavigate } from "react-router";
-  import { IoIosPersonAdd } from "react-icons/io";
-  import { useState, } from "react";
+import { Link, useNavigate } from "react-router";
+import { IoIosPersonAdd } from "react-icons/io";
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RegistreAdmin } from "../../slices/sliceLogin";
+import gsap from "gsap";
 
-  import { useDispatch,useSelector } from "react-redux";
-  import { RegistreAdmin } from "../../slices/sliceLogin";
-  function RegesterAdmin() {
-  const Dispatch = useDispatch()
-  const Nav = useNavigate()
-  const { loading, error} = useSelector((state)=>{
-    return state.register
-  })
-  
-      const [Admininfo,setAdmininfo] = useState({name:"",email:"",password:""})
-      const [Error,setError] = useState(false)
-      function Handelgetname(e){
-          setAdmininfo({...Admininfo,name:e.target.value})
-          setError(false)
-      } function Handelgetemail(e){
-          setAdmininfo({...Admininfo,email:e.target.value})
-          setError(false)
+function RegesterAdmin() {
+  const Dispatch = useDispatch();
+  const Nav = useNavigate();
+  const formRef = useRef(null);
+  const { loading, error } = useSelector((state) => state.register);
+  const [Admininfo, setAdmininfo] = useState({ name: "", email: "", password: "" });
+  const [ErrorLocal, setErrorLocal] = useState(false);
 
-      } function Handelgetpassword(e){
-          setAdmininfo({...Admininfo,password:e.target.value})
-          setError(false)
+  useEffect(() => {
+    gsap.fromTo(formRef.current, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6 });
+  }, []);
 
-      }
-
-    function HandeladdAdmin(e){
-          e.preventDefault()
-        if(Admininfo.name==""||Admininfo.email==''||Admininfo.password==""){
-         setError(true)
-        }else{
-          Dispatch(RegistreAdmin(Admininfo))
-         .unwrap().then((res)=>{
-          Nav('/LoginAdmin')
-         })
-        }
-
-      }
-    return (
-      <div className="h-screen flex justify-center items-center bg-gray-100">
-        
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-          
-          {/* Title */}
-          <h1 className="text-3xl font-bold text-center text-[#0A2647] flex justify-center items-center gap-2 mb-8">
-            Create new account
-            <IoIosPersonAdd className="text-[#2C74B3] text-3xl" />
-          </h1>
-
-          {/* Form */}
-          <form className="flex flex-col gap-5" onSubmit={HandeladdAdmin}>
-            
-            <input
-              type="text"
-              placeholder="Name"
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
-              onChange={Handelgetname}
-              style={{borderColor:Error?'red':""}}
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
-              onChange={Handelgetemail}
-              style={{borderColor:Error?'red':""}}
-            
-            />
-
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2C74B3]"
-              onChange={Handelgetpassword}
-              style={{borderColor:Error?'red':""}}
-             
-            />
-
-            {/* Login link */}
-            <Link to='/LoginAdmin' className="text-sm text-left text-[#2C74B3] hover:underline">
-            Already have an account?
-            </Link>
-
-            {/* Button */}
-            <button
-              className="
-                mt-4 bg-[#0A2647] text-white py-3 rounded-lg
-                font-semibold transition-all duration-300
-                hover:bg-[#2C74B3] hover:shadow-lg
-              "
-            >
-              {loading ? "Loading..." : "Register"}
-            </button>
-        <p style={{ color: "red" }}>{error}</p>
-              
-          </form>
-        </div>
-      </div>
-    );
+  function HandeladdAdmin(e) {
+    e.preventDefault();
+    if (!Admininfo.name || !Admininfo.email || !Admininfo.password) return setErrorLocal(true);
+    Dispatch(RegistreAdmin(Admininfo)).unwrap().then(() => Nav('/LoginAdmin'));
   }
 
-  export default RegesterAdmin;
+  return (
+    <div className="h-screen flex justify-center items-center overflow-hidden relative">
+            <div className="absolute top-[-10%] left-[-5%] w-125 h-125 bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-125 h-125 bg-indigo-400/10 rounded-full blur-[120px] animate-pulse" />
+      <div ref={formRef} style={{ background: "rgba(30, 41, 59, 0.5)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.1)" }} className="w-full max-w-md rounded-4xl p-10">
+        <h1 className="text-3xl font-bold text-center text-white flex justify-center items-center gap-3 mb-10">
+          Join Us <IoIosPersonAdd className="text-blue-400" />
+        </h1>
+        <form className="flex flex-col gap-5" onSubmit={HandeladdAdmin}>
+          <input type="text" placeholder="Full Name" style={{ borderColor: ErrorLocal && !Admininfo.name ? 'red' : 'transparent' }} className="w-full px-5 py-4 bg-white/5 border rounded-xl text-white outline-none focus:border-blue-500" onChange={(e) => { setAdmininfo({ ...Admininfo, name: e.target.value }); setErrorLocal(false); }} />
+          <input type="email" placeholder="Email" style={{ borderColor: ErrorLocal && !Admininfo.email ? 'red' : 'transparent' }} className="w-full px-5 py-4 bg-white/5 border rounded-xl text-white outline-none focus:border-blue-500" onChange={(e) => { setAdmininfo({ ...Admininfo, email: e.target.value }); setErrorLocal(false); }} />
+          <input type="password" placeholder="Password" style={{ borderColor: ErrorLocal && !Admininfo.password ? 'red' : 'transparent' }} className="w-full px-5 py-4 bg-white/5 border rounded-xl text-white outline-none focus:border-blue-500" onChange={(e) => { setAdmininfo({ ...Admininfo, password: e.target.value }); setErrorLocal(false); }} />
+          <button className="mt-4 bg-white text-black py-4 rounded-xl font-bold hover:bg-gray-200 transition-all active:scale-95">
+            {loading ? "Registering..." : "Create Account"}
+          </button>
+          <Link to='/LoginAdmin' className="text-center text-gray-400 text-sm hover:text-white">Already have an account?</Link>
+          {error && <p className="text-red-400 text-center">{error}</p>}
+        </form>
+      </div>
+    </div>
+  );
+}
+export default RegesterAdmin;

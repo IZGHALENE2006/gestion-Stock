@@ -189,7 +189,7 @@ const handlePrint = useReactToPrint({
  {/* // Logic BareCode */}
       <button
         onClick={startScan}
-        className="h-[48px] bg-green-600 hover:bg-green-700 text-white px-4 rounded-lg flex items-center gap-2"
+        className="h-12 bg-green-600 hover:bg-green-700 text-white px-4 rounded-lg flex items-center gap-2"
       >
         <IoCameraOutline size={20} />
       </button>
@@ -197,7 +197,7 @@ const handlePrint = useReactToPrint({
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
-          <div className="bg-[#0f172a] rounded-xl p-3 w-[360px] relative">
+          <div className="bg-[#0f172a] rounded-xl p-3 w-90 relative">
             
             {/* Close */}
             <button
@@ -210,7 +210,7 @@ const handlePrint = useReactToPrint({
             {/* Camera */}
             <div
               ref={scannerRef}
-              className="w-full h-[240px] overflow-hidden rounded-lg"
+              className="w-full h-60 overflow-hidden rounded-lg"
             />
           </div>
         </div>
