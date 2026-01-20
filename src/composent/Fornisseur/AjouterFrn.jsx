@@ -10,10 +10,11 @@ import {
 import { useDispatch } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import { AddFournisseur } from '../../slices/SliceFournisseur';
-import cities from "./Cities.json"
+import cities from "./cities.json"
 
 // Your list of cities
-const VILLES_DATA = cities.cities.data.map(city => city.names.fr);
+const VILLES_DATA = cities.cities.data.map(c => c.names.fr)
+console.log(VILLES_DATA);
 
 export default function AjouterFrn() {
   const Dispatch = useDispatch();

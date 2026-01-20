@@ -54,15 +54,15 @@ useEffect(()=>{
 
         {/* Nav */}
         <nav className="grow px-3 mt-4 space-y-2">
-          <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />
+          {role=='admin'&& <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />}
           <NavItem to="/Home/Categories" icon={<IoPricetagsOutline  size={22} />} label="Categories" expanded={isExpanded} />
          
           <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
-{role=='admin'&&          <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
+{role=='admin'&&<NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />
 }
-          <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Fornisseur" expanded={isExpanded} />
+        {role=='admin'&&  <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Fornisseur" expanded={isExpanded} />}
           <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Caisse" expanded={isExpanded} />
-          <NavItem to="/Home/profits" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
+          <NavItem to={"/Home/Profit/Ventes"||"/Home/Profit/Facture"} icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
           <NavItem to="/Home/history" icon={<IoCalendarOutline size={22} />} label="History" expanded={isExpanded} />
         </nav>
 

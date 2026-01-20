@@ -43,6 +43,8 @@ export default function Dashboard() {
     
   }, [token, dispatch, user]);
 
+  
+
   const totalprix = Produts.reduce((acc, product) => acc + product.prix_vente * product.quantite, 0);
   
   
@@ -80,7 +82,7 @@ export default function Dashboard() {
     labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
     datasets: [{
       label: "Profit",
-      data: [12000, 19000, 0, 0, 0, 0, 0],
+      data: [12000, 19000, 0, 0, 0, 0, 5000],
       borderColor: "#2C74B3",
       backgroundColor: "rgba(44, 116, 179, 0.1)",
       fill: true,
@@ -201,7 +203,9 @@ const maxIndex = data.indexOf(Math.max(...data));
 
 const maxColor = dataset.backgroundColor[maxIndex];
 
-
+  if (user.role == "Employe"){
+    return null
+  }
 
   return (
     <div className="p-6 bg-[#0f172a] min-h-screen space-y-6">
@@ -228,7 +232,7 @@ const maxColor = dataset.backgroundColor[maxIndex];
 
           {/* ///////////////////////////////////////// */}
 
-        <div className="lg:col-span-4 bg-[#1e293b] rounded-3xl border border-slate-700 p-6">
+        <div className="lg:col-span-3 bg-[#1e293b] rounded-3xl border border-slate-700 p-6">
           
           <Plan1 data={Plan1Data} options={chartOptions} />
 
@@ -236,7 +240,7 @@ const maxColor = dataset.backgroundColor[maxIndex];
 
           {/*////////////////////////////////////*/}
 
-        <div className="bg-[#1e293b] rounded-3xl lg:col-span-2 border border-slate-700 p-6 flex flex-col">
+        <div className="bg-[#1e293b] rounded-3xl lg:col-span-3 border border-slate-700 p-6 flex flex-col">
           <Plan2 data={Plan2Data} options={chartOptions} maxColor={maxColor} produitperc={produitperc} /> 
 
         </div>

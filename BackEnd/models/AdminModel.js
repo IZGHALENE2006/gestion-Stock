@@ -29,6 +29,27 @@ const AdminShema = new mongoose.Schema(
                            }
        
                        }
+                   ],
+                   Facture:[
+                    {
+                      Product:[
+                        {
+                          name:String,
+                          price:Number,
+                          quantite:Number,
+                          TotalPrix:Number
+                        }
+                      ],
+                      TotalQauntite:Number,
+                      TotalPrix:Number,
+                      totalOrder:Number,
+                      PrixReture:Number,
+                             DateFacture :{
+                            type:Date,
+                            default:Date.now
+
+                           }
+                    }
                    ]
 
         }

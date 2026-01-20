@@ -15,7 +15,6 @@ const Fornisseur = () => {
   const [open , setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("");
   const { Fournisseur } = useSelector((state) => state.Fournisseur);
-  console.log(Fournisseur);
   
   const Dispatch =  useDispatch();
   useEffect(() => {

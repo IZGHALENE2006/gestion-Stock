@@ -54,7 +54,30 @@ const ShemaEmploye = new mongoose.Schema(
                            }
        
                        }
+                   ],
+                                  Facture:[
+                    {
+                      Product:[
+                        {
+                          name:String,
+                          price:Number,
+                          quantite:Number,
+                          TotalPrix:Number
+                        }
+                      ],
+                        nmaeEmp:String,
+                      TotalQauntite:Number,
+                      TotalPrix:Number,
+                      totalOrder:Number,
+                      PrixReture:Number,
+                     DateFacture :{
+                            type:Date,
+                            default:Date.now
+
+                           }
+                    }
                    ]
+
        
     }
 )
