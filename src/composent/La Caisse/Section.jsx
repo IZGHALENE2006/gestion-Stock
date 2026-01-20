@@ -39,7 +39,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
 
 
 async function Khless() {
-  if (cart.length === 0) return toast.error("Le panier est vide");
+  if (cart?.length === 0) return toast.error("Le panier est vide");
   if (changeToReturn < 0) return toast.error("Montant insuffisant");
 
   try {
@@ -90,7 +90,7 @@ console.log(cart);
         </div>
         <div className="relative">
           <IoCartOutline size={30} className="text-[#2C74B3]" />
-          {Produts.length > 0 && (
+          {Produts?.length > 0 && (
              <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-bold px-1.5 rounded-full text-white">
                {Produts.length}
              </span>
@@ -128,7 +128,7 @@ console.log(cart);
                 <span className="font-bold text-[#2C74B3]">{product.prix_vente} DH</span>
             </div>
           ))
-        ) : Produts.length === 0 ? ( 
+        ) : Produts?.length === 0 ? ( 
           <div className="h-full overflow-y-scroll flex flex-col items-center justify-center text-slate-500 italic opacity-50">
             <IoCartOutline size={48} className="mb-2" />
             <p>Panier vide</p>

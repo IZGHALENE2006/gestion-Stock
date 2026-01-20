@@ -84,20 +84,30 @@ function Categories() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Category.map((t, i) => (
-            <CardCategories
-              key={t._id || i}
-              id={t._id}
-              name={t.name}
-              Datee={t.DateCreate}
-              btn={HandleDeleteCategory}
-              update={Hnadleupdatecategory}
-            />
-          ))}
-        </div>
+<div className="flex-1  overflow-y-auto">
+  {/* The Flex Container */}
+  <div className="flex flex-wrap gap-6 justify-center">
+    {Category.map((t, i) => (
+      /* The Flex Item: Responsive width calculations */
+      <div 
+        key={t._id || i} 
+        className="flex-grow-0 flex-shrink-0 
+                   basis-full 
+                   sm:basis-[calc(50%-1.5rem)] 
+                   lg:basis-[calc(33.333%-1.5rem)] 
+                   xl:basis-[calc(25%-1.5rem)]"
+      >
+        <CardCategories
+          id={t._id}
+          name={t.name}
+          Datee={t.DateCreate}
+          btn={HandleDeleteCategory}
+          update={Hnadleupdatecategory}
+        />
       </div>
+    ))}
+  </div>
+</div>
 
       {/* DIALOG ADD */}
       <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setOpen(false)} title='Ajouter nouveau categorie'>
