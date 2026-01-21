@@ -5,8 +5,12 @@ import {
 } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import DailloginfoFacture from "./DailoginfoFacture";
+import { useState } from "react";
+import FacturePrint from "../Facture/FacturePrintachat";
 
 function FactureVentes() {
+
   //Get User 
 const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
 const { Employe } = useSelector(state => state.Employe);
@@ -22,7 +26,15 @@ const EmployeFacture = Employe?.flatMap(e=>e.Facture ||[])
 }
 const Daye  = new Date().toLocaleDateString() 
 const Facture = (AllFacture ||[]).filter((t)=> new Date(t.DateFacture).toLocaleDateString()===Daye)
-
+//useStateDailogInfo
+const [open,setOpen] = useState(false)
+const [data,setData] = useState({})
+function Handleopeninfo(item){
+  setOpen(true)
+ setData(item)
+}
+// Logic Print bonne 
+  // Logic Print
 
   return (
     <div className="p-6 bg-[#0f172a] min-h-screen text-white space-y-6">
@@ -170,7 +182,9 @@ const Facture = (AllFacture ||[]).filter((t)=> new Date(t.DateFacture).toLocaleD
         </span>
       </div>
 
-      <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500/50 shadow-lg shadow-indigo-600/20 active:scale-95 transition-all">
+      <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500/50 shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
+      onClick={()=>Handleopeninfo(t)}
+      >
         Détails
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -185,7 +199,8 @@ const Facture = (AllFacture ||[]).filter((t)=> new Date(t.DateFacture).toLocaleD
    
 
       </div>
-
+<DailloginfoFacture data={data} onClose={()=>setOpen(false)}  open={open} />
+  
     </div>
   );
 }
