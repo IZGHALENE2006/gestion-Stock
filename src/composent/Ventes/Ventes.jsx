@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetAllEmploye } from "../../slices/sliceEmploye";
 import { useEffect, useState } from "react";
 import { getMe } from "../../slices/SliceLoginAdmin";
+import DailogInfoVentes from "./Dailoginfoventes";
+import Dialog from "../Dialog/Dialog";
 
 function Ventes() {
   const { user, role, token, loading } = useSelector(state => state.LoginAdmin);
@@ -43,7 +45,14 @@ function Ventes() {
   const TotalVentes = Ventes.reduce((somme, t) => (somme += Number(t.quantite || 0)), 0);
 
   const displayData = ListSearche.length === 0 && !loading ? Ventes : ListSearche;
+//open dailgog info nventes
 
+const [openInfo,setopenInfo] = useState(false)
+const [selectedVente,setselectedVente] = useState({}) 
+function HandleopeneDailog(item){
+  setselectedVente(item)
+  setopenInfo(true )
+}
   return (
     <div className="p-8 bg-[#0f172a] min-h-screen text-slate-200 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -187,7 +196,9 @@ function Ventes() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-center gap-2">
-                        <button className="px-5 py-2 rounded-xl bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/20 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30 transition-all">
+                        <button className="px-5 py-2 rounded-xl bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/20 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-600/30 transition-all"
+                        onClick={()=>HandleopeneDailog(t)}
+                        >
   Détails
 </button>
                         </div>
@@ -200,6 +211,13 @@ function Ventes() {
           </div>
         </div>
       </div>
+              <Dialog isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"} bgcolor='#1e293b'>
+   <DailogInfoVentes
+      vente={selectedVente} 
+      onClose={() => setopenInfo(false)} 
+      onViewProduct={(id) => console.log("Navigate to product:", id)} 
+   />
+</Dialog>
     </div>
   );
 }

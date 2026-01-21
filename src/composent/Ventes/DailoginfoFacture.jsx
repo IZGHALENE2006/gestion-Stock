@@ -3,14 +3,18 @@ import {
   IoCalendarOutline, 
   IoCloseCircleOutline,
   IoReceiptOutline,
-  IoCloudDownloadOutline
+  IoCloudDownloadOutline,
+  IoPersonOutline, // أيقونة المستخدم الجديدة
+  IoShieldCheckmarkOutline // أيقونة للأدمن
 } from "react-icons/io5";
+import { FaUserTie } from "react-icons/fa";
 import { FaPrint } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 import { MdOutlineNumbers } from "react-icons/md";
 import { useRef } from "react";
 import FacturePrint from "../Facture/FacturePrintachat";
 import { useSelector } from "react-redux";
+import { generateFacturePDF } from "./facure";
 
 function DailloginfoFacture({ open, data, onClose }) {
   const printRef = useRef();
@@ -24,23 +28,16 @@ function DailloginfoFacture({ open, data, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-hidden">
-      {/* Backdrop with enhanced blur */}
       <div 
         className="absolute inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity"
         onClick={onClose} 
       />
 
-      {/* Dialog Content */}
       <div 
         className="relative bg-[#0f172a] text-slate-200 p-8 rounded-[2.5rem] border border-slate-800 shadow-[0_0_50px_-12px_rgba(30,64,175,0.3)] max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300 shadow-2xl"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <style>{`
-          div::-webkit-scrollbar { display: none; }
-        `}</style>
+        <style>{` div::-webkit-scrollbar { display: none; } `}</style>
         
         {/* Header Section */}
         <div className="flex justify-between items-start mb-8">
@@ -51,7 +48,7 @@ function DailloginfoFacture({ open, data, onClose }) {
             <div>
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Détails Document</h2>
               <p className="text-2xl font-black text-white tracking-tight leading-none mt-1 italic">
-                #{String(data?._id).slice(-8).toUpperCase()}
+                #{String(data?._id).toUpperCase().slice(-8)}
               </p>
             </div>
           </div>
@@ -63,17 +60,59 @@ function DailloginfoFacture({ open, data, onClose }) {
           </button>
         </div>
 
-        {/* Action Bar */}
+        {/* Action & Info Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/40 rounded-2xl border border-slate-700/50 shadow-sm">
-            <IoCalendarOutline className="text-blue-400" />
-            <span className="text-sm font-bold text-slate-300 uppercase tracking-tighter">
-              {new Date(data?.DateFacture).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-            </span>
+          <div className="flex flex-wrap gap-3">
+            {/* Date Badge */}
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/40 rounded-xl border border-slate-700/50 shadow-sm">
+              <IoCalendarOutline className="text-blue-400" />
+              <span className="text-xs font-bold text-slate-300 uppercase">
+                {new Date(data?.DateFacture).toLocaleDateString('fr-FR')}
+              </span>
+            </div>
+
+            {/* Created By Badge (NEW) */}
+     {/* Section: Vendeur / Administrateur */}
+<div className="flex items-center gap-3 px-5 py-3 bg-slate-800/20 rounded-[1.5rem] border border-slate-700/30 shadow-sm">
+  {data?.nameEmp ? (
+    <>
+      {/* حالة الموظف - Vendeur */}
+      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+        <IoPersonOutline size={22} />
+      </div>
+      <div className="flex flex-col">
+        <span className="text-[10px] text-blue-400/70 font-black uppercase tracking-widest leading-none mb-1">
+          Vendeur
+        </span>
+        <span className="text-sm text-slate-200 font-bold tracking-tight">
+          {data.nameEmp}
+        </span>
+      </div>
+    </>
+  ) : (
+    <>
+      {/* حالة الأدمن - Administrateur */}
+      <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20 shadow-[0_0_15px_-5px_rgba(245,158,11,0.3)]">
+        <FaUserTie size={22} />
+      </div>
+      <div className="flex flex-col">
+        <span className="text-[10px] text-amber-500/80 font-black uppercase tracking-widest leading-none mb-1">
+          Administrateur
+        </span>
+        <span className="text-sm text-amber-50 font-black tracking-tight">
+          {user?.name || 'Admin Principal'}
+        </span>
+      </div>
+    </>
+  )}
+</div>
           </div>
 
           <div className="flex gap-2">
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-800 border border-slate-700 hover:border-blue-500/50 text-slate-300 text-sm font-bold transition-all active:scale-95 group">
+            <button 
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-800 border border-slate-700 hover:border-blue-500/50 text-slate-300 text-sm font-bold transition-all active:scale-95 group"
+              onClick={() => generateFacturePDF(data)}
+            >
               <IoCloudDownloadOutline size={20} className="group-hover:text-blue-400" />
               <span className="hidden sm:block">PDF</span>
             </button>
@@ -90,7 +129,7 @@ function DailloginfoFacture({ open, data, onClose }) {
 
         {/* Items Table */}
         <div className="bg-[#1e293b]/30 rounded-[2rem] border border-slate-800 overflow-hidden mb-8 shadow-2xl">
-          <table className="w-full text-left">
+          <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-800/50">
                 <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Désignation</th>
@@ -127,7 +166,7 @@ function DailloginfoFacture({ open, data, onClose }) {
             </div>
             <div className="flex items-center gap-3 text-slate-400 hover:text-slate-200 transition-colors">
               <div className="p-2 rounded-xl bg-slate-800 border border-slate-700 text-blue-400 shadow-sm"><IoCartOutline size={18} /></div>
-              <span className="text-sm font-medium">Lignes de commande: <b className="text-white ml-1 text-lg">{data?.totalOrder}</b></span>
+              <span className="text-sm font-medium">Total: <b className="text-white ml-1 text-lg">{data?.totalOrder}</b></span>
             </div>
           </div>
 
@@ -136,24 +175,19 @@ function DailloginfoFacture({ open, data, onClose }) {
             
             <div className="w-full flex justify-between items-center mb-4 px-2">
               <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Retour</p>
-              <p className="text-sm font-bold text-red-400/80 font-mono italic">-{data?.PrixReture} DH</p>
+              <p className="text-sm font-bold text-blue-400/80 font-mono italic">{data?.PrixReture} DH</p>
             </div>
             
             <div className="pt-4 border-t border-slate-700/50 w-full text-center group">
-              <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-1 group-hover:scale-110 transition-transform">Total Net à Payer</p>
+              <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-1 group-hover:scale-110 transition-transform">Total Net Payé</p>
               <p className="text-5xl font-black text-emerald-400 tracking-tighter drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
                 {data?.TotalPrix} <span className="text-xl font-medium opacity-60 font-sans">DH</span>
               </p>
             </div>
           </div>
         </div>
-        
-        {/* Glow effect */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none" />
       </div>
 
-      {/* Hidden Print Section */}
       <div className="hidden">
         <FacturePrint ref={printRef} facture={data} user={user} />
       </div>
