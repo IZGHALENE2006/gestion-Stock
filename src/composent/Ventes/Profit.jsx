@@ -3,7 +3,7 @@ import NaveProfite from "./NaveProfite";
 
 export default function Profite() {
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 bg-gray-50 ">
       <NaveProfite />
       <div>
         <Outlet />

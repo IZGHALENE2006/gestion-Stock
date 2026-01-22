@@ -1,86 +1,52 @@
-import { IoSearchOutline, IoCartOutline } from "react-icons/io5";
+import { IoSearchOutline, IoCartOutline, IoCameraOutline, IoClose } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
 import gsap from "gsap";
 import { useDispatch, useSelector } from "react-redux";
-import { getMe } from "../../slices/SliceLoginAdmin";
+import { getMe, addVentes } from "../../slices/SliceLoginAdmin";
 import { GetAllProduct } from "../../slices/SliceProduct";
-import LiveClock from "./DateTime"
+import LiveClock from "./DateTime";
 import ProductCard from "./ProductCard";
-import { addVentes } from "../../slices/SliceLoginAdmin"; 
-
-//import BareCode
 import { useEffect, useRef, useState } from "react";
 import Quagga from "quagga";
-import { IoCameraOutline, IoClose } from "react-icons/io5";
 import FacturePrint from "../Facture/FacturePrintachat";
 import { useReactToPrint } from "react-to-print";
 
 export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
-
-  //LogicBarecode@@@@@@@@@@@@@@@@@@@@@@@@@
-
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const scannerRef = useRef(null);
-const [barcode,setBarecode] = useState('')
-  const startScan = () => {
-    setOpen(true);
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const { user, token } = useSelector((state) => state.LoginAdmin);
+  const { Produts } = useSelector((state) => state.Product);
+  const dispatch = useDispatch();
+  const [amountPaid, setAmountPaid] = useState("");
+  const [Facture, setFacture] = useState(null);
+  const printRef = useRef();
+  const sectionRef = useRef(null);
 
-  const stopScan = () => {
-    Quagga.stop();
-    setOpen(false);
-  };
+  // --- LOGIC SCANNER ---
+  const startScan = () => setOpen(true);
+  const stopScan = () => { Quagga.stop(); setOpen(false); };
 
   useEffect(() => {
     if (!open) return;
-
- Quagga.init(
-  {
-    inputStream: {
-      type: "LiveStream",
-      target: scannerRef.current,
-      constraints: {
-        facingMode: "user",
-      },
-    },
-    decoder: {
-      readers: ["ean_reader", "code_128_reader"], 
-    },
-    locate: true,
-  },
-  (err) => {
-    if (err) {
-      console.error("Quagga init error:", err);
-      return;
-    }
-    Quagga.start();
-  }
-);
-
+    Quagga.init({
+      inputStream: { type: "LiveStream", target: scannerRef.current, constraints: { facingMode: "user" } },
+      decoder: { readers: ["ean_reader", "code_128_reader"] },
+      locate: true,
+    }, (err) => {
+      if (err) return;
+      Quagga.start();
+    });
     Quagga.onDetected((result) => {
-      const code = result.codeResult.code;
-      console.log("SCANNED:", code);
-      setSearchTerm(code)
+      setSearchTerm(result.codeResult.code);
+      
       stopScan();
     });
-
-    return () => {
-      stopScan();
-      Quagga.offDetected();
-    };
+    return () => { stopScan(); Quagga.offDetected(); };
   }, [open]);
-  //////////////////@@@@@@@@@@@@@@@@@@@@@@@@2
-  const { user, token } = useSelector((state) => state.LoginAdmin);
-  const { Produts, loading } = useSelector((state) => state.Product); 
-  const dispatch = useDispatch();
-  const [amountPaid, setAmountPaid] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); 
-  const sectionRef = useRef(null);
 
   useEffect(() => {
-    if (token && !user) {
-      dispatch(getMe());
-    }
+    if (token && !user) dispatch(getMe());
     dispatch(GetAllProduct());
   }, [token, dispatch, user]);
 
@@ -92,235 +58,235 @@ const [barcode,setBarecode] = useState('')
   ];
 
   const filteredProducts = Produts?.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    p.barcode?.includes(searchTerm)
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.barcode?.includes(searchTerm)
   );
 
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
   const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
-const [Facture,setFacture] = useState(null)
-async function Khless() {
-  if (cart?.length === 0) return toast.error("Le panier est vide");
-  if (changeToReturn < 0) return toast.error("Montant insuffisant");
 
-try {
-  const res = await dispatch(
-    addVentes({ cart, totalOrder, changeToReturn })
-  ).unwrap();
-
-  toast.success("Vente enregistrée avec succès");
-
-  setFacture(res.facture); 
-  onClearCart();
-  setAmountPaid("");
-
-} catch (err) {
-  toast.error(
-    typeof err === "string" ? err : err?.message || "Erreur serveur"
-  );
-}}
-    
-useEffect(() => {
-  if(Facture){
-    handlePrint();
+  async function Khless() {
+    if (cart?.length === 0) return toast.error("Le panier est vide");
+    if (changeToReturn < 0) return toast.error("Montant insuffisant");
+    try {
+      const res = await dispatch(addVentes({ cart, totalOrder, changeToReturn })).unwrap();
+      toast.success("Vente enregistrée");
+      setFacture(res.facture); 
+      onClearCart();
+      setAmountPaid("");
+    } catch (err) {
+      toast.error(err?.message || "Erreur");
+    }
   }
-}, [Facture])  
 
-  
+  const handlePrint = useReactToPrint({ contentRef: printRef });
+  useEffect(() => { if (Facture) handlePrint(); }, [Facture]);
+
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
-    gsap.fromTo(".amount-display", 
-      { scale: 1.15, color: color }, 
-      { scale: 1, color: "#2C74B3", duration: 0.5, ease: "elastic.out(1, 0.3)" }
-    );
-
-    gsap.to(target, {
-      scale: 0.92,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 1
-    });
+    gsap.fromTo(".amount-display", { scale: 1.2, color: color }, { scale: 1, color: "#2563eb", duration: 0.5 });
   };
 
-  //Logic Print
-  const printRef = useRef();
-
-const handlePrint = useReactToPrint({
-  contentRef: printRef,
-});
-
   return (
-    <div ref={sectionRef} className="ticket-section flex-1 bg-[#1e293b] rounded-2xl border border-slate-700 shadow-xl flex flex-col overflow-hidden">
-      <div className="p-5 border-b border-slate-700 bg-[#2C74B3]/10 flex justify-between items-center">
+    <div ref={sectionRef} className="flex-1 bg-white rounded-[2.5rem] border border-[#e2e8f0] shadow-sm flex flex-col overflow-hidden">
+      
+      {/* HEADER: Light style */}
+      <div className="p-6 border-b border-[#e2e8f0] bg-[#f8fafc] flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold uppercase tracking-wider">
-            <span className="font-semibold text-white">La Caisse De : </span>
-            <span className="text-white">{user?.name || "User"}</span>
+          <h2 className="text-lg font-black text-[#0f172a] uppercase tracking-tight">
+            Caissier: <span className="text-blue-600">{user?.name || "User"}</span>
           </h2>
-          <p className="text-xs text-slate-400">{user?.role?.toUpperCase()} {" "}• {new Date().toLocaleDateString()}{" "}• <LiveClock /></p>
+          <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mt-1">
+            {user?.role} • <LiveClock />
+          </p>
         </div>
-        <div className="relative">
-          <IoCartOutline size={30} className="text-[#2C74B3]" />
-          {Produts?.length > 0 && (
-             <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-bold px-1.5 rounded-full text-white">
-               {Produts.length}
-             </span>
+        <div className="p-3 bg-white rounded-2xl border border-[#e2e8f0] text-blue-600 shadow-sm relative">
+          <IoCartOutline size={24} />
+          {cart.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full text-white">
+              {cart.length}
+            </span>
           )}
         </div>
       </div>
-{/* ///////////serache */}
 
-     <div className="p-4 flex items-center gap-3">
-  
-  {/* input */}
-  <div className="relative flex-1">
-    <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-    <input 
-      type="text" 
-      placeholder="Rechercher des produits..." 
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full bg-[#0f172a] border border-slate-600 rounded-lg py-3 pl-10 pr-4 outline-none focus:border-[#2C74B3] transition-all text-sm text-white" 
-    />
-  </div>
-
-  {/* scanner */}
-  <div className="flex items-center">
- {/* // Logic BareCode */}
-      <button
-        onClick={startScan}
-        className="h-12 bg-green-600 hover:bg-green-700 text-white px-4 rounded-lg flex items-center gap-2"
-      >
-        <IoCameraOutline size={20} />
-      </button>
-
-      {/* Modal */}
-      {open && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
-          <div className="bg-[#0f172a] rounded-xl p-3 w-90 relative">
-            
-            {/* Close */}
-            <button
-              onClick={stopScan}
-              className="absolute top-2 right-2 text-white hover:text-red-500"
-            >
-              <IoClose size={22} />
-            </button>
-
-            {/* Camera */}
-            <div
-              ref={scannerRef}
-              className="w-full h-60 overflow-hidden rounded-lg"
-            />
-          </div>
+      {/* SEARCH & SCANNER */}
+      <div className="p-4 flex gap-3 bg-white">
+        <div className="relative flex-1">
+          <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b]" />
+          <input 
+            type="text" 
+            placeholder="Scanner ou rechercher un produit..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-blue-400 transition-all text-sm font-bold text-[#334155]" 
+          />
         </div>
-      )}
-  </div>
-
-</div>
-
-
-      <div className="flex-1 p-4 space-y-2 max-h-120 min-h-75 overflow-y-scroll">
-        {searchTerm.length > 0 ? (
-          filteredProducts?.map((product) => (
-            <div 
-              key={product._id} 
-              onClick={() => { onAddToCart(product); setSearchTerm(""); }}
-              className="flex justify-between items-center p-3 bg-slate-800 hover:bg-[#2C74B3]/20 rounded-lg border border-slate-600 cursor-pointer transition-colors"
-            >
-                <div className="flex flex-col">
-                 <span className="font-medium text-white">{product.name}</span>
-                 <span className="text-[10px] text-slate-400">Stock: {product.quantite}</span>
-                </div>
-                <span className="font-bold text-[#2C74B3]">{product.prix_vente} DH</span>
-            </div>
-          ))
-        ) : Produts?.length === 0 ? ( 
-          <div className="h-full overflow-y-scroll flex flex-col items-center justify-center text-slate-500 italic opacity-50">
-            <IoCartOutline size={48} className="mb-2" />
-            <p>Panier vide</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-             {Produts?.map((item, index) => (
-               <ProductCard 
-                 key={item._id} 
-                 item={item} 
-                 click={() => onAddToCart(item)} 
-               />
-             ))}
-          </div>
-        )}
+        <button onClick={startScan} className="w-14 h-14 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-2xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all">
+          <IoCameraOutline size={24} />
+        </button>
       </div>
 
-      <div className="p-6 bg-[#0f172a]/80 border-t border-slate-700">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Espèces Reçues</p>
-            <div className="flex items-center">
-                <input 
-                    type="number" 
-                    value={amountPaid} 
-                    onChange={(e) => setAmountPaid(e.target.value)}
-                    className="no-spinner amount-display bg-transparent text-4xl font-black text-[#2C74B3] outline-none w-full placeholder:opacity-20"
-                    placeholder="0.00"
-                />
+      {/* PRODUCTS AREA */}
+   {/* PRODUCTS AREA - Styled as a Clean List */}
+<div className="flex-1 p-4 overflow-y-auto min-h-[400px] bg-[#f8fafc]/50">
+  <div className="flex flex-col gap-2"> {/* Container List */}
+    
+    {searchTerm.length > 0 ? (
+      /* SEARCH RESULTS LIST */
+      filteredProducts?.map((product) => (
+        <div 
+          key={product._id} 
+          onClick={() => { onAddToCart(product); setSearchTerm(""); }}
+          className="flex justify-between items-center p-4 bg-white hover:bg-blue-50 rounded-2xl border border-[#e2e8f0] cursor-pointer transition-all group shadow-sm hover:border-blue-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs">
+              {product.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-[#0f172a] text-sm uppercase tracking-tight">{product.name}</span>
+              <span className="text-[10px] font-bold text-[#64748b] uppercase">Stock: {product.quantite} Unités</span>
             </div>
           </div>
-          <div className="text-right pl-4">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Rendu</p>
-            <p className={`text-2xl font-black transition-colors duration-300 ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-400'}`}>
+          <div className="text-right">
+            <span className="block font-black text-blue-600 text-md">{product.prix_vente} DH</span>
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Prix Unitaire</span>
+          </div>
+        </div>
+      ))
+    ) : (
+      /* ALL PRODUCTS LIST (instead of Grid) */
+      Produts?.map((item) => (
+        <div 
+          key={item._id} 
+          onClick={() => onAddToCart(item)}
+          className="flex justify-between items-center p-4 bg-white hover:bg-blue-50 rounded-2xl border border-[#e2e8f0] cursor-pointer transition-all group shadow-sm hover:border-blue-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-xs shadow-md shadow-blue-100">
+              {item.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-[#0f172a] text-sm uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                {item.name}
+              </span>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${item.quantite > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                  {item.quantite > 0 ? 'EN STOCK' : 'OUT'}
+                </span>
+                <span className="text-[10px] font-bold text-slate-400">| Qty: {item.quantite}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <p className="font-black text-[#0f172a] text-md">{item.prix_vente} DH</p>
+              <p className="text-[9px] font-bold text-slate-400 uppercase">TTC</p>
+            </div>
+            <div className="bg-slate-50 p-2 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
+               <IoCartOutline size={18} />
+            </div>
+          </div>
+        </div>
+      ))
+    )}
+
+    {/* Empty State */}
+    {(!Produts || Produts.length === 0) && (
+      <div className="flex flex-col items-center justify-center py-20 opacity-20">
+        <IoCartOutline size={60} />
+        <p className="font-black uppercase tracking-widest text-xs mt-4">Aucun produit trouvé</p>
+      </div>
+    )}
+  </div>
+</div>
+
+      {/* PAYMENT INFO */}
+      <div className="p-6 bg-white border-t border-[#e2e8f0]">
+        <div className="flex justify-between items-end mb-6">
+          <div className="flex-1">
+            <p className="text-[10px] font-black text-[#64748b] uppercase tracking-[0.2em] mb-2">Espèces Reçues</p>
+            <input 
+              type="number" 
+              value={amountPaid} 
+              onChange={(e) => setAmountPaid(e.target.value)}
+              className="amount-display bg-transparent text-5xl font-black text-blue-600 outline-none w-full placeholder:text-slate-100"
+              placeholder="0.00"
+            />
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-black text-[#64748b] uppercase tracking-[0.2em] mb-2">Rendu</p>
+            <p className={`text-3xl font-black ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
               {changeToReturn.toFixed(2)} <span className="text-sm">DH</span>
             </p>
           </div>
         </div>
         
-        <div className="flex justify-between text-2xl font-black border-t border-slate-700 pt-4 text-white">
-          <span className="opacity-50 text-lg uppercase tracking-tighter">Total à Payer</span>
-          <span className="text-white">{totalOrder.toFixed(2)} DH</span>
+        <div className="flex justify-between items-center py-4 border-t border-dashed border-[#e2e8f0]">
+          <span className="text-[#64748b] font-black text-xs uppercase tracking-widest">Net à Payer</span>
+          <span className="text-3xl font-black text-[#0f172a]">{totalOrder.toFixed(2)} <span className="text-sm">DH</span></span>
         </div>
       </div>
 
-      <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-slate-700 bg-slate-800/30">
-        {cashValues.map((cash) => (
-          <button
-            key={cash.value}
-            onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
-            className="cash-btn relative overflow-hidden h-20 rounded-xl border border-slate-700 transition-all duration-300 group bg-slate-900"
-            style={{ "--hover-color": cash.color }}
-            onMouseEnter={(e) => e.currentTarget.style.borderColor = cash.color}
-            onMouseLeave={(e) => e.currentTarget.style.borderColor = ""}
-          >
-            <div
-              className="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 ease-out scale-110 group-hover:scale-125"
-              style={{ backgroundImage: `url(${cash.img})` }}
-            />
-            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-colors duration-300" />
-            <span className="relative z-10 text-lg font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase">
-              {cash.label}
-            </span>
-            <div 
-              className="absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity bg-linear-to-b pointer-events-none" 
-              style={{ backgroundImage: `linear-gradient(to top, ${cash.color}66, transparent)` }}
-            />
-          </button>
-        ))}
-      </div>
+      {/* QUICK CASH */}
+{/* QUICK CASH - Clean Money Images */}
+<div className="p-4 grid grid-cols-4 gap-3 bg-[#f8fafc] border-t border-[#e2e8f0]">
+  {cashValues.map((cash) => (
+    <button
+      key={cash.value}
+      onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
+      className="relative h-20 rounded-2xl border-2 border-[#e2e8f0] bg-white overflow-hidden group transition-all hover:border-blue-500 hover:shadow-lg active:scale-95 shadow-sm flex flex-col items-center justify-center"
+    >
+      {/* L-warqa dial l-flouss - Safia o bayna */}
+      <div 
+        className="absolute inset-0 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:scale-110" 
+        style={{ 
+          backgroundImage: `url(${cash.img})`,
+          backgroundSize: 'contain', /* Kat-khalli l-warqa t-ban kamla bla ma t-qte3 */
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.1))' /* Shadow khfif l-warqa */
+        }} 
+      />
       
-      <div className="p-4 pt-0">
+      {/* Label t-ban nqiya ta7t l-warqa aw wast menha */}
+      <div className="relative z-10 mt-auto mb-1 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded-lg">
+        <span className="font-black text-white text-[10px] tracking-tighter uppercase">
+          {cash.label}
+        </span>
+      </div>
+    </button>
+  ))}
+</div>
+      
+      {/* CONFIRM BUTTON */}
+      <div className="p-6 bg-white">
         <button 
-            onClick={() => {
-              Khless()
-            }} 
-            className="bg-linear-to-r from-[#2C74B3] via-[#fffcf662] to-[#2C74B3] bg-size-[300%_auto] transition-all duration-1000 ease-in-out hover:bg-right w-full py-5 rounded-2xl font-black text-lg tracking-widest active:scale-[0.98] shadow-xl shadow-blue-500/20 text-white"
+          onClick={Khless} 
+          className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[1.5rem] font-black text-lg tracking-widest transition-all active:scale-[0.97] shadow-xl shadow-blue-100 uppercase"
         >
-            CONFIRMER LA VENTE
+          Confirmer la vente
         </button>
       </div>
-      <Toaster />
+
+      {/* MODAL SCANNER */}
+      {open && (
+        <div className="fixed inset-0 z-[100] bg-[#0f172a]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-[2.5rem] p-4 w-full max-w-md relative shadow-2xl">
+            <button onClick={stopScan} className="absolute -top-12 right-0 text-white hover:rotate-90 transition-transform">
+              <IoClose size={32} />
+            </button>
+            <div ref={scannerRef} className="w-full h-72 overflow-hidden rounded-[2rem] bg-black border-4 border-blue-600" />
+            <p className="text-center mt-4 text-[#64748b] font-bold text-xs uppercase tracking-widest">Placez le code-barres devant la caméra</p>
+          </div>
+        </div>
+      )}
+
+      <Toaster position="bottom-right" />
       <div style={{ display: "none" }}>
-  <FacturePrint ref={printRef} facture={Facture} user={user} />
-</div>
+        <FacturePrint ref={printRef} facture={Facture} user={user} />
+      </div>
     </div>
   );
 }

@@ -3,38 +3,37 @@ import { IoPeopleOutline, IoBarChartOutline } from "react-icons/io5";
 
 export default function NavRow() {
   return (
-    <div className="flex justify-start gap-6 bg-[#1e293b] border border-slate-700 shadow-xl  p-4 rounded-xl shadow-md">
+    <div className="flex gap-4 bg-white border border-slate-200 rounded-2xl p-3 shadow-sm mb-8">
       
-      {/* Employees List */}
-      <NavLink 
-        to="/Home/employees/EmployeeDashboard" 
-        className={({ isActive }) => `
-          flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
-          ${isActive 
-            ? 'bg-[#2C74B3] text-white'
-            : 'text-gray-400 hover:bg-[#2C74B3]/30 hover:text-white'
-          }
-        `}
+      <NavLink
+        to="/Home/employees/EmployeeDashboard"
+        className={({ isActive }) =>
+          `flex items-center gap-2 px-5 py-2 rounded-xl font-semibold text-sm transition
+          ${
+            isActive
+              ? "bg-blue-600 text-white shadow"
+              : "text-slate-600 hover:bg-slate-100"
+          }`
+        }
       >
-        <IoPeopleOutline size={22} />
-        <span>Employees</span>
+        <IoPeopleOutline size={20} />
+        Employees
       </NavLink>
 
-      {/* Statistics */}
-      <NavLink 
-        to="/Home/employees/statistique" 
-        className={({ isActive }) => `
-          flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
-          ${isActive 
-            ? 'bg-[#2C74B3] text-white'
-            : 'text-gray-400 hover:bg-[#2C74B3]/30 hover:text-white'
-          }
-        `}
+      <NavLink
+        to="/Home/employees/statistique"
+        className={({ isActive }) =>
+          `flex items-center gap-2 px-5 py-2 rounded-xl font-semibold text-sm transition
+          ${
+            isActive
+              ? "bg-blue-600 text-white shadow"
+              : "text-slate-600 hover:bg-slate-100"
+          }`
+        }
       >
-        <IoBarChartOutline size={22} />
-        <span>Statistics</span>
+        <IoBarChartOutline size={20} />
+        Statistics
       </NavLink>
-
     </div>
   );
 }

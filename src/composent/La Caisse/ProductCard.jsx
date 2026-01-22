@@ -1,63 +1,71 @@
 import { IoAddCircle } from "react-icons/io5";
 
-export default function ProductCard({ item , click }) {
+export default function ProductCard({ item, click }) {
+  // Styles dial l-status b alwan fati7a o nqiya
   const statusStyles = {
-    active: "from-emerald-500/20 to-emerald-500/5 text-emerald-400 border-emerald-500/20",
-    low: "from-amber-500/20 to-amber-500/5 text-amber-400 border-amber-500/20",
-    out: "from-rose-500/20 to-rose-500/5 text-rose-400 border-rose-500/20",
+    active: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    low: "bg-amber-50 text-amber-600 border-amber-100",
+    out: "bg-rose-50 text-rose-600 border-rose-100",
   };
 
-  const currentStatus = item.status || 'active';
+  const currentStatus = item.quantite > 10 ? 'active' : item.quantite > 0 ? 'low' : 'out';
+  const statusLabel = item.quantite > 10 ? 'Disponible' : item.quantite > 0 ? 'Stock Faible' : 'Rupture';
 
   return (
     <div 
-    onClick={click}
-    className="cursor-pointer group relative overflow-hidden bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-3xl p-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#2C74B3]/10 hover:border-[#2C74B3]/50">
-    
-      <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#2C74B3]/10 blur-3xl rounded-full group-hover:bg-[#2C74B3]/20 transition-colors" />
+      onClick={click}
+      className="cursor-pointer group relative bg-white border border-[#e2e8f0] rounded-[2rem] p-5 transition-all duration-300 hover:shadow-xl hover:shadow-blue-100/50 hover:border-blue-200"
+    >
+      {/* Decorative Blur Effect */}
+      <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 blur-2xl rounded-full group-hover:bg-blue-100 transition-colors" />
 
-      <div className="flex justify-between items-center mb-6">
-        <span className="text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase">
-          {item.categorie}
+      {/* Header Card: Categorie & Status */}
+      <div className="flex justify-between items-center mb-5 relative z-10">
+        <span className="text-[9px] font-black tracking-[0.15em] text-[#64748b] uppercase bg-slate-50 px-2 py-1 rounded-md">
+          {item.categorie || 'General'}
         </span>
-        <div className={`px-3 py-1 rounded-full border text-[10px] font-bold uppercase bg-linear-to-tr ${statusStyles[currentStatus]}`}>
-          ● {item.status || 'Disponible'}
+        <div className={`px-2.5 py-1 rounded-full border text-[9px] font-black uppercase tracking-tighter ${statusStyles[currentStatus]}`}>
+          ● {statusLabel}
         </div>
       </div>
 
-      <div className="mb-8">
-        <div className="flex items-center gap-4 mb-2">
-          <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-[#2C74B3] to-[#1e293b] flex items-center justify-center text-white font-bold shadow-lg">
+      {/* Product Name & Icon */}
+      <div className="mb-6 relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-[#0f172a] flex items-center justify-center text-white font-black shadow-md shadow-slate-200">
             {item.name.charAt(0).toUpperCase()}
           </div>
-          <h3 className="text-xl font-bold text-white leading-tight group-hover:text-[#2C74B3] transition-colors">
+          <h3 className="text-md font-black text-[#0f172a] leading-tight uppercase tracking-tight group-hover:text-blue-600 transition-colors">
             {item.name}
           </h3>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-800/50">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-4 py-4 border-y border-dashed border-[#e2e8f0] relative z-10">
         <div>
-          <p className="text-slate-500 text-[10px] uppercase font-semibold">Stock</p>
-          <p className="text-slate-200 font-medium">{item.quantite} Unités</p>
+          <p className="text-[#64748b] text-[9px] uppercase font-black tracking-widest">Stock</p>
+          <p className="text-[#334155] font-black text-sm">{item.quantite} <span className="text-[10px] font-bold">U</span></p>
         </div>
         <div className="text-right">
-          <p className="text-slate-500 text-[10px] uppercase font-semibold">Prix Unitaire</p>
-          <p className="text-slate-200 font-medium">{item.prix_vente} DH</p>
+          <p className="text-[#64748b] text-[9px] uppercase font-black tracking-widest">Prix</p>
+          <p className="text-blue-600 font-black text-sm">{item.prix_vente} <span className="text-[10px]">DH</span></p>
         </div>
       </div>
 
-      <div className="mt-6 flex justify-between items-end">
+      {/* Footer: Total Value & Add Icon */}
+      <div className="mt-5 flex justify-between items-end relative z-10">
         <div>
-          <p className="text-slate-500 text-[10px] font-medium italic">Valeur totale</p>
-          <p className="text-2xl font-black text-transparent bg-clip-text bg-linear-to-r from-white to-slate-400">
+          <p className="text-[#94a3b8] text-[9px] font-black uppercase tracking-tighter">Valeur Stock</p>
+          <p className="text-xl font-black text-[#0f172a]">
             {item.prix_vente * item.quantite} 
-            <span className="text-sm ml-1 text-slate-500 font-normal">DH</span>
+            <span className="text-[10px] ml-1 text-[#64748b]">DH</span>
           </p>
         </div>
         
-        <div className="opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-            <IoAddCircle className="text-[#2C74B3]" size={32}/>
+        {/* Add Button: Blue-600 */}
+        <div className="transform translate-y-1 group-hover:translate-y-0 opacity-80 group-hover:opacity-100 transition-all duration-300">
+            <IoAddCircle className="text-blue-600 filter drop-shadow-sm" size={38}/>
         </div>
       </div>
     </div>

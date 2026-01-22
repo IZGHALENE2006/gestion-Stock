@@ -3,36 +3,40 @@ import { IoPeopleOutline, IoBarChartOutline } from "react-icons/io5";
 
 export default function NaveProfite() {
   return (
-    <div className="flex justify-start gap-6 bg-[#1e293b] border border-slate-700 shadow-xl  p-4 rounded-xl shadow-md">
+    /* - bg-white: blast l-k7al
+       - border-slate-200: khit fate7
+       - shadow-sm: shadow khfif dial l-light mode
+    */
+    <div className="flex justify-start gap-6 bg-white border border-slate-200 shadow-sm p-3 rounded-2xl mb-6">
       
-      {/* Employees List */}
+      {/* Ventes Link */}
       <NavLink 
         to="/Home/Profit/Ventes" 
         className={({ isActive }) => `
-          flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+          flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-200
           ${isActive 
-            ? 'bg-[#2C74B3] text-white'
-            : 'text-gray-400 hover:bg-[#2C74B3]/30 hover:text-white'
+            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' 
+            : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
           }
         `}
       >
-        <IoPeopleOutline size={22} />
-        <span>Ventes</span>
+        <IoPeopleOutline size={20} />
+        <span className="text-sm">Ventes</span>
       </NavLink>
 
-      {/* Statistics */}
+      {/* Facture Link */}
       <NavLink 
         to="/Home/Profit/Facture" 
         className={({ isActive }) => `
-          flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+          flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-200
           ${isActive 
-            ? 'bg-[#2C74B3] text-white'
-            : 'text-gray-400 hover:bg-[#2C74B3]/30 hover:text-white'
+            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' 
+            : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
           }
         `}
       >
-        <IoBarChartOutline size={22} />
-        <span>Facture</span>
+        <IoBarChartOutline size={20} />
+        <span className="text-sm">Facture</span>
       </NavLink>
 
     </div>
