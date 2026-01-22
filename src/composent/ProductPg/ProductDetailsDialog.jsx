@@ -1,27 +1,93 @@
 // Dialog/ProductDetailsDialog.jsx
+import { IoCloseOutline, IoCubeOutline, IoLayersOutline, IoWalletOutline, IoStatsChartOutline } from "react-icons/io5";
+
 export default function ProductDetailsDialog({ open, onClose, product }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-[#1a1a1a] border border-gray-600 p-6 rounded-lg shadow-xl w-96">
-        <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
-          Product Details
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-200/60 backdrop-blur-md p-4">
+      <div className="bg-white border border-white p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] w-full max-w-md transform transition-all relative">
         
-        <div className="space-y-3 text-gray-300">
-          <p><strong className="text-sky-400">Name:</strong> {product?.name}</p>
-          <p><strong className="text-sky-400">Category:</strong> {product?.categorie}</p>
-          <p><strong className="text-sky-400">Price:</strong> {product?.prix_achat} Dh</p>
-          <p><strong className="text-sky-400">Stock:</strong> {product?.quantite}</p>
+        {/* Close Button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all"
+        >
+          <IoCloseOutline size={24} />
+        </button>
+
+        {/* Header Section */}
+        <div className="flex flex-col items-center mb-10">
+          <div className="w-24 h-24 bg-indigo-50 rounded-[2.2rem] flex items-center justify-center text-indigo-500 text-4xl font-black mb-4 border border-indigo-100/50">
+            {product?.name?.charAt(0).toUpperCase()}
+          </div>
+          <h2 className="text-xl font-black text-slate-800 uppercase tracking-tighter">
+            Infos Produit
+          </h2>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">
+            Détails de l'inventaire
+          </span>
+        </div>
+        
+        {/* Info Cards (Light Style) */}
+        <div className="grid grid-cols-1 gap-3">
+          
+          <div className="flex items-center gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+            <div className="p-3 bg-white rounded-xl shadow-sm text-indigo-500">
+              <IoCubeOutline size={20} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Désignation</span>
+              <span className="text-sm font-black text-slate-700 uppercase">{product?.name}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+            <div className="p-3 bg-white rounded-xl shadow-sm text-emerald-500">
+              <IoLayersOutline size={20} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Catégorie</span>
+              <span className="text-sm font-black text-slate-700 uppercase">{product?.categorie || "Général"}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+            <div className="p-3 bg-white rounded-xl shadow-sm text-amber-500">
+              <IoWalletOutline size={20} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Prix d'achat</span>
+              <span className="text-sm font-black text-slate-700">{product?.prix_achat?.toFixed(2)} DH</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+            <div className="p-3 bg-white rounded-xl shadow-sm text-rose-500">
+              <IoStatsChartOutline size={20} />
+            </div>
+            <div className="flex flex-col flex-1">
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Stock Disponible</span>
+              <div className="flex justify-between items-center">
+                 <span className="text-sm font-black text-slate-700">{product?.quantite} Unités</span>
+                 <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase ${
+                    product?.quantite < 10 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'
+                 }`}>
+                   {product?.quantite < 10 ? 'Faible' : 'Ok'}
+                 </span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div className="mt-6 flex justify-end">
+        {/* Action Button */}
+        <div className="mt-10">
           <button 
             onClick={onClose}
-            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded transition-colors"
+            className="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-[0_10px_25px_rgba(99,102,241,0.3)]"
           >
-            Close
+            Fermer
           </button>
         </div>
       </div>

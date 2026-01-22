@@ -1,139 +1,149 @@
-import { IoSearchOutline, IoAddOutline, IoFileTrayStackedOutline } from "react-icons/io5";
+import {
+  IoSearchOutline,
+  IoAddOutline,
+  IoFileTrayStackedOutline
+} from "react-icons/io5";
 import CardCategories from "./CardCategories";
 import Dialog from "../Dialog/Dialog";
-import { MdDeleteForever } from "react-icons/md";
 import AddCategoryorm from "./AddForm";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetAllCatefory, DeleteCategory } from "../../slices/SilceCategory";
-import toast, { Toaster } from 'react-hot-toast';
 import ConfirmDelete from "../Dialog/ConfirmDelete";
 import UpdateCategoryForma from "./UpdateCategoryForma";
+import toast, { Toaster } from "react-hot-toast";
 
 function Categories() {
-  const Dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { Category } = useSelector((state) => state.category);
-  //Get user
-  const { user, role,token,loading } = useSelector(state => state.LoginAdmin);
-  console.log(role);
-  
+  const { role } = useSelector((state) => state.LoginAdmin);
+
   useEffect(() => {
-    Dispatch(GetAllCatefory());
-  }, [Dispatch]);
+    dispatch(GetAllCatefory());
+  }, [dispatch]);
 
-  const [open, setOpen] = useState(false);
-  const [openDailgoConfirmation, setOpenDailgoConfirmation] = useState(false);
-  const [iddelete, setiddelet] = useState('');
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [idDelete, setIdDelete] = useState("");
+  const [idUpdate, setIdUpdate] = useState("");
 
-  // Logic Delete Category
-  function HandleDeleteCategory(id) {
-    setiddelet(id);
-    setOpenDailgoConfirmation(true);
+  // Delete
+  function handleDelete(id) {
+    setIdDelete(id);
+    setOpenDelete(true);
   }
 
-  function HandleconfiremeDEleteCategorey() {
-    Dispatch(DeleteCategory(iddelete)).unwrap().then(() => {
-      setOpenDailgoConfirmation(false);
-    });
+  function confirmDelete() {
+    dispatch(DeleteCategory(idDelete))
+      .unwrap()
+      .then(() => {
+        toast.success("Category deleted");
+        setOpenDelete(false);
+      });
   }
 
-  // Logic Update
-  const [idupdate, setidupdate] = useState('');
-  const [openDailgoupdate, setopenDailgoupdate] = useState(false);
-
-  function Hnadleupdatecategory(id) {
-    setidupdate(id);
-    setopenDailgoupdate(true);
+  // Update
+  function handleUpdate(id) {
+    setIdUpdate(id);
+    setOpenUpdate(true);
   }
 
   return (
-    <div className="p-6 bg-[#0f172a] min-h-screen text-white flex flex-col">
+    <div className="p-6 bg-slate-50 min-h-screen">
+      {/* ===== TOP CARDS & SEARCH ===== */}
       <div className="flex flex-col lg:flex-row gap-6 mb-8">
-        <div className="ProductsCard flex-1 min-w-65 p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-500/20">
-            <IoFileTrayStackedOutline size={36} className="text-blue-400" />
+        
+        {/* Counter Card */}
+        <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-blue-100">
+            <IoFileTrayStackedOutline size={34} className="text-blue-600" />
           </div>
           <div>
-            <p className="text-slate-400 text-sm font-medium">Number Categories</p>
-            <h1 className="text-3xl font-bold">{Category.length}</h1>
+            <p className="text-slate-500 text-sm font-medium">
+              Number of Categories
+            </p>
+            <h1 className="text-3xl font-bold text-slate-800">
+              {Category.length}
+            </h1>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col md:flex-row items-center gap-4 bg-[#1e293b] border border-slate-700 rounded-2xl p-5 ">
-          <div className={`flex items-center bg-[#0f172a] border border-slate-600 rounded-lg overflow-hidden w-full md:${role=='admin'?"w-2/3":"w-3/3"}`}>
+        {/* Search + Add */}
+        <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-4 items-center">
+          
+          {/* Search */}
+          <div className={`flex items-center bg-slate-100 border border-slate-200 rounded-xl overflow-hidden w-full ${role === "admin" ? "md:w-2/3" : "md:w-full"}`}>
             <span className="px-3 text-slate-400">
               <IoSearchOutline />
             </span>
             <input
               type="text"
               placeholder="Search category..."
-              className="bg-transparent text-sm px-3 py-2 outline-none w-full text-white"
+              className="bg-transparent text-sm px-2 py-2 outline-none w-full text-slate-700"
             />
           </div>
 
-   {role=='admin'&&
-     <button
-            className="flex items-center gap-2 px-5 py-2 bg-[#2C74B3] rounded-lg text-sm hover:bg-white hover:text-[#2C74B3] transition"
-            onClick={() => setOpen(true)}
-                
-          >
-            <IoAddOutline size={18} />
-            Add Category
-          </button>
-   }
+          {/* Add Button */}
+          {role === "admin" && (
+            <button
+              onClick={() => setOpenAdd(true)}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"
+            >
+              <IoAddOutline size={18} />
+              Add Category
+            </button>
+          )}
         </div>
       </div>
 
-<div className="flex-1  overflow-y-auto">
-  {/* The Flex Container */}
-  <div className="flex flex-wrap gap-6 justify-center">
-    {Category.map((t, i) => (
-      /* The Flex Item: Responsive width calculations */
-      <div 
-        key={t._id || i} 
-        className="flex-grow-0 flex-shrink-0 
-                   basis-full 
-                   sm:basis-[calc(50%-1.5rem)] 
-                   lg:basis-[calc(33.333%-1.5rem)] 
-                   xl:basis-[calc(25%-1.5rem)]"
-      >
-        <CardCategories
-          id={t._id}
-          name={t.name}
-          Datee={t.DateCreate}
-          btn={HandleDeleteCategory}
-          update={Hnadleupdatecategory}
-        />
+      {/* ===== CATEGORIES GRID ===== */}
+      <div className="flex flex-wrap gap-6 justify-center">
+        {Category.map((t, i) => (
+          <div
+            key={t._id || i}
+            className="basis-full sm:basis-[calc(50%-1.5rem)] lg:basis-[calc(33.333%-1.5rem)] xl:basis-[calc(25%-1.5rem)]"
+          >
+            <CardCategories
+              id={t._id}
+              name={t.name}
+              Datee={t.DateCreate}
+              btn={handleDelete}
+              update={handleUpdate}
+            />
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-</div>
 
-      {/* DIALOG ADD */}
-      <Dialog bgcolor={"#FFFFFF"} width="550px" isOpen={open} onClose={() => setOpen(false)} title='Ajouter nouveau categorie'>
+      {/* ===== DIALOGS ===== */}
+      <Dialog
+        bgcolor="#ffffff"
+        width="550px"
+        isOpen={openAdd}
+        onClose={() => setOpenAdd(false)}
+        title="Ajouter nouvelle catégorie"
+      >
         <AddCategoryorm />
       </Dialog>
 
-      {/* DIALOG DELETE */}
-      <ConfirmDelete 
-        open={openDailgoConfirmation} 
-        onClose={() => setOpenDailgoConfirmation(false)}
-        onConfirm={HandleconfiremeDEleteCategorey} 
-        title={"Delete Categorie"} 
-        message={"Êtes-vous certain(e) de vouloir supprimer cette catégorie"}
+      <ConfirmDelete
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        message="Êtes-vous sûr de vouloir supprimer cette catégorie ?"
       />
 
-      {/* DIALOG UPDATE */}
-      <Dialog 
-        bgcolor={"#FFFFFF"} 
-        width="550px" 
-        isOpen={openDailgoupdate} 
-        onClose={() => setopenDailgoupdate(false)} 
-        title="modifie info catégorie"
+      <Dialog
+        bgcolor="#ffffff"
+        width="550px"
+        isOpen={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        title="Modifier la catégorie"
       >
-        <UpdateCategoryForma 
-          idupdate={idupdate} 
-          onClose={() => setopenDailgoupdate(false)} 
+        <UpdateCategoryForma
+          idupdate={idUpdate}
+          onClose={() => setOpenUpdate(false)}
         />
       </Dialog>
 

@@ -1,4 +1,3 @@
-import "./Product.css"
 import { 
   IoFileTrayStackedOutline, 
   IoWalletOutline, 
@@ -10,83 +9,85 @@ import { useSelector } from "react-redux";
 
 export default function ProductPg() {
   const { Produts, loading } = useSelector((state) => state.Product);
-
-  const { user, role,token, } = useSelector(state => state.LoginAdmin);
+  const { role } = useSelector(state => state.LoginAdmin);
  
   const Total = Produts.reduce((somme, item) => {
     return somme += item.prix_achat;
   }, 0);
 
   const lowStockCount = Produts.filter(item => item.quantite > 0 && item.quantite < 10).length;
-
   const outOfStockCount = Produts.filter(item => item.quantite <= 0).length;
 
+  // Reusable Stat Card Component for Light Mode
+  const StatCard = ({ icon, label, value, colorClass, bgColor, iconColor }) => (
+    <div className={`flex-1 min-w-[240px] p-6 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center gap-5 transition-all hover:translate-y-[-5px] hover:shadow-md`}>
+      <div className={`p-4 rounded-[1.8rem] ${bgColor} ${iconColor}`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{label}</p>
+        <h2 className={`text-2xl font-black ${colorClass || "text-slate-800"}`}>
+          {value}
+        </h2>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="p-6 bg-[#0f172a] min-h-screen text-white">
-      <div className="flex flex-wrap gap-6 mb-8">
+    <div className="p-8 bg-[#f8fafc] min-h-screen">
+      {/* --- STATS SECTION --- */}
+      <div className="flex flex-wrap gap-6 mb-10">
         
-        <div className="ProductsCard flex-1 min-w-60 p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-500/20">
-            <IoFileTrayStackedOutline size={35} className="text-blue-400" />
-          </div>
-          <div>
-            <h1 className="text-slate-400 text-sm font-medium">Count Product</h1>
-            <h1 className="text-3xl font-bold">{Produts.length}</h1>
-          </div>
-        </div>
+        <StatCard 
+          icon={<IoFileTrayStackedOutline size={28} />}
+          label="Total Produits"
+          value={Produts.length}
+          bgColor="bg-indigo-50"
+          iconColor="text-indigo-500"
+        />
 
-        <div className="ProductsCard flex-1 min-w-60 p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-amber-500/20">
-            <IoBagRemoveOutline size={35} className="text-amber-400" />
-          </div>
-          <div>
-            <h1 className="text-slate-400 text-sm font-medium">Low Stock</h1>
-            <h1 className="text-3xl font-bold text-amber-500">{lowStockCount}</h1>
-          </div>
-        </div>
+        <StatCard 
+          icon={<IoBagRemoveOutline size={28} />}
+          label="Stock Faible"
+          value={lowStockCount}
+          colorClass="text-amber-600"
+          bgColor="bg-amber-50"
+          iconColor="text-amber-500"
+        />
 
-        <div className={`flex-1 min-w-60 p-5 rounded-2xl border shadow-xl flex items-center gap-4 transition-all duration-300 ${
+        <div className={`flex-1 min-w-[240px] p-6 rounded-[2.5rem] border transition-all duration-300 flex items-center gap-5 ${
           outOfStockCount > 0 
-          ? "bg-red-900/20 border-red-500 animate-pulse" 
-          : "bg-[#1e293b] border-slate-700 ProductsCard"
+          ? "bg-rose-50 border-rose-100 shadow-rose-100 shadow-lg" 
+          : "bg-white border-slate-100 shadow-sm"
         }`}>
-          <div className={`p-3 rounded-xl ${outOfStockCount > 0 ? "bg-red-500/30" : "bg-slate-700/30"}`}>
-            <IoBanOutline size={35} className={outOfStockCount > 0 ? "text-red-500" : "text-slate-400"} />
+          <div className={`p-4 rounded-[1.8rem] ${outOfStockCount > 0 ? "bg-white text-rose-500 shadow-sm" : "bg-slate-50 text-slate-400"}`}>
+            <IoBanOutline size={28} />
           </div>
           <div>
-            <h1 className="text-slate-400 text-sm font-medium">Out Of Stock</h1>
-            <h1 className={`text-3xl font-bold ${outOfStockCount > 0 ? "text-red-500" : "text-white"}`}>
+            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Rupture Stock</p>
+            <h2 className={`text-2xl font-black ${outOfStockCount > 0 ? "text-rose-600" : "text-slate-800"}`}>
               {outOfStockCount}
-            </h1>
+            </h2>
           </div>
         </div>
 
-        <div className="ProductsCard flex-1 min-w-60 p-5 rounded-2xl bg-[#1e293b] border border-slate-700 shadow-xl flex items-center gap-4 hover:border-emerald-500 transition-all duration-300">
-          <div className="p-3 rounded-xl bg-emerald-500/20">
-            <IoWalletOutline size={37} className="text-emerald-400" />
-          </div>
-          <div>
-            <h1 className="text-slate-400 text-sm font-medium">Total Inventory Value</h1>
-            <h1 className="text-3xl font-bold text-emerald-400">
-            {role === 'admin' ? (
-  <>
-    {Total.toLocaleString()}
-    <span className="text-sm font-normal text-slate-400"> dh</span>
-  </>
-) : (
-  <div className="flex justify-center items-center gap-2">
-   <div className="mt-2">****</div> <div>dh</div>
-     
-  </div>
-)}
-
-            </h1>
-          </div>
-        </div>
+        <StatCard 
+          icon={<IoWalletOutline size={28} />}
+          label="Valeur Inventaire"
+          value={role === 'admin' ? (
+            <div className="flex items-baseline gap-1">
+              {Total.toLocaleString()} <span className="text-xs font-bold opacity-40 uppercase">dh</span>
+            </div>
+          ) : "**** DH"}
+          colorClass="text-emerald-600"
+          bgColor="bg-emerald-50"
+          iconColor="text-emerald-500"
+        />
 
       </div>
 
-      <div className="overflow-hidden">
+      {/* --- LIST SECTION --- */}
+      <div className="rounded-[3rem]">
         <ProductList />
       </div>
     </div>

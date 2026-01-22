@@ -1,53 +1,43 @@
-import { useState } from "react"
+import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import AddEmploye from "./AddEmploye";
 
 export default function EmployeeSearch() {
-const[open,setopne]=useState(false)
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="mb-7 w-full p-4 px-8 bg-[#1e293b] border border-gray-600 rounded-xl flex justify-between items-center gap-6">
-    
+    <div className="mb-8 w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 flex flex-wrap justify-between items-center gap-4 shadow-sm">
+      
       {/* LEFT */}
-      <div className="flex items-center gap-4 flex-wrap">
-    
-        {/* Search */}
-        <div className="flex items-center bg-[#0f172a] border border-gray-600 rounded-lg overflow-hidden">
-          <label htmlFor="search" className="px-3 text-gray-400">
+      <div className="flex items-center gap-3 flex-wrap">
+        {/* Search input */}
+        <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl overflow-hidden">
+          <span className="px-3 text-slate-400">
             <IoSearchOutline />
-          </label>
+          </span>
           <input
-            id="search"
             type="text"
-            placeholder="Search Employee..."
-            className="bg-transparent text-sm text-white px-3 py-2 outline-none w-44 group"
+            placeholder="Search employee..."
+            className="bg-transparent text-sm text-slate-700 px-2 py-2 outline-none w-48"
           />
         </div>
-    
-        <button className="px-5 py-2 bg-[#2C74B3] text-white rounded-lg text-sm
-                           hover:bg-white hover:text-[#2C74B3] transition">
+
+        {/* Search button */}
+        <button className="px-5 py-2 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-900 transition">
           Search
         </button>
       </div>
-    
+
       {/* RIGHT */}
       <button
-        onClick={() => setopne(true)}
-        className="px-5 py-2 bg-[#2C74B3] text-white rounded-lg text-sm
-                   hover:bg-white hover:text-[#2C74B3] transition"
+        onClick={() => setOpen(true)}
+        className="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2"
       >
-        <span id='plus'>+</span>
-         Add Employees
+        <span className="text-lg leading-none">+</span>
+        Add Employee
       </button>
-    
 
-
-<AddEmploye open={open} onClose={()=>setopne(false)} />
-
-
-
-
-
-
+      <AddEmploye open={open} onClose={() => setOpen(false)} />
     </div>
-  )
+  );
 }

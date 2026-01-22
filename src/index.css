@@ -1,65 +1,36 @@
 body {
-    font-family: "Saira", sans-serif;
+  font-family: "Saira", sans-serif;
   margin: 0;
   min-height: 100vh;
-  /* background: radial-gradient(
-      circle at 20% 30%,
-      rgba(109, 117, 117, 0.45),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 70%,
-      rgba(10, 38, 71, 0.85),
-      transparent 65%
-    ),
-    linear-gradient(
-      120deg,
-      #0A2647,
-      #09223d,
-      #0A2647
-    ); */
-    background-color:#0f172a;
-    overflow-x: hidden;
-  background-size: 200% 200%;
-  /* animation: smoothFlow 25s ease-in-out infinite; */
+  
+  /* Hada howa l-background fate7 (gray-50) li derna f ventes.jsx */
+  background-color: #f8fafc; 
+  
+  /* 7yedna l-gradient l-ghameq o khlina 7aja khfifa bzzaf */
+  background-image: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  
+  overflow-x: hidden;
+  color: #1e293b; 
 }
 
-/* Slow, liquid movement */
-@keyframes smoothFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-/*
-
-#0A2647 high
-#144272
-#205295
-#2C74B3 low
-
-https://colorhunt.co/palette/0a26471442722052952c74b3
-
-*/
-
-
-::-webkit-scrollbar{
-  background-color: #0A2647;
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-thumb{
-  background-color: #2C74B3;
-  border-radius: 25px;
-
+/* Scrollbar Style - Modern & Light */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #f1f5f9;
 }
 
-/* Remove Counter in inputs */
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* Gris fate7 */
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* Ky-ghmeq chwia f l-hover */
+}
+
+/* Utilities for Inputs */
 @layer utilities {
   .no-spinner::-webkit-outer-spin-button,
   .no-spinner::-webkit-inner-spin-button {
