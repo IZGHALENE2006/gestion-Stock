@@ -3,40 +3,39 @@ import { IoPeopleOutline, IoBarChartOutline } from "react-icons/io5";
 
 export default function NaveProfite() {
   return (
-    /* - bg-white: blast l-k7al
-       - border-slate-200: khit fate7
-       - shadow-sm: shadow khfif dial l-light mode
+    /* - Standardized with your dashboard's container style 
+       - Glass effect in dark mode
     */
-    <div className="flex justify-start gap-6 bg-white border border-slate-200 shadow-sm p-3 rounded-2xl mb-6">
+    <div className="flex justify-start gap-4 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm p-2 rounded-2xl mb-8 backdrop-blur-md transition-all">
       
       {/* Ventes Link */}
       <NavLink 
         to="/Home/Profit/Ventes" 
         className={({ isActive }) => `
-          flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-200
+          flex items-center gap-3 px-6 py-3 rounded-[1.2rem] text-xs font-black uppercase tracking-widest transition-all duration-300
           ${isActive 
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' 
-            : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
+            ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-600/20 scale-105' 
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600'
           }
         `}
       >
-        <IoPeopleOutline size={20} />
-        <span className="text-sm">Ventes</span>
+        <IoPeopleOutline size={18} className={({ isActive }) => isActive ? 'animate-pulse' : ''} />
+        <span>Ventes</span>
       </NavLink>
 
       {/* Facture Link */}
       <NavLink 
         to="/Home/Profit/Facture" 
         className={({ isActive }) => `
-          flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-200
+          flex items-center gap-3 px-6 py-3 rounded-[1.2rem] text-xs font-black uppercase tracking-widest transition-all duration-300
           ${isActive 
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' 
-            : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
+            ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-600/20 scale-105' 
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600'
           }
         `}
       >
-        <IoBarChartOutline size={20} />
-        <span className="text-sm">Facture</span>
+        <IoBarChartOutline size={18} />
+        <span>Facture</span>
       </NavLink>
 
     </div>

@@ -5,242 +5,207 @@ import {
   IoMailOutline,
   IoLockClosedOutline,
   IoCloseOutline,
+  IoFingerPrintOutline,
+  IoColorPaletteOutline,
 } from "react-icons/io5";
 import { addEmploye } from "../../slices/sliceEmploye";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from 'react-hot-toast';
 
 function AddEmploye({ open, onClose }) {
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [infoEmp, setInfoEmp] = useState({
     name: "",
     cin: "",
     phone: "",
     email: "",
     password: "",
-    color: "#2C74B3",
+    color: "#10b981", // Default to Emerald
     isActive: true,
   });
-  //Get state 
-  const {loading,error} = useSelector((state)=>state.Employe)
-  //function add 
-function HandelAddEmploye() {
-  dispatch(addEmploye(infoEmp))
-    .unwrap()
-    .then(() => {
-      toast.success("Employé ajouté avec succès", {
-        duration: 3000,
-        style: {
-          border: "1px solid #00d435",
-          padding: "16px",
-          color: "#00d435",
-          backgroundColor: "#fffffe",
-        },
+
+  const { loading, error } = useSelector((state) => state.Employe);
+
+  function HandelAddEmploye() {
+    dispatch(addEmploye(infoEmp))
+      .unwrap()
+      .then(() => {
+        toast.success("Employé ajouté avec succès", {
+          duration: 3000,
+          style: {
+            border: "1px solid #10b981",
+            padding: "16px",
+            color: "#10b981",
+            backgroundColor: "#ffffff",
+          },
+        });
+        onClose();
+      })
+      .catch((err) => {
+        toast.error(error || "Une erreur est survenue", {
+          duration: 3000,
+        });
       });
-
-      onClose(); 
-    })
-    .catch((err) => {
-      toast.error(error, {
-        duration: 3000,
-      });
-    });
-}
-
-
+  }
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
- 
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       {/* Overlay */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity"
       />
 
       {/* Dialog */}
-      <div className="relative bg-white w-full max-w-3xl rounded-2xl shadow-xl p-6 animate-scaleIn">
-
+      <div className="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] shadow-2xl p-8 border border-slate-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+        
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Ajouter un employé
-          </h2>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
+              Nouvel Employé
+            </h2>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+              Remplissez les informations de profil
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
           >
-            <IoCloseOutline size={22} />
+            <IoCloseOutline size={28} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="space-y-4">
-
+        <div className="space-y-6">
           {/* Nom + CIN */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Nom */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm text-gray-600 block mb-1">Nom</label>
-              <div className="relative">
-                <IoPersonOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Nom Complet</label>
+              <div className="relative group">
+                <IoPersonOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Nom complet"
-                  className="w-full pl-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  onChange={(e) =>
-                    setInfoEmp({ ...infoEmp, name: e.target.value })
-                  }
+                  placeholder="Jean Dupont"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  onChange={(e) => setInfoEmp({ ...infoEmp, name: e.target.value })}
                 />
               </div>
             </div>
 
-            {/* CIN */}
             <div>
-              <label className="text-sm text-gray-600 block mb-1">CIN</label>
-              <div className="relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">CIN</label>
+              <div className="relative group">
+                <IoFingerPrintOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Ex: AB123456"
-                  className="w-full pl-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  onChange={(e) =>
-                    setInfoEmp({ ...infoEmp, cin: e.target.value })
-                  }
+                  placeholder="AB123456"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  onChange={(e) => setInfoEmp({ ...infoEmp, cin: e.target.value })}
                 />
               </div>
             </div>
           </div>
 
           {/* Téléphone + Email */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Téléphone */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm text-gray-600 block mb-1">Téléphone</label>
-              <div className="relative">
-                <IoCallOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Téléphone</label>
+              <div className="relative group">
+                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="tel"
-                  placeholder="06xxxxxxxx"
-                  className="w-full pl-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  onChange={(e) =>
-                    setInfoEmp({ ...infoEmp, phone: e.target.value })
-                  }
+                  placeholder="06 00 00 00 00"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  onChange={(e) => setInfoEmp({ ...infoEmp, phone: e.target.value })}
                 />
               </div>
             </div>
 
-            {/* Email */}
             <div>
-              <label className="text-sm text-gray-600 block mb-1">Email</label>
-              <div className="relative">
-                <IoMailOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Email Professionnel</label>
+              <div className="relative group">
+                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="email"
-                  placeholder="email@example.com"
-                  className="w-full pl-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  onChange={(e) =>
-                    setInfoEmp({ ...infoEmp, email: e.target.value })
-                  }
+                  placeholder="nom@entreprise.com"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  onChange={(e) => setInfoEmp({ ...infoEmp, email: e.target.value })}
                 />
               </div>
             </div>
           </div>
 
           {/* Password + Couleur */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Password */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm text-gray-600 block mb-1">Mot de passe</label>
-              <div className="relative">
-                <IoLockClosedOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Mot de passe</label>
+              <div className="relative group">
+                <IoLockClosedOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="password"
                   placeholder="••••••••"
-                  className="w-full pl-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                  onChange={(e) =>
-                    setInfoEmp({ ...infoEmp, password: e.target.value })
-                  }
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  onChange={(e) => setInfoEmp({ ...infoEmp, password: e.target.value })}
                 />
               </div>
             </div>
 
-            {/* Couleur */}
-            <div className="flex items-center gap-3 mt-5 md:mt-0">
-              <input
-                type="color"
-                className="w-12 h-12 rounded-lg border border-gray-300 cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={infoEmp.color}
-                onChange={(e) =>
-                  setInfoEmp({ ...infoEmp, color: e.target.value })
-                }
-              />
-              <span className="text-sm text-gray-700">Couleur préférée</span>
+            <div className="flex flex-col">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Identité Visuelle</label>
+              <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 rounded-2xl">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded-xl border-none cursor-pointer bg-transparent"
+                  value={infoEmp.color}
+                  onChange={(e) => setInfoEmp({ ...infoEmp, color: e.target.value })}
+                />
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Choisir une couleur</span>
+              </div>
             </div>
           </div>
 
-          {/* Compte actif */}
-          <div>
-            <label className="text-sm text-gray-600 block mb-2">
-              Statut du compte
-            </label>
-            <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-blue-500 transition">
+          {/* Status Toggle */}
+          <div className="pt-2">
+            <label className="flex items-center justify-between p-4 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
+              <div className="flex flex-col">
+                <span className="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-tight">Compte Actif</span>
+                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-500/50 font-bold uppercase tracking-widest">Autoriser l'accès au tableau de bord</span>
+              </div>
               <input
                 type="checkbox"
-                className="w-5 h-5 accent-blue-500"
+                className="w-6 h-6 rounded-lg accent-emerald-600 cursor-pointer"
                 checked={infoEmp.isActive}
-                onChange={(e) =>
-                  setInfoEmp({ ...infoEmp, isActive: e.target.checked })
-                }
+                onChange={(e) => setInfoEmp({ ...infoEmp, isActive: e.target.checked })}
               />
-              <span className="text-sm font-medium text-gray-700">Compte actif</span>
             </label>
-            <p className="text-xs text-gray-400 mt-1">
-              Si coché → actif, sinon → inactif
-            </p>
           </div>
-
         </div>
-        
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 mt-6">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 mt-10 pt-6 border-t border-slate-100 dark:border-slate-800">
           <button
             onClick={onClose}
-            className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 transition"
+            className="px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
           >
             Annuler
           </button>
-        <button
-  onClick={HandelAddEmploye}
-  disabled={loading}
-  className={`px-5 py-2 rounded-lg text-white transition
-    ${loading
-      ? "bg-blue-400 cursor-not-allowed"
-      : "bg-blue-600 hover:bg-blue-700"}
-  `}
->
-  {loading ? "Ajout en cours..." : "Ajouter"}
-</button>
-
+          <button
+            onClick={HandelAddEmploye}
+            disabled={loading}
+            className={`px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-lg transition-all active:scale-95
+              ${loading 
+                ? "bg-slate-400 cursor-not-allowed" 
+                : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"}
+            `}
+          >
+            {loading ? "Traitement..." : "Ajouter l'employé"}
+          </button>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 }

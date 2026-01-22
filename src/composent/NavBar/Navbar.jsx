@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { 
   IoGridOutline, IoPeopleOutline, IoCartOutline, 
   IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
-  IoPersonOutline, IoLogOutOutline, IoSettingsOutline ,IoPricetagsOutline , IoBusinessOutline 
+  IoPersonOutline, IoLogOutOutline, IoSettingsOutline, IoPricetagsOutline, IoBusinessOutline 
 } from "react-icons/io5";
-import { useSelector ,useDispatch} from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom'; // T-akked men react-router-dom
+import { useSelector, useDispatch } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 
 export default function Sidebar() {
@@ -36,23 +36,19 @@ export default function Sidebar() {
       <div
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
-        /* - bg-white: blast l-k7al
-           - border-slate-200: border fate7
-           - shadow-2xl: bach t-ban hazza 3la l-erd
-        */
-        className={`fixed left-0 top-0 h-full bg-white border-r border-slate-200 text-slate-600 
+        className={`fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 
           transition-all duration-300 ease-in-out flex flex-col overflow-hidden shadow-2xl
           ${isExpanded ? 'w-64' : 'w-20'}`}
       >
         
         {/* Logo */}
         <div className="flex items-center h-20 px-6">
-          <div className="bg-indigo-600 p-2 rounded-xl min-w-10 h-10 flex items-center justify-center shadow-lg shadow-indigo-200">
+          <div className="bg-[#19b393] p-2 rounded-xl min-w-10 h-10 flex items-center justify-center shadow-lg shadow-green-200 dark:shadow-green-900/20">
             <div className="w-4 h-4 bg-white rounded-sm rotate-45" /> 
           </div>
-          <span className={`ml-4 font-black text-slate-800 text-lg transition-opacity duration-300 whitespace-nowrap
+          <span className={`ml-4 font-black text-slate-800 dark:text-slate-100 text-lg transition-opacity duration-300 whitespace-nowrap
             ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-            STOCK <span className='text-indigo-600'>PRO</span>
+            STOCK <span className='text-[#19b393]'>PRO</span>
           </span>
         </div>
 
@@ -69,24 +65,24 @@ export default function Sidebar() {
         </nav>
 
         {/* Profile Section */}
-        <div className="p-4 border-t border-slate-100 relative">
-          <div className="flex items-center cursor-pointer p-2 rounded-2xl hover:bg-slate-50 transition-colors" onClick={handleProfileClick}>
-            <div className="min-w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 relative">
+          <div className="flex items-center cursor-pointer p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" onClick={handleProfileClick}>
+            <div className="min-w-10 h-10 rounded-xl bg-[#19b393]/20 border border-green-100 dark:border-green-900/30 flex items-center justify-center text-[#19b393] font-bold">
               <IoPersonOutline size={20} />
             </div>
             <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-sm font-bold text-slate-800 whitespace-nowrap capitalize">{user?.name || "User"}</p>
-              <p className="text-[10px] text-indigo-500 font-black uppercase tracking-tighter">{role}</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap capitalize">{user?.name || "User"}</p>
+              <p className="text-[10px] text-[#19b393] font-black uppercase tracking-wider">{role}</p>
             </div>
           </div>
 
-          {/* Dropdown Menu (Light Mode) */}
+          {/* Dropdown Menu */}
           {profileOpen && isExpanded && (
-            <div className="absolute left-4 bottom-20 w-48 bg-white shadow-2xl rounded-2xl border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
-              <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition">
+            <div className="absolute left-4 bottom-20 w-48 bg-white dark:bg-slate-800 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
+              <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-[#19b393] transition">
                 <IoSettingsOutline className="mr-3" size={18}/> Profile
               </button>
-              <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 transition" onClick={HanleLogoutAdmin}>
+              <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition" onClick={HanleLogoutAdmin}>
                 <IoLogOutOutline className="mr-3" size={18}/> Déconnexion
               </button>
             </div>
@@ -97,7 +93,7 @@ export default function Sidebar() {
   );
 }
 
-// NavItem Helper (Light Style)
+// NavItem Helper
 function NavItem({ to, icon, label, expanded }) {
   return (
     <NavLink 
@@ -105,8 +101,8 @@ function NavItem({ to, icon, label, expanded }) {
       className={({ isActive }) => `
         flex items-center h-12 rounded-xl transition-all duration-200 
         ${isActive 
-          ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 scale-[1.02]' 
-          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+          ? 'bg-[#19b393] text-white shadow-lg shadow-green-100 dark:shadow-green-900/20 scale-[1.02]' 
+          : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'
         }
       `}
     >

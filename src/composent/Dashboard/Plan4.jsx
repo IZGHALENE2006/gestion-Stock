@@ -4,7 +4,8 @@ export default function Plan4({ data, options }) {
     <div className="h-full">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-1.5 h-6 bg-purple-600 rounded-full" />
-        <h3 className="text-slate-800 font-black uppercase text-xs tracking-widest">Valeur Totale (DH)</h3>
+        <h3 className="text-slate-800 dark:text-slate-100 font-black uppercase text-xs tracking-widest">
+          Valeur Totale (DH)</h3>
       </div>
       <div className="h-80">
         <Bar data={data} options={options} />

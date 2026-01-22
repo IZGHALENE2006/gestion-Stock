@@ -45,7 +45,7 @@ export default function UpdateCategoryForma(props) {
     // basker test
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="text-sm text-gray-700 mb-2 block">
+        <label className="text-sm text-gray-700 dark:text-slate-300 mb-2 block font-medium">
           Entrez nouveau Nom de la catégorie
         </label>
 
@@ -61,10 +61,11 @@ export default function UpdateCategoryForma(props) {
               setFormData({ ...formData, name: e.target.value })
             }
             placeholder="Ex: Informatique"
-            className="w-full bg-[#071a2f]/10 border border-[#2C74B3]/40
-                       rounded-lg pl-10 pr-4 py-3
+            className="w-full bg-[#071a2f]/5 dark:bg-slate-800/50 border border-[#19b393]/30 dark:border-slate-700
+                       rounded-lg pl-10 pr-4 py-3 text-slate-800 dark:text-slate-100
+                       placeholder:text-gray-400 dark:placeholder:text-slate-500
                        focus:outline-none focus:ring-2
-                       focus:ring-[#2C74B3] text-gray-800"
+                       focus:ring-[#19b393] transition-all"
           />
         </div>
       </div>
@@ -76,7 +77,7 @@ export default function UpdateCategoryForma(props) {
           ${
             isSubmitting
               ? "bg-gray-500 cursor-not-allowed"
-              : "bg-[#2C74B3] hover:bg-[#205295] active:scale-95"
+              : "bg-[#19b393] hover:bg-[#137964] active:scale-95"
           }`}
       >
         <IoSaveOutline size={20} />

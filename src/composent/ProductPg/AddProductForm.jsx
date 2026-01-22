@@ -6,7 +6,7 @@ import { GetAllCatefory } from "../../slices/SilceCategory";
 import Barcode from "react-barcode"; 
 import toast, { Toaster } from 'react-hot-toast';
 
-// bar code looooooooooogic
+// Barcode logic
 const generateEAN13 = () => {
   let code = "6"; 
   for (let i = 0; i < 11; i++) {
@@ -20,15 +20,16 @@ const generateEAN13 = () => {
   return code + checksum;
 };
 
+// Input Wrapper with Dark Mode and Emerald Focus
 const InputWrapper = ({ label, children, icon: Icon, action }) => (
   <div className="flex flex-col flex-1 mb-4 group">
-    <label className="text-sm font-semibold text-gray-600 mb-1 flex justify-between">
+    <label className="text-sm font-semibold text-gray-600 dark:text-slate-400 mb-1 flex justify-between">
       {label}
       {action}
     </label>
     <div className="relative flex items-center">
       {children}
-      <div className="absolute right-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+      <div className="absolute right-3 flex items-center pointer-events-none text-gray-400 dark:text-slate-500 group-focus-within:text-emerald-500 dark:group-focus-within:text-emerald-400 transition-colors">
         <Icon size={18} />
       </div>
     </div>
@@ -64,126 +65,129 @@ export default function AddProductForm() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  try {
-    await Dispatch(AddProduct(formData)).unwrap();
+    try {
+      await Dispatch(AddProduct(formData)).unwrap();
 
-    setFormData({
-      name: "",
-      prix_achat: "",
-      prix_vente: "",
-      categorie: "",
-      quantite: "",
-      barcode: generateEAN13(),
-      fournisseur: "",
-      datecreate: new Date(),
-      status: true
-    });
+      setFormData({
+        name: "",
+        prix_achat: "",
+        prix_vente: "",
+        categorie: "",
+        quantite: "",
+        barcode: generateEAN13(),
+        fournisseur: "",
+        datecreate: new Date(),
+        status: true
+      });
 
-    toast.success('The Product Added Successfully', {
-      style: {
-        border: '1px solid #00d435',
-        padding: '16px',
-        color: '#00d435',
-        backgroundColor: "#fffffe",
-        backdropFilter: "blur(10px)",
-      },
-      iconTheme: {
-        primary: '#00d435',
-        secondary: '#FFFAEE',
-      },
-    });
-
-  } catch (err) {
-    console.error(err);
-
-    // ❌ ERROR TOAST
-    toast.error(
-      err?.message || 'Failed to add product.',
-      {
+      toast.success('Product Added Successfully', {
         style: {
-          border: '1px solid #e22620',
+          border: '1px solid #10b981',
           padding: '16px',
-          color: '#e22620',
-          backgroundColor: "#fffffe",
-          backdropFilter: "blur(10px)",
+          color: '#059669',
+          backgroundColor: "#ffffff",
         },
-        iconTheme: {
-          primary: '#e22620',
-          secondary: '#FFFAEE',
+        iconTheme: { primary: '#10b981', secondary: '#fff' },
+      });
+
+    } catch (err) {
+      toast.error(err?.message || 'Failed to add product.', {
+        style: {
+          border: '1px solid #ef4444',
+          padding: '16px',
+          color: '#dc2626',
+          backgroundColor: "#ffffff",
         },
-      }
-    );
-
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const profit = (Number(formData.prix_vente) - Number(formData.prix_achat)).toFixed(2);
+  const inputStyles = "w-full border p-2.5 pr-10 rounded-xl border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm";
 
   return (
-    <div className="mx-auto bg-white shadow-md rounded-lg p-6 max-w-4xl">
+    <div className="mx-auto rounded-2xl p-6 max-w-4xl">
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          
           <InputWrapper label="Product Name" icon={IoCubeOutline}>
-            <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Product Name" className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Ex: Laptop Pro" className={inputStyles} />
           </InputWrapper>
 
           <InputWrapper label="Stock Quantity" icon={IoSaveOutline}>
-            <input type="number" value={formData.quantite} onChange={(e) => setFormData({ ...formData, quantite: e.target.value })} placeholder="0" className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="number" value={formData.quantite} onChange={(e) => setFormData({ ...formData, quantite: e.target.value })} placeholder="0" className={inputStyles} />
           </InputWrapper>
 
           <InputWrapper label="Purchase Price" icon={IoPricetagOutline}>
-            <input required type="number" value={formData.prix_achat} onChange={(e) => setFormData({ ...formData, prix_achat: e.target.value })} placeholder="0.00" className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input required type="number" value={formData.prix_achat} onChange={(e) => setFormData({ ...formData, prix_achat: e.target.value })} placeholder="0.00" className={inputStyles} />
           </InputWrapper>
 
           <div className="flex flex-col mb-4">
-            <label className="text-sm font-semibold text-gray-600 mb-1 flex justify-between">
-              Selling Price <span className={Number(profit) >= 0 ? 'text-green-600' : 'text-red-600'}>({profit }Dh)</span>
+            <label className="text-sm font-semibold text-gray-600 dark:text-slate-400 mb-1 flex justify-between">
+              Selling Price 
+              <span className={Number(profit) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600'}>
+                ({profit} Dh)
+              </span>
             </label>
             <div className="relative flex items-center group">
-              <input required type="number" value={formData.prix_vente} onChange={(e) => setFormData({ ...formData, prix_vente: e.target.value })} placeholder="0.00" className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <div className="absolute right-3 text-gray-400 group-focus-within:text-blue-500"><IoPricetagOutline size={18} /></div>
+              <input required type="number" value={formData.prix_vente} onChange={(e) => setFormData({ ...formData, prix_vente: e.target.value })} placeholder="0.00" className={inputStyles} />
+              <div className="absolute right-3 text-gray-400 group-focus-within:text-emerald-500"><IoPricetagOutline size={18} /></div>
             </div>
           </div>
 
           <InputWrapper label="Category" icon={IoLayersOutline}>
-            <select onChange={HandlegetCategort} className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none cursor-pointer">
-              <option value="">Select category</option>
-              {Category.map((t) => (<option key={t._id} value={t._id}>{t.name}</option>))}
+            <select onChange={HandlegetCategort} className={`${inputStyles} appearance-none cursor-pointer`}>
+              <option value="" className="dark:bg-slate-900">Select category</option>
+              {Category.map((t) => (<option key={t._id} value={t._id} className="dark:bg-slate-900">{t.name}</option>))}
             </select>
           </InputWrapper>
 
           <InputWrapper label="Fournisseur" icon={IoBusinessSharp}>
-            <input value={formData.fournisseur} onChange={(e) => setFormData({ ...formData, fournisseur: e.target.value })} placeholder="Fournisseur" className="w-full border p-2 pr-10 rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input value={formData.fournisseur} onChange={(e) => setFormData({ ...formData, fournisseur: e.target.value })} placeholder="Nom du fournisseur" className={inputStyles} />
           </InputWrapper>
         </div>
 
-        <div className="mt-6 flex flex-col items-center p-0 bg-gray-50 rounded-lg">
+        {/* Barcode Section */}
+        <div className="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
           <InputWrapper 
             label="Visual Barcode" 
             icon={IoBarcodeOutline}
             action={
-              <button type="button" onClick={() => setFormData({ ...formData, barcode: generateEAN13() })} className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-bold">
-                <IoRefreshOutline /> New Code
+              <button type="button" onClick={() => setFormData({ ...formData, barcode: generateEAN13() })} className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1 font-bold transition-colors">
+                <IoRefreshOutline /> Regenerate
               </button>
             }
           >
-            <input value={formData.barcode} readOnly className="text-center font-mono font-bold text-gray-600 w-full px-15 border p-2 rounded border-gray-300 bg-white" />
+            <input value={formData.barcode} readOnly className="text-center font-mono font-bold tracking-widest text-slate-600 dark:text-slate-300 w-full border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl bg-white dark:bg-slate-800" />
           </InputWrapper>
-
-        
         </div>
 
-        <button type="submit" disabled={isSubmitting} className={`mt-8 w-full flex items-center justify-center gap-2 py-3 px-4 rounded font-bold text-white transition-all ${isSubmitting ? 'bg-gray-400' : 'bg-[#2C74B3] hover:bg-[#4887da] hover:scale-103 cursor-pointer active:scale-[0.98]'}`}>
-          {isSubmitting ? "Saving..." : <><IoSaveOutline size={20} /> Save Product</>}
+        {/* Submit Button */}
+        <button 
+          type="submit" 
+          disabled={isSubmitting} 
+          className={`mt-8 w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold text-white shadow-lg shadow-emerald-500/20 transition-all ${
+            isSubmitting 
+              ? 'bg-slate-400 cursor-not-allowed' 
+              : 'bg-emerald-600 hover:bg-emerald-500 hover:scale-[1.01] active:scale-[0.99] cursor-pointer'
+          }`}
+        >
+          {isSubmitting ? (
+            "Processing..."
+          ) : (
+            <>
+              <IoSaveOutline size={20} /> 
+              Confirm & Save Product
+            </>
+          )}
         </button>
       </form>
-      <Toaster />
+      <Toaster position="top-right" />
     </div>
   );
 }

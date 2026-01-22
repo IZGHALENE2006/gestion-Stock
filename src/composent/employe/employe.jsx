@@ -3,7 +3,7 @@ import NavRow from "./NavEmploye";
 
 export default function EmployeesPage() {
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-2 bg-gray-100 dark:bg-[#1e293b]">
       <NavRow />
       <div>
         {/* هاد المكان غادي يبدل على حسب الروت اللي مختار */}

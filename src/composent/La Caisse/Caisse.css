@@ -4,7 +4,10 @@
 .caise {
     font-family: "Saira", sans-serif;
     overflow-x: hidden;
-    background-color: #f8fafc; /* Slate-50 fati7 */
+    background-color: #f8fafc;
+    font-family: "Saira", sans-serif;
+    
+    /* Slate-50 fati7 */
 }
 
 /* Style dial l-Cards f l-Header */
@@ -48,7 +51,6 @@
     left: 110%;
 }
 
-/* Custom Scrollbar nqiya bach t-ji m3a l-style */
 .overflow-y-auto::-webkit-scrollbar {
     width: 6px;
 }

@@ -50,37 +50,37 @@ function Categories() {
   }
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
+    <div className="p-6 bg-gray-100 dark:bg-[#1e293b] min-h-screen transition-colors duration-300">
       {/* ===== TOP CARDS & SEARCH ===== */}
       <div className="flex flex-col lg:flex-row gap-6 mb-8">
         
         {/* Counter Card */}
-        <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-100">
-            <IoFileTrayStackedOutline size={34} className="text-blue-600" />
+        <div className="flex-1 bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-500/10">
+            <IoFileTrayStackedOutline size={34} className="text-[#19b393]" />
           </div>
           <div>
-            <p className="text-slate-500 text-sm font-medium">
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
               Number of Categories
             </p>
-            <h1 className="text-3xl font-bold text-slate-800">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
               {Category.length}
             </h1>
           </div>
         </div>
 
         {/* Search + Add */}
-        <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex-1 justify-between bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-4 items-center">
           
           {/* Search */}
-          <div className={`flex items-center bg-slate-100 border border-slate-200 rounded-xl overflow-hidden w-full ${role === "admin" ? "md:w-2/3" : "md:w-full"}`}>
-            <span className="px-3 text-slate-400">
+          <div className={`flex items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden w-full ${role === "admin" ? "md:w-2/3" : "md:w-full"}`}>
+            <span className="px-3 text-slate-400 dark:text-slate-500">
               <IoSearchOutline />
             </span>
             <input
               type="text"
               placeholder="Search category..."
-              className="bg-transparent text-sm px-2 py-2 outline-none w-full text-slate-700"
+              className="bg-transparent text-sm px-2 py-2 outline-none w-full text-slate-700 dark:text-slate-200"
             />
           </div>
 
@@ -88,7 +88,7 @@ function Categories() {
           {role === "admin" && (
             <button
               onClick={() => setOpenAdd(true)}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#19b393] text-white text-sm font-semibold hover:bg-emerald-700 transition"
             >
               <IoAddOutline size={18} />
               Add Category
@@ -117,7 +117,7 @@ function Categories() {
 
       {/* ===== DIALOGS ===== */}
       <Dialog
-        bgcolor="#ffffff"
+        bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
         width="550px"
         isOpen={openAdd}
         onClose={() => setOpenAdd(false)}
@@ -135,7 +135,7 @@ function Categories() {
       />
 
       <Dialog
-        bgcolor="#ffffff"
+        bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
         width="550px"
         isOpen={openUpdate}
         onClose={() => setOpenUpdate(false)}

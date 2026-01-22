@@ -16,14 +16,26 @@ import Fornisseur from "./composent/Fornisseur/Fornisseur"
 import Profite from './composent/Ventes/Profit'
 import Ventes from './composent/Ventes/Ventes'
 import FactureVentes from './composent/Ventes/Facture'
+import { useState } from 'react'
 
 function App() {
- 
+const [theme, seTheme] = useState("light");
+
+const toggleTheme = () => {
+  const newTheme = theme === "light" ? "dark" : "light";
+  seTheme(newTheme);
+  document.documentElement.classList.toggle("dark", newTheme === "dark");
+};
 
   return (
     <>
 
-
+      <button
+      className="fixed border border-white p-2 right-3 bottom-3 bg-black dark:bg-amber-50 rounded-3xl text-white dark:text-black"
+      onClick={toggleTheme}
+    >
+      {theme === "light" ? "🌙" : "☀️"}
+    </button>
         
         <Routes>
         <Route path='/' element={<LoginChoise/>}/>

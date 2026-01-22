@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMe, addVentes } from "../../slices/SliceLoginAdmin";
 import { GetAllProduct } from "../../slices/SliceProduct";
 import LiveClock from "./DateTime";
-import ProductCard from "./ProductCard";
 import { useEffect, useRef, useState } from "react";
 import Quagga from "quagga";
 import FacturePrint from "../Facture/FacturePrintachat";
@@ -22,6 +21,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
   const [Facture, setFacture] = useState(null);
   const printRef = useRef();
   const sectionRef = useRef(null);
+  const listRef = useRef(null);
 
   // --- LOGIC SCANNER ---
   const startScan = () => setOpen(true);
@@ -39,7 +39,6 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
     });
     Quagga.onDetected((result) => {
       setSearchTerm(result.codeResult.code);
-      
       stopScan();
     });
     return () => { stopScan(); Quagga.offDetected(); };
@@ -50,11 +49,22 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
     dispatch(GetAllProduct());
   }, [token, dispatch, user]);
 
+  // GSAP Animation for the list
+  useEffect(() => {
+    if (Produts?.length > 0) {
+      gsap.fromTo(
+        ".product-item",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: "power2.out" }
+      );
+    }
+  }, [Produts, searchTerm]);
+
   const cashValues = [
-    { label: "20 DH", value: 20, img: "/20dh.png", color: "#661a99" },
-    { label: "50 DH", value: 50, img: "/50dh.png", color: "#128512" },
-    { label: "100 DH", value: 100, img: "/100dh.png", color: "#994d1a" },
-    { label: "200 DH", value: 200, img: "/200dh.png", color: "#1a8099" },
+    { label: "20 DH", value: 20, img: "/20dh.png", color: "#10b981" },
+    { label: "50 DH", value: 50, img: "/50dh.png", color: "#059669" },
+    { label: "100 DH", value: 100, img: "/100dh.png", color: "#047857" },
+    { label: "200 DH", value: 200, img: "/200dh.png", color: "#065f46" },
   ];
 
   const filteredProducts = Produts?.filter(p => 
@@ -83,26 +93,30 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
 
   const handleQuickPay = (val, target, color) => {
     setAmountPaid(val.toString());
-    gsap.fromTo(".amount-display", { scale: 1.2, color: color }, { scale: 1, color: "#2563eb", duration: 0.5 });
+    gsap.fromTo(".amount-display", 
+      { scale: 1.1, color: color }, 
+      { scale: 1, color: "#059669", duration: 0.4 }
+    );
   };
 
   return (
-    <div ref={sectionRef} className="flex-1 bg-white rounded-[2.5rem] border border-[#e2e8f0] shadow-sm flex flex-col overflow-hidden">
+    <div ref={sectionRef} className="flex-1 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col overflow-hidden">
       
-      {/* HEADER: Light style */}
-      <div className="p-6 border-b border-[#e2e8f0] bg-[#f8fafc] flex justify-between items-center">
+      {/* HEADER */}
+      <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
         <div>
-          <h2 className="text-lg font-black text-[#0f172a] uppercase tracking-tight">
-            Caissier: <span className="text-blue-600">{user?.name || "User"}</span>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
+            Caissier: <span className="text-emerald-600">{user?.name || "Admin"}</span>
           </h2>
-          <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mt-1">
-            {user?.role} • <LiveClock />
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+             <span className="px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black rounded-md uppercase">{user?.role}</span>
+             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest"><LiveClock /></p>
+          </div>
         </div>
-        <div className="p-3 bg-white rounded-2xl border border-[#e2e8f0] text-blue-600 shadow-sm relative">
+        <div className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-emerald-600 shadow-sm relative">
           <IoCartOutline size={24} />
           {cart.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full text-white">
+            <span className="absolute -top-2 -right-2 bg-rose-500 text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full text-white border-4 border-white dark:border-slate-800">
               {cart.length}
             </span>
           )}
@@ -110,175 +124,183 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
       </div>
 
       {/* SEARCH & SCANNER */}
-      <div className="p-4 flex gap-3 bg-white">
-        <div className="relative flex-1">
-          <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b]" />
+      <div className="p-4 flex gap-3 bg-white dark:bg-slate-900">
+        <div className="relative flex-1 group">
+          <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
           <input 
             type="text" 
-            placeholder="Scanner ou rechercher un produit..." 
+            placeholder="Rechercher un produit..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-blue-400 transition-all text-sm font-bold text-[#334155]" 
+            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-bold text-slate-700 dark:text-slate-200" 
           />
         </div>
-        <button onClick={startScan} className="w-14 h-14 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-2xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all">
-          <IoCameraOutline size={24} />
+        <button onClick={startScan} className="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all active:scale-95">
+          <IoCameraOutline size={26} />
         </button>
       </div>
 
       {/* PRODUCTS AREA */}
-   {/* PRODUCTS AREA - Styled as a Clean List */}
-<div className="flex-1 p-4 overflow-y-auto min-h-[400px] bg-[#f8fafc]/50">
-  <div className="flex flex-col gap-2"> {/* Container List */}
-    
-    {searchTerm.length > 0 ? (
-      /* SEARCH RESULTS LIST */
-      filteredProducts?.map((product) => (
-        <div 
-          key={product._id} 
-          onClick={() => { onAddToCart(product); setSearchTerm(""); }}
-          className="flex justify-between items-center p-4 bg-white hover:bg-blue-50 rounded-2xl border border-[#e2e8f0] cursor-pointer transition-all group shadow-sm hover:border-blue-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs">
-              {product.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col">
-              <span className="font-black text-[#0f172a] text-sm uppercase tracking-tight">{product.name}</span>
-              <span className="text-[10px] font-bold text-[#64748b] uppercase">Stock: {product.quantite} Unités</span>
-            </div>
-          </div>
-          <div className="text-right">
-            <span className="block font-black text-blue-600 text-md">{product.prix_vente} DH</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Prix Unitaire</span>
-          </div>
-        </div>
-      ))
-    ) : (
-      /* ALL PRODUCTS LIST (instead of Grid) */
-      Produts?.map((item) => (
-        <div 
-          key={item._id} 
-          onClick={() => onAddToCart(item)}
-          className="flex justify-between items-center p-4 bg-white hover:bg-blue-50 rounded-2xl border border-[#e2e8f0] cursor-pointer transition-all group shadow-sm hover:border-blue-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-xs shadow-md shadow-blue-100">
-              {item.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex flex-col">
-              <span className="font-black text-[#0f172a] text-sm uppercase tracking-tight group-hover:text-blue-600 transition-colors">
-                {item.name}
-              </span>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${item.quantite > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                  {item.quantite > 0 ? 'EN STOCK' : 'OUT'}
-                </span>
-                <span className="text-[10px] font-bold text-slate-400">| Qty: {item.quantite}</span>
+      <div className="flex-1 p-4 overflow-y-auto min-h-87.5 bg-slate-50/50 dark:bg-slate-950/20">
+        <div ref={listRef} className="flex flex-col gap-3">
+          {(searchTerm.length > 0 ? filteredProducts : Produts)?.map((item) => (
+            <div 
+              key={item._id} 
+              onClick={() => { onAddToCart(item); if(searchTerm) setSearchTerm(""); }}
+              className="product-item flex justify-between items-center p-4 bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-500/5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer transition-all group shadow-sm hover:border-emerald-300 dark:hover:border-emerald-700"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-slate-900 dark:bg-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-lg">
+                  {item.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-black text-slate-900 dark:text-slate-100 text-sm uppercase tracking-tight group-hover:text-emerald-600 transition-colors">
+                    {item.name}
+                  </span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`text-[8px] font-black px-2 py-0.5 rounded-md ${item.quantite > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                      {item.quantite > 0 ? 'DISPONIBLE' : 'EPUISE'}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Stock: {item.quantite}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-6">
+                <div className="text-right">
+                  <p className="font-black text-slate-900 dark:text-white text-lg">{item.prix_vente} <span className="text-[10px]">DH</span></p>
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Prix TTC</p>
+                </div>
+                <div className="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-all transform group-active:scale-90">
+                   <IoCartOutline size={20} />
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            <div className="text-right">
-              <p className="font-black text-[#0f172a] text-md">{item.prix_vente} DH</p>
-              <p className="text-[9px] font-bold text-slate-400 uppercase">TTC</p>
-            </div>
-            <div className="bg-slate-50 p-2 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-               <IoCartOutline size={18} />
-            </div>
-          </div>
-        </div>
-      ))
-    )}
+          ))}
 
-    {/* Empty State */}
-    {(!Produts || Produts.length === 0) && (
-      <div className="flex flex-col items-center justify-center py-20 opacity-20">
-        <IoCartOutline size={60} />
-        <p className="font-black uppercase tracking-widest text-xs mt-4">Aucun produit trouvé</p>
+          {(!Produts || Produts.length === 0) && (
+            <div className="flex flex-col items-center justify-center py-24 opacity-20 dark:text-white">
+              <IoCartOutline size={80} />
+              <p className="font-black uppercase tracking-[0.3em] text-[10px] mt-4">Aucun produit</p>
+            </div>
+          )}
+        </div>
       </div>
-    )}
-  </div>
-</div>
 
       {/* PAYMENT INFO */}
-      <div className="p-6 bg-white border-t border-[#e2e8f0]">
+      <div className="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-end mb-6">
           <div className="flex-1">
-            <p className="text-[10px] font-black text-[#64748b] uppercase tracking-[0.2em] mb-2">Espèces Reçues</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Reçu</p>
             <input 
               type="number" 
               value={amountPaid} 
               onChange={(e) => setAmountPaid(e.target.value)}
-              className="amount-display bg-transparent text-5xl font-black text-blue-600 outline-none w-full placeholder:text-slate-100"
+              className="amount-display bg-transparent text-5xl font-black text-emerald-600 outline-none w-full placeholder:text-slate-100 dark:placeholder:text-slate-800"
               placeholder="0.00"
             />
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-[#64748b] uppercase tracking-[0.2em] mb-2">Rendu</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Rendu Client</p>
             <p className={`text-3xl font-black ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
-              {changeToReturn.toFixed(2)} <span className="text-sm">DH</span>
+              {changeToReturn.toFixed(2)} <span className="text-sm font-bold">DH</span>
             </p>
           </div>
         </div>
         
-        <div className="flex justify-between items-center py-4 border-t border-dashed border-[#e2e8f0]">
-          <span className="text-[#64748b] font-black text-xs uppercase tracking-widest">Net à Payer</span>
-          <span className="text-3xl font-black text-[#0f172a]">{totalOrder.toFixed(2)} <span className="text-sm">DH</span></span>
+        <div className="flex justify-between items-center py-5 border-t border-dashed border-slate-200 dark:border-slate-700">
+          <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">Net à Payer</span>
+          <span className="text-4xl font-black text-slate-900 dark:text-white">{totalOrder.toFixed(2)} <span className="text-sm">DH</span></span>
         </div>
       </div>
 
       {/* QUICK CASH */}
-{/* QUICK CASH - Clean Money Images */}
-<div className="p-4 grid grid-cols-4 gap-3 bg-[#f8fafc] border-t border-[#e2e8f0]">
+<div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 
+  bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 backdrop-blur-xl">
+  
   {cashValues.map((cash) => (
     <button
       key={cash.value}
       onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
-      className="relative h-20 rounded-2xl border-2 border-[#e2e8f0] bg-white overflow-hidden group transition-all hover:border-blue-500 hover:shadow-lg active:scale-95 shadow-sm flex flex-col items-center justify-center"
+      className="group relative h-28 rounded-4xl transition-all duration-500 overflow-hidden border
+        /* Light Mode */
+        bg-white/50 border-slate-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-2xl hover:-translate-y-2
+        /* Dark Mode */
+        dark:bg-slate-900/40 dark:border-slate-800 dark:shadow-none"
     >
-      {/* L-warqa dial l-flouss - Safia o bayna */}
+      {/* 1. The Image Layer - Fixed & Fitted */}
+      <div className="absolute inset-0 z-0">
+        <div
+          className="w-full h-full bg-center bg-no-repeat bg-cover opacity-30 dark:opacity-30 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+          style={{ backgroundImage: `url(${cash.img})` }}
+        />
+        {/* Gradient Overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+      </div>
+
+      {/* 2. Floating Glow (Themed to Cash Color) */}
       <div 
-        className="absolute inset-0 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:scale-110" 
-        style={{ 
-          backgroundImage: `url(${cash.img})`,
-          backgroundSize: 'contain', /* Kat-khalli l-warqa t-ban kamla bla ma t-qte3 */
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.1))' /* Shadow khfif l-warqa */
-        }} 
+        className="absolute -right-4 -bottom-4 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-60 transition-all duration-700"
+        style={{ backgroundColor: cash.color }}
       />
-      
-      {/* Label t-ban nqiya ta7t l-warqa aw wast menha */}
-      <div className="relative z-10 mt-auto mb-1 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded-lg">
-        <span className="font-black text-white text-[10px] tracking-tighter uppercase">
+
+      {/* 3. Content Layer */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full gap-1">
+        {/* Value Badge */}
+        <div 
+          className="px-3 py-1 rounded-full text-[10px] font-black text-white mb-1 shadow-lg"
+          style={{ backgroundColor: cash.color }}
+        >
+          {cash.value} DH
+        </div>
+        
+        {/* Big Label */}
+        <span className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase 
+          group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">
           {cash.label}
         </span>
+
+        {/* Animated Selection Bar */}
+        <div 
+          className="w-0 h-1.5 rounded-full transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:w-12"
+          style={{ 
+            backgroundColor: cash.color,
+            boxShadow: `0 0 15px ${cash.color}` 
+          }}
+        />
       </div>
+
+      {/* 4. Active Selection Indicator (Corner) */}
+      <div 
+        className="absolute top-0 right-0 w-12 h-12 bg-linear-to-bl from-white/20 to-transparent translate-x-12 -translate-y-12 group-hover:translate-x-6 group-hover:-translate-y-6 transition-all duration-500 rotate-45"
+        style={{ backgroundColor: cash.color }}
+      />
     </button>
   ))}
 </div>
       
       {/* CONFIRM BUTTON */}
-      <div className="p-6 bg-white">
+      <div className="p-6 bg-white dark:bg-slate-900">
         <button 
           onClick={Khless} 
-          className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[1.5rem] font-black text-lg tracking-widest transition-all active:scale-[0.97] shadow-xl shadow-blue-100 uppercase"
+          className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-4xl font-black text-sm uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/20"
         >
           Confirmer la vente
         </button>
       </div>
 
-      {/* MODAL SCANNER */}
+      {/* SCANNER MODAL */}
       {open && (
-        <div className="fixed inset-0 z-[100] bg-[#0f172a]/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2.5rem] p-4 w-full max-w-md relative shadow-2xl">
-            <button onClick={stopScan} className="absolute -top-12 right-0 text-white hover:rotate-90 transition-transform">
-              <IoClose size={32} />
+        <div className="fixed inset-0 z-200 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-6 w-full max-w-md relative shadow-2xl border border-white/20">
+            <button onClick={stopScan} className="absolute -top-14 right-0 p-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all">
+              <IoClose size={28} />
             </button>
-            <div ref={scannerRef} className="w-full h-72 overflow-hidden rounded-[2rem] bg-black border-4 border-blue-600" />
-            <p className="text-center mt-4 text-[#64748b] font-bold text-xs uppercase tracking-widest">Placez le code-barres devant la caméra</p>
+            <div ref={scannerRef} className="w-full h-80 overflow-hidden rounded-[2.5rem] bg-black border-4 border-emerald-500 shadow-2xl shadow-emerald-500/20" />
+            <div className="text-center mt-6">
+               <p className="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest">Scanner en cours...</p>
+               <p className="text-slate-400 font-bold text-[9px] mt-2 uppercase">Veuillez centrer le code-barres</p>
+            </div>
           </div>
         </div>
       )}

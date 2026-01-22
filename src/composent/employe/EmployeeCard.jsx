@@ -13,6 +13,7 @@ import {
   IoCheckmarkCircleOutline,
   IoCloseCircleOutline,
   IoPersonOutline,
+  IoArrowBackOutline,
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -39,12 +40,12 @@ export const EmployeeCard = ({ employee }) => {
     dispatch(UpdateEmploye({ id, newinfoEmp }))
       .unwrap()
       .then(() => {
-        toast.success("Employé mis à jour avec succès");
+        toast.success("Employé mis à jour");
         setIsFlipped(false);
         gsap.to(innerRef.current, {
           rotateY: 0,
           duration: 0.6,
-          ease: "power2.inOut",
+          ease: "back.inOut(1.7)",
         });
       })
       .catch(() => toast.error("Erreur serveur"));
@@ -68,108 +69,103 @@ export const EmployeeCard = ({ employee }) => {
   };
 
   return (
-    <div className="w-72 h-[420px]" style={{ perspective: "1000px" }}>
+    <div className="w-82 h-115" style={{ perspective: "1200px" }}>
       <div
         ref={innerRef}
-        className="relative w-full h-full"
+        className="relative w-full h-full transition-shadow duration-500"
         style={{ transformStyle: "preserve-3d" }}
       >
         {/* ================= FRONT ================= */}
         <div
-          className="absolute inset-0 bg-white border border-slate-200 shadow-xl rounded-3xl p-6 flex flex-col justify-between"
+          className="absolute inset-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl/40 rounded-[2.5rem] p-6 flex flex-col justify-between overflow-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
+          {/* Top accent bar */}
+          <div 
+            className="absolute top-0 left-0 w-full h-1.5" 
+            style={{ backgroundColor: employee.color || "#10b981" }}
+          />
+
           <div>
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div
-                className="w-12 h-1.5 rounded-full"
-                style={{ backgroundColor: employee.color }}
-              />
-              <div className="flex items-center gap-1">
-                {employee.isActive ? (
-                  <IoCheckmarkCircleOutline className="text-green-500" />
-                ) : (
-                  <IoCloseCircleOutline className="text-red-500" />
-                )}
-                <span
-                  className={`text-[10px] font-bold ${
-                    employee.isActive ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {employee.isActive ? "ACTIVE" : "OFFLINE"}
-                </span>
+            {/* Header Status */}
+            <div className="flex justify-end items-center mb-6">
+              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest ${
+                employee.isActive 
+                ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600" 
+                : "bg-rose-50 dark:bg-rose-900/20 text-rose-600"
+              }`}>
+                {employee.isActive ? <IoCheckmarkCircleOutline size={14}/> : <IoCloseCircleOutline size={14}/>}
+                {employee.isActive ? "ACTIF" : "OFFLINE"}
               </div>
             </div>
 
-            {/* Name */}
-            <h3 className="text-slate-900 font-bold text-xl flex items-center gap-2">
-              <IoPersonOutline style={{ color: employee.color }} />
-              {employee.name}
-            </h3>
+            {/* Profile Info */}
+            <div className="flex flex-col items-center text-center mb-6">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-inner"
+                  style={{ backgroundColor: `${employee.color}20`, color: employee.color }}
+                >
+                    <IoPersonOutline size={32} />
+                </div>
+                <h3 className="text-slate-800 dark:text-slate-100 font-black text-lg leading-tight">
+                  {employee.name}
+                </h3>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] mt-1 opacity-70" style={{ color: employee.color }}>
+                  {employee.role}
+                </p>
+            </div>
 
-            <p
-              className="text-xs font-semibold ml-7 mb-6 uppercase tracking-wider"
-              style={{ color: employee.color }}
-            >
-              {employee.role}
-            </p>
-
-            {/* Infos */}
-            <div className="space-y-4 mt-6">
-              <div className="flex items-center gap-3 text-slate-700">
-                <IoMailOutline className="text-slate-400" />
-                <span className="text-xs truncate">{employee.email}</span>
+            {/* Contact Details */}
+            <div className="space-y-2 px-2">
+              <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <IoMailOutline className="text-emerald-500" size={18} />
+                <span className="text-xs font-medium truncate">{employee.email}</span>
               </div>
-
-              <div className="flex items-center gap-3 text-slate-700">
-                <IoCallOutline className="text-slate-400" />
-                <span className="text-xs">{employee.phone}</span>
+              <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <IoCallOutline className="text-emerald-500" size={18} />
+                <span className="text-xs font-medium">{employee.phone}</span>
               </div>
-
-              <div className="flex items-center gap-3 text-slate-700">
-                <IoFingerPrintOutline className="text-slate-400" />
-                <span className="text-xs font-mono">
+              <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <IoFingerPrintOutline className="text-emerald-500" size={18} />
+                <span className="text-xs font-mono font-bold tracking-tighter">
                   {employee.cin.toUpperCase()}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Footer */}
+          {/* Footer Area */}
           <div className="space-y-4">
-            {/* Password */}
-            <div className="bg-slate-50 p-2 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <span className="text-[9px] text-slate-500 font-bold uppercase">
-                  Access Key
+                <span className="text-[8px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">
+                  Cle d'accès
                 </span>
-                <div className="text-xs font-mono text-slate-800">
+                <div className="text-xs font-mono font-bold text-slate-700 dark:text-slate-200">
                   {showPassword ? employee.password : "••••••••"}
                 </div>
               </div>
               <button
                 onClick={togglePassword}
-                className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-900"
+                className="p-2 rounded-xl hover:bg-white dark:hover:bg-slate-700 text-slate-400 dark:text-slate-500 transition-colors"
               >
                 {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </button>
             </div>
 
-            {/* Date + Edit */}
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 text-slate-500">
+            <div className="flex justify-between items-center pt-2">
+              <div className="flex items-center gap-2 text-slate-400">
                 <IoCalendarOutline size={14} />
-                <span className="text-[11px] font-semibold">
+                <span className="text-[10px] font-black uppercase tracking-tighter">
                   {new Date(employee.datecreate).toLocaleDateString("fr-FR")}
                 </span>
               </div>
 
               <button
                 onClick={toggleFlip}
-                className="p-3 bg-slate-100 hover:bg-slate-200 rounded-2xl border border-slate-200 text-slate-700"
+                className="w-10 h-10 flex items-center justify-center bg-slate-900 dark:bg-emerald-600 text-white rounded-xl hover:scale-110 active:scale-95 transition-all shadow-lg"
               >
-                <IoPencil />
+                <IoPencil size={18} />
               </button>
             </div>
           </div>
@@ -177,42 +173,51 @@ export const EmployeeCard = ({ employee }) => {
 
         {/* ================= BACK ================= */}
         <div
-          className="absolute inset-0 bg-white border border-slate-200 rounded-3xl p-6 shadow-xl"
+          className="absolute inset-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 shadow-xl"
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <h4 className="text-xs font-black uppercase tracking-widest text-slate-700 mb-6">
-            Update Profile
-          </h4>
+          <div className="flex items-center gap-2 mb-8">
+            <button onClick={toggleFlip} className="text-slate-400 hover:text-emerald-500 transition-colors">
+                <IoArrowBackOutline size={20}/>
+            </button>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-800 dark:text-slate-100">
+                Modifier Profile
+            </h4>
+          </div>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {["name", "email", "phone", "cin", "password"].map((field) => (
-              <input
-                key={field}
-                type="text"
-                placeholder={field.toUpperCase()}
-                value={newinfoEmp[field]}
-                onChange={(e) =>
-                  setNewInfoEmp({ ...newinfoEmp, [field]: e.target.value })
-                }
-                className="w-full border-b-2 border-slate-200 py-1 text-sm font-semibold outline-none focus:border-slate-900"
-              />
+              <div key={field} className="relative">
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest absolute -top-2 left-0 bg-white dark:bg-slate-900 px-1">
+                    {field}
+                </label>
+                <input
+                  type="text"
+                  value={newinfoEmp[field]}
+                  onChange={(e) =>
+                    setNewInfoEmp({ ...newinfoEmp, [field]: e.target.value })
+                  }
+                  className="w-full bg-transparent border-b border-slate-200 dark:border-slate-800 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:border-emerald-500 transition-colors"
+                />
+              </div>
             ))}
           </div>
 
           <button
             onClick={() => HandleUpdateEmploye(employee._id)}
-            className="mt-6 w-full py-3 rounded-2xl text-xs font-bold text-white shadow-md hover:brightness-105"
-            style={{ backgroundColor: employee.color }}
+            disabled={loading}
+            className={`mt-10 w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all active:scale-95 ${
+                loading ? "bg-slate-400" : "hover:brightness-110 shadow-emerald-500/20"
+            }`}
+            style={{ backgroundColor: employee.color || "#10b981" }}
           >
-            {loading ? "CONFIRMING..." : "CONFIRM CHANGES"}
+            {loading ? "EN COURS..." : "CONFIRMER"}
           </button>
         </div>
       </div>
-
-      <Toaster />
     </div>
   );
 };

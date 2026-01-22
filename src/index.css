@@ -17,13 +17,13 @@ body {
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-  background-color: #f1f5f9;
+  background-color: black;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1; /* Gris fate7 */
-  border-radius: 10px;
-  border: 1px solid #f1f5f9;
+  background-image: linear-gradient(to bottom , #19b393 , #19b347);
+  border-radius: 50px;
+
 }
 
 ::-webkit-scrollbar-thumb:hover {

@@ -14,7 +14,7 @@ export default function ProductCard({ item, click }) {
   return (
     <div 
       onClick={click}
-      className="cursor-pointer group relative bg-white border border-[#e2e8f0] rounded-[2rem] p-5 transition-all duration-300 hover:shadow-xl hover:shadow-blue-100/50 hover:border-blue-200"
+      className="cursor-pointer group relative bg-white border border-[#e2e8f0] rounded-4xl p-5 transition-all duration-300 hover:shadow-xl hover:shadow-blue-100/50 hover:border-blue-200"
     >
       {/* Decorative Blur Effect */}
       <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 blur-2xl rounded-full group-hover:bg-blue-100 transition-colors" />

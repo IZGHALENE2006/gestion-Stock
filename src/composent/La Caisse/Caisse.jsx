@@ -3,7 +3,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import gsap from "gsap";
 import CaisseSection from "./Section";
 import RightSidebar from "./RightSidebar";
-
+import "./Caisse.css";
 function LaCaisse() {
   const [cart, setCart] = useState([]);
   const containerRef = useRef(null);
@@ -61,7 +61,7 @@ function LaCaisse() {
 
   return (
     // Background fatih dialna: f8fafc
-    <div ref={containerRef} className="p-6 bg-[#f8fafc] min-h-screen text-[#1e293b] flex flex-col gap-6 font-sans">
+    <div ref={containerRef} className="p-6 bg-gray-100 dark:bg-[#1e293b] min-h-screen text-[#1e293b] dark:text-white flex flex-col gap-6 font-sans">
       <Toaster position="top-center" />
 
       <div className="flex flex-col lg:flex-row gap-6 flex-1 h-full">
