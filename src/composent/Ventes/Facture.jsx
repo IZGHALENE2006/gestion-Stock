@@ -120,7 +120,7 @@ function FactureVentes() {
 
 </div>
 
-        {/* Filters & View Switcher */}
+      
         <div className="flex flex-col lg:flex-row gap-5 items-center justify-between bg-white dark:bg-slate-900 p-5 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
           <div className="flex flex-col md:flex-row flex-1 gap-5 w-full">
             <div className="relative flex-1">
@@ -167,7 +167,7 @@ function FactureVentes() {
                 <div className="flex justify-between items-start mb-8">
                   <div>
                     <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mb-1">RÉFÉRENCE</p>
-                    <h2 className="text-2xl font-black text-slate-900 dark:text-white">#{String(t._id).slice(-5).toUpperCase()}</h2>
+                    <h2 className="text-2xl font-black  dark:text-white">#{String(t._id).slice(-5).toUpperCase()}</h2>
                   </div>
                   <div className="bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
                     <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase">{new Date(t.DateFacture).toLocaleDateString('fr-FR')}</span>
@@ -190,11 +190,15 @@ function FactureVentes() {
                       </>
                     ) : (
                       <>
-                        <div className="w-10 h-10 rounded-xl bg-slate-900 text-emerald-400 flex items-center justify-center"><FaUserTie size={18} /></div>
-                        <div className="flex flex-col">
-                          <span className="text-[8px] text-emerald-500 font-black uppercase tracking-widest leading-none mb-1">Administrateur</span>
-                          <span className="text-xs text-slate-900 dark:text-white font-black">{user.name}</span>
-                        </div>
+                    <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-amber-900/20 text-amber-500 border border-amber-500/20 flex items-center justify-center shadow-sm">
+          <FaUserTie size={18} />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-[8px] text-amber-500 font-black uppercase tracking-widest leading-none mb-1">Administrateur</span>
+          <span className="text-xs text-slate-900 dark:text-white font-black">{user.name}</span>
+        </div>
+      </div>
                       </>
                     )}
                   </div>

@@ -16,6 +16,7 @@ import Fornisseur from "./composent/Fornisseur/Fornisseur"
 import Profite from './composent/Ventes/Profit'
 import Ventes from './composent/Ventes/Ventes'
 import FactureVentes from './composent/Ventes/Facture'
+import HestoriqueProfit from './composent/Ventes/hestorique'
 import { useRef, useState } from 'react'
 import { useEffect } from "react";
 import gsap from "gsap";
@@ -99,6 +100,7 @@ const onLeave = () => {
         <Route path="profit" element={<Profite/>}>
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>
+            <Route path='Hestorique' element={<HestoriqueProfit/>}/>
         </Route>
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>

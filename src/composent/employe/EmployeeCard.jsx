@@ -205,6 +205,43 @@ export const EmployeeCard = ({ employee }) => {
               </div>
             ))}
           </div>
+            {/* ===== ACTIVE STATUS ===== */}
+{/* ===== IS ACTIVE CHECK ===== */}
+<div className="flex items-center justify-between mt-6 p-4 rounded-xl
+                bg-slate-50 dark:bg-slate-800/50
+                border border-slate-200 dark:border-slate-800">
+
+  <label className="flex items-center gap-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={newinfoEmp.isActive}
+      onChange={(e) =>
+        setNewInfoEmp({
+          ...newinfoEmp,
+          isActive: e.target.checked,
+        })
+      }
+      className="w-5 h-5 accent-emerald-500 cursor-pointer"
+    />
+
+    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+      Compte actif
+    </span>
+  </label>
+
+  <span
+    className={`text-xs font-black px-3 py-1 rounded-full
+      ${
+        newinfoEmp.isActive
+          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+          : "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
+      }
+    `}
+  >
+    {newinfoEmp.isActive ? "ACTIF" : "OFFLINE"}
+  </span>
+</div>
+
 
           <button
             onClick={() => HandleUpdateEmploye(employee._id)}
