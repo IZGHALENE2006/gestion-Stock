@@ -37,7 +37,19 @@ export default function NaveProfite() {
         <IoBarChartOutline size={18} />
         <span>Facture</span>
       </NavLink>
-
+    <NavLink 
+        to="/Home/Profit/Hestorique" 
+        className={({ isActive }) => `
+          flex items-center gap-3 px-6 py-3 rounded-[1.2rem] text-xs font-black uppercase tracking-widest transition-all duration-300
+          ${isActive 
+            ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-600/20 scale-105' 
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600'
+          }
+        `}
+      >
+        <IoBarChartOutline size={18} />
+        <span>HestoriqueProfit</span>
+      </NavLink>
     </div>
   );
 }

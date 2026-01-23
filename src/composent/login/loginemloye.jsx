@@ -21,7 +21,7 @@ function LoginEmploye() {
   function HandeleLohinEmp(e) {
     e.preventDefault();
     dispatch(Loginuser({ role: "Employe", data: infoEmp }))
-      .unwrap().then(() => Nav('/Home/Dashboard'))
+      .unwrap().then(() => Nav('/Home/Caisse'))
       .catch((err) => { if (err.includes('suspendu')) setShowDialog(true); });
   }
 

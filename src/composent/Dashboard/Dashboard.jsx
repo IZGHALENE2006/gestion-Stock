@@ -101,9 +101,9 @@ const Plan1Data = {
 };
 const isDarkMode = document.documentElement.classList.contains('dark');
 const Plan2Data = {
-  labels: Category.map(cat => cat.name),
+  labels: Category?.map(cat => cat.name),
   datasets: [{
-    data: Category.map(cat => Produts.filter(p => p.categorie === cat.name).length),
+    data: Category?.map(cat => Produts.filter(p => p.categorie === cat.name).length),
     /* Modern vibrant colors that pop in both modes */
     backgroundColor: [
       '#f59e0b', // Amber 500
@@ -192,7 +192,7 @@ const stats = [
 const dataset = Plan2Data.datasets[0];
 const data = dataset.data;
 
-const maxIndex = data.indexOf(Math.max(...data));
+const maxIndex = data?.indexOf(Math.max(...data));
 const maxColor = dataset.backgroundColor[maxIndex];
 
 

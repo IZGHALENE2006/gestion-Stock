@@ -143,7 +143,7 @@ export const EmployeeDashboard = () => {
       >
         {Employe.length > 0 ? (
           Employe.map((emp) => (
-            <div key={emp._id} data-id={emp._id} className="card-wrapper cursor-grab active:cursor-grabbing">
+            <div key={emp._id} data-id={emp._id} className="card-wrapper cursor-grab active:cursor-grabbing z-0">
               <EmployeeCard employee={emp} />
             </div>
           ))

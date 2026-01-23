@@ -17,6 +17,7 @@ import Profite from './composent/Ventes/Profit'
 import Ventes from './composent/Ventes/Ventes'
 import FactureVentes from './composent/Ventes/Facture'
 import { useState } from 'react'
+import HestoriqueProfit from './composent/Ventes/hestorique'
 
 function App() {
 const [theme, seTheme] = useState("light");
@@ -51,6 +52,7 @@ const toggleTheme = () => {
         <Route path="profit" element={<Profite/>}>
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>
+            <Route path='Hestorique' element={<HestoriqueProfit/>}/>
         </Route>
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>
