@@ -26,8 +26,8 @@ const FacturePrint = forwardRef(({ facture, user }, ref) => {
       >
         <td className="py-1 px-1">{t.name}</td>
         <td className="py-1 px-1">{t.quantite}</td>
-        <td className="py-1 px-1">{t.price} Dh</td>
-        <td className="py-1 px-1 font-medium">{t.TotalPrix} Dh</td>
+        <td className="py-1 px-1">{t.price.toFixed(2)} Dh</td>
+        <td className="py-1 px-1 font-medium">{t.TotalPrix.toFixed(2)} Dh</td>
       </tr>
     ))}
   </tbody>
@@ -38,9 +38,9 @@ const FacturePrint = forwardRef(({ facture, user }, ref) => {
 
       <hr />
       <p>Total Qté: {facture.TotalQauntite}</p>
-      <p>Total: {facture.TotalPrix} Dh</p>
-      <p>Payé: {facture.totalOrder} Dh</p>
-      <p>Retour: {facture.PrixReture} Dh</p>
+      <p>Total: {facture.TotalPrix.toFixed(2)} Dh</p>
+      <p>Payé: {(facture.totalOrder + facture.PrixReture).toFixed(2)} Dh</p>
+      <p>Retour: {facture.PrixReture.toFixed(2)} Dh</p>
 
       <p style={{ textAlign: "center", marginTop: 10 }}>
         Merci pour votre achat 

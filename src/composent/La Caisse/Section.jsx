@@ -25,7 +25,14 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
 
   // --- LOGIC SCANNER ---
   const startScan = () => setOpen(true);
-  const stopScan = () => { Quagga.stop(); setOpen(false); };
+  const stopScan = () => {
+    try {
+      Quagga.stop();
+    } catch (e) {
+      console.log("Scanner already stopped");
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -34,7 +41,10 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
       decoder: { readers: ["ean_reader", "code_128_reader"] },
       locate: true,
     }, (err) => {
-      if (err) return;
+      if (err) {
+        toast.error("Erreur de caméra");
+        return;
+      }
       Quagga.start();
     });
     Quagga.onDetected((result) => {
@@ -49,17 +59,6 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
     dispatch(GetAllProduct());
   }, [token, dispatch, user]);
 
-  // GSAP Animation for the list
-  useEffect(() => {
-    if (Produts?.length > 0) {
-      gsap.fromTo(
-        ".product-item",
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: "power2.out" }
-      );
-    }
-  }, [Produts, searchTerm]);
-
   const cashValues = [
     { label: "20 DH", value: 20, img: "/20dh.png", color: "#10b981" },
     { label: "50 DH", value: 50, img: "/50dh.png", color: "#059669" },
@@ -72,31 +71,72 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
   );
 
   const totalOrder = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  const changeToReturn = amountPaid ? parseFloat(amountPaid) - totalOrder : 0;
+  const parsedAmountPaid = amountPaid === "" ? 0 : parseFloat(amountPaid);
+  const changeToReturn = parsedAmountPaid - totalOrder;
 
+  // --- REFINED PAYMENT LOGIC ---
   async function Khless() {
-    if (cart?.length === 0) return toast.error("Le panier est vide");
-    if (changeToReturn < 0) return toast.error("Montant insuffisant");
+    // 1. Check if cart is empty
+    if (!cart || cart.length === 0) {
+      return toast.error("Le panier est vide. Ajoutez des produits d'abord.");
+    }
+
+    // 2. Check if amount was entered
+    if (amountPaid === "" || parsedAmountPaid === 0) {
+      return toast.error("Veuillez saisir le montant reçu du client.");
+    }
+
+    // 3. Check if amount is enough
+    if (changeToReturn < 0) {
+      const manque = (totalOrder - parsedAmountPaid).toFixed(2);
+      return toast.error(`Montant insuffisant. Il manque ${manque} DH`);
+    }
+
     try {
-      const res = await dispatch(addVentes({ cart, totalOrder, changeToReturn })).unwrap();
-      toast.success("Vente enregistrée");
+      const res = await dispatch(addVentes({ 
+        cart, 
+        totalOrder, 
+        amountPaid: parsedAmountPaid,
+        changeToReturn 
+      })).unwrap();
+      
+      toast.success("Vente validée et enregistrée !");
       setFacture(res.facture); 
       onClearCart();
       setAmountPaid("");
+      dispatch(GetAllProduct()); // Refresh stocks
     } catch (err) {
-      toast.error(err?.message || "Erreur");
+      toast.error(err?.message || "Erreur lors de la transaction");
     }
   }
 
-  const handlePrint = useReactToPrint({ contentRef: printRef });
-  useEffect(() => { if (Facture) handlePrint(); }, [Facture]);
+  const handlePrint = useReactToPrint({ 
+    contentRef: printRef,
+    onAfterPrint: () => setFacture(null) 
+  });
+
+  useEffect(() => { 
+    if (Facture) {
+      handlePrint();
+    }
+  }, [Facture]);
 
   const handleQuickPay = (val, target, color) => {
+    // Cumulative logic: if user taps 20 then 50, it sets 50. 
+    // If you want it to add up, use: setAmountPaid(prev => (parseFloat(prev || 0) + val).toString())
     setAmountPaid(val.toString());
     gsap.fromTo(".amount-display", 
       { scale: 1.1, color: color }, 
       { scale: 1, color: "#059669", duration: 0.4 }
     );
+  };
+
+  const handleAddToCartWithCheck = (product) => {
+    if (product.quantite <= 0) {
+      return toast.error("Produit en rupture de stock !");
+    }
+    onAddToCart(product);
+    if(searchTerm) setSearchTerm("");
   };
 
   return (
@@ -146,8 +186,8 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           {(searchTerm.length > 0 ? filteredProducts : Produts)?.map((item) => (
             <div 
               key={item._id} 
-              onClick={() => { onAddToCart(item); if(searchTerm) setSearchTerm(""); }}
-              className="product-item flex justify-between items-center p-4 bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-500/5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer transition-all group shadow-sm hover:border-emerald-300 dark:hover:border-emerald-700"
+              onClick={() => handleAddToCartWithCheck(item)}
+              className={`product-item flex justify-between items-center p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer transition-all group shadow-sm ${item.quantite > 0 ? 'hover:bg-emerald-50 dark:hover:bg-emerald-500/5 hover:border-emerald-300 dark:hover:border-emerald-700' : 'opacity-60 grayscale cursor-not-allowed'}`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-slate-900 dark:bg-emerald-600 text-white flex items-center justify-center font-black text-lg shadow-lg">
@@ -203,7 +243,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           <div className="text-right">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Rendu Client</p>
             <p className={`text-3xl font-black ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
-              {changeToReturn.toFixed(2)} <span className="text-sm font-bold">DH</span>
+              {Math.max(0, changeToReturn).toFixed(2)} <span className="text-sm font-bold">DH</span>
             </p>
           </div>
         </div>
@@ -215,69 +255,49 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
       </div>
 
       {/* QUICK CASH */}
-<div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 
-  bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 backdrop-blur-xl">
-  
-  {cashValues.map((cash) => (
-    <button
-      key={cash.value}
-      onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
-      className="group relative h-28 rounded-4xl transition-all duration-500 overflow-hidden border
-        /* Light Mode */
-        bg-white/50 border-slate-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-2xl hover:-translate-y-2
-        /* Dark Mode */
-        dark:bg-slate-900/40 dark:border-slate-800 dark:shadow-none"
-    >
-      {/* 1. The Image Layer - Fixed & Fitted */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="w-full h-full bg-center bg-no-repeat bg-cover opacity-30 dark:opacity-30 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-          style={{ backgroundImage: `url(${cash.img})` }}
-        />
-        {/* Gradient Overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+      <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 backdrop-blur-xl">
+        {cashValues.map((cash) => (
+          <button
+            key={cash.value}
+            onClick={(e) => handleQuickPay(cash.value, e.currentTarget, cash.color)}
+            className="group relative h-28 rounded-4xl transition-all duration-500 overflow-hidden border bg-white/50 border-slate-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-2xl hover:-translate-y-2 dark:bg-slate-900/40 dark:border-slate-800 dark:shadow-none"
+          >
+            <div className="absolute inset-0 z-0">
+              <div
+                className="w-full h-full bg-center bg-no-repeat bg-cover opacity-30 dark:opacity-30 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                style={{ backgroundImage: `url(${cash.img})` }}
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+            </div>
+
+            <div 
+              className="absolute -right-4 -bottom-4 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-60 transition-all duration-700"
+              style={{ backgroundColor: cash.color }}
+            />
+
+            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-1">
+              <div 
+                className="px-3 py-1 rounded-full text-[10px] font-black text-white mb-1 shadow-lg"
+                style={{ backgroundColor: cash.color }}
+              >
+                {cash.value} DH
+              </div>
+              <span className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">
+                {cash.label}
+              </span>
+              <div 
+                className="w-0 h-1.5 rounded-full transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:w-12"
+                style={{ backgroundColor: cash.color, boxShadow: `0 0 15px ${cash.color}` }}
+              />
+            </div>
+
+            <div 
+              className="absolute top-0 right-0 w-12 h-12 bg-linear-to-bl from-white/20 to-transparent translate-x-12 -translate-y-12 group-hover:translate-x-6 group-hover:-translate-y-6 transition-all duration-500 rotate-45"
+              style={{ backgroundColor: cash.color }}
+            />
+          </button>
+        ))}
       </div>
-
-      {/* 2. Floating Glow (Themed to Cash Color) */}
-      <div 
-        className="absolute -right-4 -bottom-4 w-24 h-24 blur-3xl rounded-full opacity-0 group-hover:opacity-60 transition-all duration-700"
-        style={{ backgroundColor: cash.color }}
-      />
-
-      {/* 3. Content Layer */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full gap-1">
-        {/* Value Badge */}
-        <div 
-          className="px-3 py-1 rounded-full text-[10px] font-black text-white mb-1 shadow-lg"
-          style={{ backgroundColor: cash.color }}
-        >
-          {cash.value} DH
-        </div>
-        
-        {/* Big Label */}
-        <span className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase 
-          group-hover:scale-110 transition-transform duration-500 drop-shadow-sm">
-          {cash.label}
-        </span>
-
-        {/* Animated Selection Bar */}
-        <div 
-          className="w-0 h-1.5 rounded-full transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:w-12"
-          style={{ 
-            backgroundColor: cash.color,
-            boxShadow: `0 0 15px ${cash.color}` 
-          }}
-        />
-      </div>
-
-      {/* 4. Active Selection Indicator (Corner) */}
-      <div 
-        className="absolute top-0 right-0 w-12 h-12 bg-linear-to-bl from-white/20 to-transparent translate-x-12 -translate-y-12 group-hover:translate-x-6 group-hover:-translate-y-6 transition-all duration-500 rotate-45"
-        style={{ backgroundColor: cash.color }}
-      />
-    </button>
-  ))}
-</div>
       
       {/* CONFIRM BUTTON */}
       <div className="p-6 bg-white dark:bg-slate-900">
@@ -291,7 +311,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
 
       {/* SCANNER MODAL */}
       {open && (
-        <div className="fixed inset-0 z-200 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-6 w-full max-w-md relative shadow-2xl border border-white/20">
             <button onClick={stopScan} className="absolute -top-14 right-0 p-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all">
               <IoClose size={28} />
