@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { IoIosLogIn } from "react-icons/io";
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,8 +14,8 @@ function LoginAdmin() {
 
   useEffect(() => {
     gsap.fromTo(boxRef.current, 
-      { opacity: 0, scale: 0.8, y: 20 }, 
-      { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power4.out" }
+      { opacity: 0, scale: 0.9, y: 30 }, 
+      { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "back.out(1.2)" }
     );
   }, []);
 
@@ -23,32 +23,84 @@ function LoginAdmin() {
     e.preventDefault();
     Dispatch(Loginuser({ role: 'admin', data: infoAdmin }))
       .unwrap().then(() => {
-        gsap.to(boxRef.current, { opacity: 0, scale: 1.1, duration: 0.4, onComplete: () => Nav("/Home/Dashboard") });
+        gsap.to(boxRef.current, { opacity: 0, scale: 1.05, y: -20, duration: 0.4, onComplete: () => Nav("/Home/Dashboard") });
       });
   }
 
   return (
-    <div className="h-screen flex justify-center items-center p-4 overflow-hidden relative">
-  <div className="absolute top-[-10%] left-[-5%] w-125 h-125 bg-indigo-600/10 rounded-full blur-[120px] animate-pulse"/>
-  <div className="absolute bottom-[-10%] right-[-5%] w-125 h-125 bg-indigo-400/10 rounded-full blur-[120px] animate-pulse" />
-      <div ref={boxRef} style={{ background: "rgba(15, 23, 42, 0.9)", border: "1px solid rgba(255, 255, 255, 0.1)" }} className="w-full max-w-md rounded-4xl p-10 shadow-2xl">
-        <h1 className="text-4xl font-bold text-center text-white flex justify-center items-center gap-3 mb-10">
-          Admin <IoIosLogIn className="text-[#D4AF37]" />
+    <div className="h-screen w-full flex flex-col justify-center items-center p-4 overflow-hidden relative transition-colors duration-700 bg-gray-100 dark:bg-[#1e293b] font-sans">
+      
+      {/* Background Glows */}
+      <div className="absolute top-[-10%] left-[-5%] w-125 h-125 bg-emerald-500/10 dark:bg-emerald-600/15 rounded-full blur-[120px] animate-pulse pointer-events-none"/>
+      <div className="absolute bottom-[-10%] right-[-5%] w-125 h-125 bg-emerald-400/10 dark:bg-emerald-400/10 rounded-full blur-[120px] animate-pulse pointer-events-none" />
+
+      {/* Header Section (Tightened Logo + Title) */}
+      <div className="flex flex-col items-center mb-8 z-10 text-center">
+        <h1 className="text-4xl font-black tracking-tighter text-slate-800 dark:text-white leading-none">
+          STOCK <span className="text-emerald-500">PRO</span>
         </h1>
-        <form className="flex flex-col gap-5" onSubmit={Login}>
-          <input type="email" placeholder="Email" className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:ring-2 focus:ring-[#D4AF37] transition-all" onChange={(e) => setInfoAdmin({ ...infoAdmin, email: e.target.value })} />
-          <input type="password" placeholder="Password" className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:ring-2 focus:ring-[#D4AF37] transition-all" onChange={(e) => setInfoAdmin({ ...infoAdmin, password: e.target.value })} />
-          <button className="mt-4 bg-[#D4AF37] hover:bg-[#B8860B] text-white py-4 rounded-xl font-bold shadow-lg shadow-[#D4AF37]/20 active:scale-95 transition-all">
-            {loading ? "Authenticating..." : "Login"}
-          </button>
-          <div className="flex justify-between text-sm mt-4 text-gray-400">
-            <Link to='/RegisterAdmin' className="hover:text-blue-400 underline decoration-blue-500/30">Create Account</Link>
-            <Link to='/LoginEmploye' className="hover:text-white">Login as Employee</Link>
+        <p className="text-slate-400 dark:text-slate-600 text-[9px] font-black uppercase tracking-[0.4em] mt-2">Admin Portal</p>
+      </div>
+
+      {/* Login Box */}
+      <div 
+        ref={boxRef} 
+        className="relative w-full max-w-md rounded-[2.5rem] p-10 z-10 border transition-all duration-500
+          bg-white border-slate-200 shadow-2xl shadow-slate-200/50
+          dark:bg-slate-900/40 dark:backdrop-blur-2xl dark:border-white/5 dark:shadow-none"
+      >
+        <div className="flex justify-between items-center mb-10">
+            <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tighter">Login</h2>
+            <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                <IoIosLogIn size={24} />
+            </div>
+        </div>
+
+        <form className="flex flex-col gap-4" onSubmit={Login}>
+          <div className="space-y-1">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2">Email Address</label>
+            <input 
+              type="email" 
+              placeholder="admin@stockpro.com" 
+              className="w-full px-5 py-4 rounded-2xl outline-none transition-all duration-300
+                bg-slate-50 border-slate-100 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500
+                dark:bg-white/5 dark:border-white/10 dark:text-white dark:focus:border-emerald-500" 
+              onChange={(e) => setInfoAdmin({ ...infoAdmin, email: e.target.value })} 
+            />
           </div>
-          {error && <p className="text-red-400 text-center mt-2">{error}</p>}
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2">Security Key</label>
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              className="w-full px-5 py-4 rounded-2xl outline-none transition-all duration-300
+                bg-slate-50 border-slate-100 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500
+                dark:bg-white/5 dark:border-white/10 dark:text-white dark:focus:border-emerald-500" 
+              onChange={(e) => setInfoAdmin({ ...infoAdmin, password: e.target.value })} 
+            />
+          </div>
+
+          <button className="mt-4 bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center">
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : "Authenticate"}
+          </button>
+
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest mt-6">
+            <Link to='/RegisterAdmin' className="text-slate-400 dark:text-slate-600 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">Create Account</Link>
+            <Link to='/' className="text-emerald-600 dark:text-emerald-500 hover:underline">Switch Portal</Link>
+          </div>
+
+          {error && (
+            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold text-center uppercase tracking-wider">
+               {error}
+            </div>
+          )}
         </form>
       </div>
     </div>
   );
 }
+
 export default LoginAdmin;

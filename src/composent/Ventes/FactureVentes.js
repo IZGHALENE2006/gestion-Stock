@@ -18,15 +18,22 @@ export const generateFactureVentesPDF = (facture) => {
 
   autoTable(doc, {
     startY: 35,
-    head: [['Employe',"Nom", "Quantité", "Prix_Vente","Profite", "Date","temps"]],
-    body: facture.map(p => [
-      p.nameEmp,
-      p.name,
-      p.quantite,
-      `${p.price} Dh`,
-      `+ ${p.profite} Dh`,
-   
-    ]),
+head: [['Employe',"Nom", "Quantité", "Prix Vente","Profit", "Date","Temps"]],
+body: facture.map(p => {
+  const [datePart, timePart] = String(p.DateVante).split('T');
+  const time = timePart ? timePart.split('.')[0] : '-';
+
+  return [
+    p.nameEmp,
+    p.name,
+    p.quantite,
+    `${p.price} Dh`,
+    `+ ${p.profite} Dh`,
+    datePart,
+    time
+  ];
+}),
+
   });
 
   const y = doc.lastAutoTable.finalY + 10;
