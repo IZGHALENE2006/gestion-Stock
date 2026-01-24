@@ -109,8 +109,8 @@ const Plan2Data = {
     backgroundColor: [
       '#f59e0b', // Amber 500
       '#06b6d4', // Cyan 500
-      '#10b981', // Emerald 500
       '#ec4899', // Pink 500
+      '#10b981', // Emerald 500
       '#6366f1', // Indigo 500
     ],
     /* Change border color based on mode for a seamless look */
