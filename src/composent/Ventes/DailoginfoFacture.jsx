@@ -166,18 +166,18 @@ function DailloginfoFacture({ open, data, onClose }) {
             </div>
           </div>
 
-          <div className="bg-slate-900 dark:bg-emerald-600 p-8 rounded-[3rem] flex flex-col items-center shadow-2xl shadow-emerald-500/20 relative overflow-hidden group">
+          <div className="bg-emerald-50/30 dark:bg-emerald-600 p-8 rounded-[3rem] flex flex-col items-center shadow-2xl shadow-emerald-500/20 relative overflow-hidden group">
             {/* Background Decorative Circle */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
             
             <div className="w-full flex justify-between items-center mb-6 px-3 relative z-10">
               <p className="text-[9px] font-black text-emerald-400 dark:text-emerald-200 uppercase tracking-[0.2em]">Retour client</p>
-              <p className="text-sm font-black text-rose-400">-{data?.PrixReture} DH</p>
+              <p className="text-sm font-black text-blue-400">{data?.PrixReture} DH</p>
             </div>
             
             <div className="pt-6 border-t border-white/10 w-full text-center relative z-10">
               <p className="text-[10px] font-black text-emerald-400 dark:text-white/60 uppercase tracking-[0.4em] mb-3">Net à Payer</p>
-              <p className="text-5xl font-black text-white tracking-tighter">
+              <p className="text-5xl font-black text-emerald-600 tracking-tighter">
                 {data?.TotalPrix} <span className="text-xl font-bold opacity-60">DH</span>
               </p>
             </div>

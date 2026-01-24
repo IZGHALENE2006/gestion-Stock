@@ -22,6 +22,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { LuMoon, LuSun } from "react-icons/lu"; 
 import Landing from './composent/Landing/landing'
+import ProfilePage from './composent/profile/profile'
 function App() {
 
   
@@ -98,6 +99,8 @@ const onLeave = () => {
         <Route path='Dashboard' element={<Dashboard />} />
         <Route path='Caisse' element={<Caisse />} />
         <Route path='Fornisseur' element={<Fornisseur />} />
+       <Route path='profile' element={<ProfilePage/>}/>
+       
         <Route path="profit" element={<Profite/>}>
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>
@@ -112,7 +115,7 @@ const onLeave = () => {
         </Route>  
 
 
-
+     
      
      </Routes>
     </>

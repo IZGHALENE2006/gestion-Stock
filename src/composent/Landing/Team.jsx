@@ -2,7 +2,7 @@ import React from 'react';
 import { Linkedin, Globe, Github } from 'lucide-react';
 
 const members = [
-  { name: 'Izghalene El-Mahdi', role: 'Back-End Developer', image: 'https://picsum.photos/seed/person1/400/500' },
+  { name: 'Izghalene El-Mahdi', role: 'Back-End Developer', image: 'img4.png' },
   { name: 'BasKer Ayoub', role: 'Front-End Developer', image: '/ayoub.webp' , Linkedin : "https://www.linkedin.com/in/baskerayoub/" , WebSite : "https://baskeer.vercel.app/" , Github : "https://github.com/baskerayoub" },
 ];
 

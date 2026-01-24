@@ -5,7 +5,7 @@ import {
   IoPersonOutline, IoLogOutOutline, IoSettingsOutline, IoPricetagsOutline, IoBusinessOutline 
 } from "react-icons/io5";
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate ,Link} from 'react-router-dom';
 import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 
 export default function Sidebar() {
@@ -16,11 +16,15 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const nav = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      dispatch(getMe());
-    }
-  }, [dispatch, token]);
+const [loaded, setLoaded] = useState(false);
+
+useEffect(() => {
+  if (token && !loaded) {
+    dispatch(getMe());
+    setLoaded(true);
+  }
+}, [dispatch, token, loaded]);
+
 
   const handleProfileClick = () => {
     setProfileOpen(!profileOpen);
@@ -79,9 +83,23 @@ export default function Sidebar() {
           {/* Dropdown Menu */}
           {profileOpen && isExpanded && (
             <div className="absolute left-4 bottom-20 w-48 bg-white dark:bg-slate-800 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
+     {/* <Link to='/Home/profile'>
               <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-[#19b393] transition">
-                <IoSettingsOutline className="mr-3" size={18}/> Profile
+               
               </button>
+     </Link> */}
+<NavLink
+  to="/Home/profile"
+  onClick={() => setProfileOpen(false)}
+  className="flex items-center w-full px-4 py-3 text-sm font-medium
+             text-slate-600 dark:text-slate-300
+             hover:bg-slate-50 dark:hover:bg-slate-700/50
+             hover:text-[#19b393] transition"
+>
+  <IoSettingsOutline className="mr-3" size={18}/>
+  Profile
+</NavLink>
+
               <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition" onClick={HanleLogoutAdmin}>
                 <IoLogOutOutline className="mr-3" size={18}/> Déconnexion
               </button>
