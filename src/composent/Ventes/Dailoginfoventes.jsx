@@ -98,7 +98,7 @@ const DailogInfoVentes = ({ vente, onClose, onViewProduct }) => {
               label="Profit" 
               value={`${vente.profite?.toLocaleString()} DH`}
               subValue="Gain net"
-              darkIconColor="dark:text-emerald-400"
+              darkIconColor="dark:text-emerald-400  "
             />
 
             <StatCard 

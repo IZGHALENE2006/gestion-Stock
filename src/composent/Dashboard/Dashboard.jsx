@@ -17,9 +17,10 @@ import { useEffect } from "react";
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler);
 
 export default function Dashboard() {
-  const { user, token } = useSelector((state) => state.LoginAdmin);
-  const { Produts } = useSelector((state) => state.Product);
+  const { user, token,role } = useSelector((state) => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe);
+
+  const { Produts } = useSelector((state) => state.Product);
   const { Category } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
@@ -30,7 +31,7 @@ export default function Dashboard() {
     dispatch(GetAllCatefory());
   }, [token, dispatch, user]);
 
-  const totalprix = Produts.reduce((acc, product) => acc + product.prix_vente * product.quantite, 0);
+  const totalprix = Produts.reduce((acc, product) => acc + product.prix_achat * product.quantite, 0);
 
 
   
@@ -146,6 +147,23 @@ const Plan2Data = {
     }]
   };
 
+  //Logic Profite
+    let allVentes = [];
+  if (role === "admin") {
+    const adminVentes = user?.ventes || [];
+    // Hna fin kanzido l-smiya dial l-khdam l-koll vente dyalo
+    const employeVentes = Employe?.flatMap(e => 
+      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
+    ) || [];
+    allVentes = [...adminVentes, ...employeVentes];
+  } else {
+    allVentes = user?.ventes || [];
+  }
+
+  const Daye = new Date().toLocaleDateString();
+  const VentesDujour = allVentes.filter((t) => new Date(t.DateVante).toLocaleDateString() === Daye);
+  const TotalProfite = VentesDujour.reduce((somme, t) => (somme += t.profite), 0);
+
 const stats = [
     { 
       label: "Employés", 
@@ -167,7 +185,7 @@ const stats = [
     },
     { 
       label: "Profit (jour)", 
-      value: "45,000 DH", 
+      value: TotalProfite || 0, 
       icon: <IoTrendingUpOutline />, 
       gradient: "from-emerald-400 to-emerald-600", 
       text: "text-emerald-500 dark:text-emerald-400", 
