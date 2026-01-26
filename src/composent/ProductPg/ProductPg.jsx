@@ -12,7 +12,7 @@ export default function ProductPg() {
   const { role } = useSelector(state => state.LoginAdmin);
  
   const Total = Produts.reduce((somme, item) => {
-    return somme += item.prix_achat;
+    return somme += item.prix_vente * item.quantite;
   }, 0);
 
   const lowStockCount = Produts.filter(item => item.quantite > 0 && item.quantite < 10).length;

@@ -28,6 +28,14 @@ function Categories() {
   const [idDelete, setIdDelete] = useState("");
   const [idUpdate, setIdUpdate] = useState("");
 
+  // --- Search Logic ---
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCategories = Category.filter((cat) =>
+    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  // --------------------
+
   // Delete
   function handleDelete(id) {
     setIdDelete(id);
@@ -64,7 +72,7 @@ function Categories() {
               Number of Categories
             </p>
             <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-              {Category.length}
+              {filteredCategories.length}
             </h1>
           </div>
         </div>
@@ -80,6 +88,8 @@ function Categories() {
             <input
               type="text"
               placeholder="Search category..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-transparent text-sm px-2 py-2 outline-none w-full text-slate-700 dark:text-slate-200"
             />
           </div>
@@ -99,7 +109,7 @@ function Categories() {
 
       {/* ===== CATEGORIES GRID ===== */}
       <div className="flex flex-wrap gap-6 justify-center">
-        {Category.map((t, i) => (
+        {filteredCategories.map((t, i) => (
           <div
             key={t._id || i}
             className="basis-full sm:basis-[calc(50%-1.5rem)] lg:basis-[calc(33.333%-1.5rem)] xl:basis-[calc(25%-1.5rem)]"
@@ -113,6 +123,9 @@ function Categories() {
             />
           </div>
         ))}
+        {filteredCategories.length === 0 && (
+          <p className="text-slate-500 mt-10">No categories found matching your search.</p>
+        )}
       </div>
 
       {/* ===== DIALOGS ===== */}
