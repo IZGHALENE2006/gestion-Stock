@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { IoBarcodeOutline, IoSaveOutline, IoPricetagOutline, IoCubeOutline, IoBusinessSharp, IoLayersOutline, IoRefreshOutline } from "react-icons/io5";
-import { AddProduct } from "../../slices/SliceProduct";
+import { AddProduct, GetAllProduct } from "../../slices/SliceProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { GetAllCatefory } from "../../slices/SilceCategory";
 import Barcode from "react-barcode"; 
@@ -60,8 +60,7 @@ export default function AddProductForm() {
 
   const HandlegetCategort = (e) => {
     const val = e.target.value;
-    const cat = Category.find((t) => t._id === val);
-    setFormData((prev) => ({ ...prev, categorie: cat ? cat.name : "" }));
+    setFormData((prev) => ({ ...prev, categorie: val}));
   };
 
   const handleSubmit = async (e) => {
@@ -82,7 +81,7 @@ export default function AddProductForm() {
         datecreate: new Date(),
         status: true
       });
-
+   
       toast.success('Product Added Successfully', {
         style: {
           border: '1px solid #10b981',
@@ -92,6 +91,7 @@ export default function AddProductForm() {
         },
         iconTheme: { primary: '#10b981', secondary: '#fff' },
       });
+        Dispatch(GetAllProduct()) 
 
     } catch (err) {
       toast.error(err?.message || 'Failed to add product.', {

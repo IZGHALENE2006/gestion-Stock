@@ -1,10 +1,14 @@
 import ProductModel from '../models/productModel.js';
-
+import CategoryModel from '../models/Category.js'
 // Add New Product
 export const CreateProduct = async (req, res) => {
     try {
         const { name, quantite, barcode, prix_achat, prix_vente, categorie, fournisseur, datecreate, status } = req.body;
-
+  const category = await CategoryModel.findById(categorie);
+ 
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
+  }
         const newProduct = await ProductModel.create({
             idAdmin: req.user.idAdmin,
             name,
@@ -13,7 +17,7 @@ export const CreateProduct = async (req, res) => {
             prix_achat,
             prix_vente,
             profite:Number( prix_vente)-Number(prix_achat),
-            categorie,
+            categorie:category._id,
             fournisseur,
             datecreate,
             status
@@ -28,7 +32,7 @@ export const CreateProduct = async (req, res) => {
 //get All Product
 export const AllProduct = async (req, res) => {
     try {
-        const products = await ProductModel.find( {idAdmin: req.user.idAdmin});
+        const products = await ProductModel.find( {idAdmin: req.user.idAdmin}).populate("categorie", "name")
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -51,7 +55,11 @@ export const DeleteProduct = async(req,res)=>{
 export const UpdateProduit = async(req,res)=>{
     const {id} = req.params
     const {name,quantite,prix_achat,prix_vente,categorie,fournisseur} = req.body
+  const category = await CategoryModel.findById(categorie);
 
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
+  }
     try{
        const newProduct = await ProductModel.findByIdAndUpdate(id,{
            
@@ -62,7 +70,7 @@ export const UpdateProduit = async(req,res)=>{
             prix_vente,
             profite:Number( prix_vente)-Number(prix_achat),
 
-            categorie,
+            categorie:category._id,
             fournisseur,
          
 
@@ -73,7 +81,7 @@ export const UpdateProduit = async(req,res)=>{
     res.status(200).json(newProduct)
 
     }catch(err){
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: err.message });
 
     }
 }

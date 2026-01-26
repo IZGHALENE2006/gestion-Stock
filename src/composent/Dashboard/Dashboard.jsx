@@ -11,9 +11,12 @@ import Plan1 from "./Plan1";
 import Plan2 from "./Plan2";
 import Plan3 from "./Plan3";
 import Plan4 from "./Plan4";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import stringToColor from "string-to-color";
 
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler);
 
 export default function Dashboard() {
@@ -35,6 +38,12 @@ export default function Dashboard() {
 
 
   
+  useEffect(()=>{
+  toast.success(`Hello ${user?.name}`,{
+    position:"top-right",
+  
+  })
+  },[])
 
 
 
@@ -109,8 +118,8 @@ const Plan2Data = {
     backgroundColor: [
       '#f59e0b', // Amber 500
       '#06b6d4', // Cyan 500
-      '#ec4899', // Pink 500
       '#10b981', // Emerald 500
+      '#ec4899', // Pink 500
       '#6366f1', // Indigo 500
     ],
     /* Change border color based on mode for a seamless look */
@@ -120,15 +129,38 @@ const Plan2Data = {
     borderRadius: 8, // Adds slightly rounded edges to the doughnut segments
   }]
 };
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  const Employees = [
-    { name: "Ayoub", data: [20, 15, 30, 25, 15, 35, 60], color: "#4f46e5" },
-    { name: "Mehdi", data: [15, 25, 20, 30, 35, 45, 55], color: "#10b981" },
-    { name: "Basker", data: [10, 20, 25, 20, 30, 40, 50], color: "#ef4444" },
-  ];
+function ventesParJour(ventes = []) {
+  const result = {
+    Mon: 0, Tue: 0, Wed: 0,
+    Thu: 0, Fri: 0, Sat: 0, Sun: 0,
+  };
+
+  ventes.forEach(v => {
+    if (!v.DateVante) return;
+
+    const day = new Date(v.DateVante)
+      .toLocaleDateString("en-US", { weekday: "short" });
+
+    result[day] += v.profite || 0;
+  });
+
+  return days.map(d => result[d]);
+}
+const Employees = useMemo(()=>{
+  if(!Employe) return []
+  return Employe.map(emp => ({
+    name: emp.name,
+    data: ventesParJour(emp.ventes),
+    color: emp.color || stringToColor(emp._id),
+  }));
+},)
+  
+
 
   const Plan3Data = {
-    labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+    labels:days,
     datasets: Employees.map((emp) => ({
       label: emp.name,
       data: emp.data,

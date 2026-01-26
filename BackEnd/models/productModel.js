@@ -13,7 +13,11 @@
             prix_achat:Number,
             prix_vente:Number,
             profite:Number,
-            categorie:String,
+            categorie:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Categories",
+                required:true
+            },
             fournisseur:String,
             datecreate:Date,
             dateupdate:Date,
