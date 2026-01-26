@@ -83,7 +83,7 @@ export const UpdateFournisseur = createAsyncThunk(
           name,
           email,
           phone,
-          address:Ville,
+          Ville,
         },
         {
           headers: {

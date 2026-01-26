@@ -22,7 +22,7 @@ const Fornisseur = () => {
 const VILLES_DATA = cities.cities.data.map(c => c.names.fr)
     const dropdownRef = useRef(null);
   
-  const { Fournisseur } = useSelector((state) => state.Fournisseur);
+  const { Fournisseur,loading, error } = useSelector((state) => state.Fournisseur);
   const Dispatch = useDispatch();
 
   useEffect(() => {
@@ -66,6 +66,8 @@ const [selectedSupplier,setselectedSupplier] = useState({
     phone: "",
     Ville: ""
 })
+console.log(selectedSupplier);
+
   const [showDatalist, setShowDatalist] = useState(false);
     // Filter logic: find cities that include the typed text
       // Close dropdown when clicking outside
@@ -101,6 +103,8 @@ function HandleopenUpdate(id){
 }
 function  HandleUpdateFornisseur(){
   Dispatch(UpdateFournisseur({selectedSupplier,IdUpdate}))
+  setEditOpen(false)
+  
 }
 
   return (
@@ -379,7 +383,7 @@ function  HandleUpdateFornisseur(){
           className="flex-[2] py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all active:scale-95 flex items-center justify-center gap-2"
           onClick={HandleUpdateFornisseur}
         >
-          Mettre à jour le profil
+          {loading ?'.....' :"Mettre à jour le profil"}
         </button>
       </div>
     </div>

@@ -36,7 +36,18 @@ export default function Dashboard() {
 
   const totalprix = Produts.reduce((acc, product) => acc + product.prix_achat * product.quantite, 0);
 
-
+  //Logic Profite
+    let allVentes = [];
+  if (role === "admin") {
+    const adminVentes = user?.ventes || [];
+    // Hna fin kanzido l-smiya dial l-khdam l-koll vente dyalo
+    const employeVentes = Employe?.flatMap(e => 
+      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
+    ) || [];
+    allVentes = [...adminVentes, ...employeVentes];
+  } else {
+    allVentes = user?.ventes || [];
+  }
   
   useEffect(()=>{
   toast.success(`Hello ${user?.name}`,{
@@ -45,6 +56,57 @@ export default function Dashboard() {
   })
   },[])
 
+//Logic 4eme daigramme 
+const dayse = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function calcTotalCAParJourSemaine(ventes) {
+  const now = new Date();
+
+  // 🔹 الاثنين
+  const dayOfWeek = now.getDay(); // 0=Sun
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday);
+  monday.setHours(0, 0, 0, 0);
+
+  // 🔹 الأحد
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  // 🔹 init
+  const result = {
+    Mon: 0,
+    Tue: 0,
+    Wed: 0,
+    Thu: 0,
+    Fri: 0,
+    Sat: 0,
+    Sun: 0,
+  };
+
+  ventes.forEach(v => {
+    if (!v.DateVante) return;
+
+    const venteDate = new Date(v.DateVante);
+
+    // غير سيمانة الحالية
+    if (venteDate < monday || venteDate > sunday) return;
+
+    const day = venteDate.toLocaleDateString("en-US", {
+      weekday: "short",
+    });
+
+    const totalVente = Number(v.price || 0) * Number(v.quantite || 0);
+
+    if (result[day] !== undefined) {
+      result[day] += totalVente;
+    }
+  });
+
+  return dayse.map(d => result[d]);
+}
 
 
   // 1. Chart Options fate7in
@@ -85,13 +147,61 @@ const chartOptions = {
     }
   }
 };
+//Logic 2 Daigramme 
+
+function calcProfitParJourSemaineActuelle(ventes) {
+const dayse = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  const now = new Date();
+
+// Lundi 
+  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday ...
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday);
+  monday.setHours(0, 0, 0, 0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  const result = {
+    Mon: 0,
+    Tue: 0,
+    Wed: 0,
+    Thu: 0,
+    Fri: 0,
+    Sat: 0,
+    Sun: 0,
+  };
+
+  // 🔹 حساب ventes
+  ventes.forEach(v => {
+    if (!v.DateVante) return;
+
+    const venteDate = new Date(v.DateVante);
+  //simana dyale db 
+    if (venteDate < monday || venteDate > sunday) return;
+
+    const day = venteDate.toLocaleDateString("en-US", {
+      weekday: "short",
+    });
+
+    if (result[day] !== undefined) {
+      result[day] += Number(v.profite || 0);
+    }
+  });
+
+  return dayse.map(d => result[d]);
+}
 
   // 2. T3rif dial l-Data (khass ykono hna bash t-khdem l-Plan1Data)
 const Plan1Data = {
   labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
   datasets: [{
     label: "Profit (DH)",
-    data: [12000, 19000, 15000, 22000, 18000, 25000, 5000],
+    data: calcProfitParJourSemaineActuelle(allVentes),
     borderColor: "#19b393", // Indigo-500
     borderWidth: 3,
     pointBackgroundColor: "#19b393",
@@ -173,24 +283,13 @@ const Employees = useMemo(()=>{
     labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
     datasets: [{
       label: "Valeur Totale",
-      data: [10000, 15000, 12000, 18000, 14000, 20000, 8000],
+      data:calcTotalCAParJourSemaine(allVentes),
       backgroundColor: "#8b5cf6",
       borderRadius: 8,
     }]
   };
 
-  //Logic Profite
-    let allVentes = [];
-  if (role === "admin") {
-    const adminVentes = user?.ventes || [];
-    // Hna fin kanzido l-smiya dial l-khdam l-koll vente dyalo
-    const employeVentes = Employe?.flatMap(e => 
-      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
-    ) || [];
-    allVentes = [...adminVentes, ...employeVentes];
-  } else {
-    allVentes = user?.ventes || [];
-  }
+
 
   const Daye = new Date().toLocaleDateString();
   const VentesDujour = allVentes.filter((t) => new Date(t.DateVante).toLocaleDateString() === Daye);

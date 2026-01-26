@@ -130,7 +130,7 @@ function Categories() {
 
       {/* ===== DISPLAY CONTENT ===== */}
       {viewMode === "grid" ? (
-        <div className="flex flex-wrap gap-6 justify-center">
+        <div className="flex flex-wrap gap-6 justify-start">
           {filteredCategories.map((t, i) => (
             <div
               key={t._id || i}
@@ -162,7 +162,7 @@ function Categories() {
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredCategories.map((t) => {
                   // Calculate count using your method
-                  const productCount = Produts?.filter(item => item.categorie === t.name).length || 0;
+                  const productCount = Produts?.filter(item => item.categorie._id === t._id).length || 0;
                   
                   return (
                     <tr key={t._id} className="group hover:bg-emerald-50/30 dark:hover:bg-emerald-500/5 transition-all">
