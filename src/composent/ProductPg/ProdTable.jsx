@@ -52,10 +52,11 @@ const BarcodeDisplay = ({ value }) => {
   return <svg ref={barcodeRef} className="mx-auto"></svg>;
 };
 
-export default function ProdTable() {
+// ADDED: products as a prop
+export default function ProdTable({ products }) {
   const Dispatch = useDispatch();
   const printRef = useRef();
-  const { Produts, loading } = useSelector((state) => state.Product);
+  const { loading } = useSelector((state) => state.Product);
   const { role } = useSelector(state => state.LoginAdmin);
 
   const [openDailgoConfirmation, setOpenDailgoConfirmation] = useState(false);
@@ -111,7 +112,7 @@ export default function ProdTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-            {Produts?.map((item) => (
+            {products?.map((item) => (
               <tr key={item._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-all group">
                 <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200 uppercase text-xs">{item.name}</td>
                 <td className="px-6 py-4">
@@ -145,7 +146,6 @@ export default function ProdTable() {
         </table>
       </div>
 
-      {/* --- OVERVIEW DIALOG --- */}
       <Dialog 
         title={"Information"}
         bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
@@ -153,7 +153,6 @@ export default function ProdTable() {
         {selectedProduct && (
           <div className="p-2">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Left Side: Visual */}
               <div className="w-full md:w-2/5 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] border border-slate-100 dark:border-slate-700">
                 <div className="w-24 h-24 bg-emerald-500 rounded-[2.2rem] flex items-center justify-center text-white text-4xl font-black shadow-xl shadow-emerald-100 dark:shadow-none mb-4">
                   {selectedProduct.name.charAt(0).toUpperCase()}
@@ -170,7 +169,6 @@ export default function ProdTable() {
                 </button>
               </div>
 
-              {/* Right Side: Data */}
               <div className="flex-1 grid grid-cols-1 gap-3 py-2">
                 <InfoItem icon={<HiOutlineCube size={20}/>} label="Stock Actuel" value={`${selectedProduct.quantite} Unités`} color="text-emerald-500" />
                 <InfoItem icon={<HiOutlineUser size={20}/>} label="Fournisseur" value={selectedProduct.fournisseur || "Direct"} color="text-slate-500" />
@@ -192,7 +190,6 @@ export default function ProdTable() {
       <div style={{ display: "none" }}><PrintContainer ref={printRef} product={selectedProduct} /></div>
       <Dialog 
         bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
-      
       isOpen={openupdate} onClose={() => setopeopenupdaten(false)} title="Modifier Produit" width="550px">
         <UpdateProduit idupdate2={idupdate2} close={() => setopeopenupdaten(false)} />
       </Dialog>
