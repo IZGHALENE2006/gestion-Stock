@@ -21,7 +21,8 @@ import { useRef, useState } from 'react'
 import { useEffect } from "react";
 import gsap from "gsap";
 import { LuMoon, LuSun } from "react-icons/lu"; 
-
+import Landing from './composent/Landing/landing'
+import ProfilePage from './composent/profile/profile'
 function App() {
 
   
@@ -72,7 +73,7 @@ const onLeave = () => {
     onMouseEnter={onEnter}
     onMouseLeave={onLeave}
     onClick={toggleTheme}
-    className="fixed z-999 -right-3 bottom-5 z-50 flex items-center justify-start pl-4 w-25 h-12 translate-x-[45px] bg-white dark:bg-zinc-900 border border-indigo-200 dark:border-yellow-200 rounded-l-full text-indigo-500 dark:text-yellow-500 transition-colors"
+    className="fixed z-999 -right-3 bottom-5 flex items-center justify-start pl-4 w-25 h-12 translate-x-[45px] bg-white dark:bg-zinc-900 border border-indigo-200 dark:border-yellow-200 rounded-l-full text-indigo-500 dark:text-yellow-500 transition-colors"
   >
     <div className="text-xl flex items-center justify-center">
       {theme === "light" ? <LuMoon size={20}/> : <LuSun size={20}/>}
@@ -87,7 +88,8 @@ const onLeave = () => {
 
         
         <Routes>
-        <Route path='/' element={<LoginChoise/>}/>
+        <Route path='/' element={<Landing/>}/>
+        <Route path='/LoginChoise' element={<LoginChoise/>}/>
         <Route path='/RegisterAdmin' element={<RegesterAdmin/>}/>
         <Route path='/LoginAdmin' element={<LoginAdmin/>}/>
         <Route path='/LoginEmploye' element={<LoginEmploye/>}/>
@@ -97,6 +99,8 @@ const onLeave = () => {
         <Route path='Dashboard' element={<Dashboard />} />
         <Route path='Caisse' element={<Caisse />} />
         <Route path='Fornisseur' element={<Fornisseur />} />
+       <Route path='profile' element={<ProfilePage/>}/>
+       
         <Route path="profit" element={<Profite/>}>
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>
@@ -111,7 +115,7 @@ const onLeave = () => {
         </Route>  
 
 
-
+     
      
      </Routes>
     </>

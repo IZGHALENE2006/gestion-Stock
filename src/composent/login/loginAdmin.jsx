@@ -89,7 +89,7 @@ function LoginAdmin() {
 
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest mt-6">
             <Link to='/RegisterAdmin' className="text-slate-400 dark:text-slate-600 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">Create Account</Link>
-            <Link to='/' className="text-emerald-600 dark:text-emerald-500 hover:underline">Switch Portal</Link>
+            <Link to='/LoginChoise' className="text-emerald-600 dark:text-emerald-500 hover:underline">Switch Portal</Link>
           </div>
 
           {error && (
