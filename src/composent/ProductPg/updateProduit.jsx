@@ -3,13 +3,13 @@ import {
   IoPricetagOutline,
   IoCubeOutline,
   IoCashOutline,
-  IoCartOutline,
+
   IoSaveOutline,
   IoLayersOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProduit } from "../../slices/SliceProduct";
+import { GetAllProduct, updateProduit } from "../../slices/SliceProduct";
 import toast, { Toaster } from 'react-hot-toast';
 
 function UpdateProduit(props) {
@@ -53,6 +53,8 @@ function UpdateProduit(props) {
           backgroundColor: "var(--toast-bg, #ffffff)",
         },
       });
+        dispatch(GetAllProduct()) 
+
       close();
     } catch (err) {
       toast.error('Failed to update produit', {
@@ -129,7 +131,7 @@ function UpdateProduit(props) {
               >
                 <option value='' className="dark:bg-slate-900">Sélectionner une catégorie</option>
                 {Category.map((t) => (
-                  <option key={t._id} value={t.name} className="dark:bg-slate-900">{t.name}</option>
+                  <option key={t._id} value={t._id} className="dark:bg-slate-900">{t.name}</option>
                 ))}
               </select>
             </div>

@@ -42,11 +42,11 @@ export const DeleteFournisseur = async (req, res) => {
 // Update Fournisseur
 export const UpdateFournisseur = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone, Ville, status } = req.body;
+  const { name, email, phone, Ville,  } = req.body;
 
   const NewItem = await FournisseurModel.findByIdAndUpdate(
     id,
-    { name, email, phone, Ville, status },
+    { name, email, phone, Ville },
     { new: true }
   );
 

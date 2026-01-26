@@ -74,15 +74,16 @@ export const UpdateFournisseur = createAsyncThunk(
   "UpdateFournisseur",
   async (data, { rejectWithValue }) => {
     const Token = localStorage.getItem("token");
+   const{name,email,phone,Ville} = data.selectedSupplier
+    
     try {
       const res = await axios.patch(
-        `http://localhost:7000/Fournisseur/Update/${data.id}`,
+        `http://localhost:7000/Fournisseur/Update/${data.IdUpdate}`,
         {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          address: data.address,
-          status: data.status,
+          name,
+          email,
+          phone,
+          address:Ville,
         },
         {
           headers: {

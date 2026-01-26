@@ -1,6 +1,6 @@
 
 import CategoryModel from '../models/Category.js'
-
+import productModel from '../models/productModel.js'
 
 //Add New Category
 export const AddCategory = async(req,res)=>{
@@ -37,14 +37,13 @@ export const GetCategory = async(req,res)=>{
     export const UpdateCategory = async(req,res)=>{
         const {id} = req.params 
         const {name} = req.body
-        // const  item = await CategoryModel.find({_id:id})
+
+
         const Newitem  = await CategoryModel.findByIdAndUpdate(id,
            {name},
            {new:true}
-        )
-        // const produit  = await  productModel.updateMany({categorie:item.name},{
+        )   
 
-        // })
         if(!Newitem) return res.status(404).json({message:"Not Found"})
         res.status(201).json(Newitem)
     }

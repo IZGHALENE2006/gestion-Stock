@@ -123,7 +123,7 @@ export default function ProdTable({ products }) {
                   </span>
                 </td>
                 <td className="px-6 py-4 font-bold text-slate-600 dark:text-slate-400 text-sm">{item.prix_vente?.toFixed(2)} DH</td>
-                <td className="px-6 py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase">{item.categorie}</td>
+                <td className="px-6 py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase">{item.categorie?.name||"not valid"}</td>
                 <td className="px-6 py-4">
                   <span className={`font-black text-sm ${item.quantite < 10 ? 'text-rose-500' : 'text-slate-700 dark:text-slate-300'}`}>
                     {item.quantite} <span className="text-[10px] opacity-50">PCS</span>
@@ -158,7 +158,7 @@ export default function ProdTable({ products }) {
                   {selectedProduct.name.charAt(0).toUpperCase()}
                 </div>
                 <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 uppercase text-center leading-tight">{selectedProduct.name}</h3>
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">{selectedProduct.categorie}</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">{selectedProduct.categorie?.name||"not Valide"}</p>
                 
                 <div className="p-3">
                   <BarcodeDisplay value={selectedProduct.barcode} />
@@ -179,7 +179,7 @@ export default function ProdTable({ products }) {
                   <HiOutlineCalendar size={14}/>
                   <span className="text-[10px] font-bold uppercase tracking-tighter">Créé le: {new Date(selectedProduct.datecreate).toLocaleDateString()}</span>
                 </div>
-              </div>
+              </div>  
             </div>
           </div>
         )}

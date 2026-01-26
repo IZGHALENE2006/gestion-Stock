@@ -183,7 +183,9 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
           }}
         >
           <div className="flex items-center gap-2 mb-8">
-            <button onClick={toggleFlip} className="text-slate-400 hover:text-emerald-500 transition-colors">
+            <button onClick={toggleFlip} className="text-slate-400 hover:text-emerald-500 transition-colors"
+            
+            >
                 <IoArrowBackOutline size={20}/>
             </button>
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-800 dark:text-slate-100">
