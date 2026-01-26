@@ -11,6 +11,7 @@ gsap.registerPlugin(Draggable);
 
 export const EmployeeDashboard = () => {
   const dispatch = useDispatch();
+  const [refreshEmployees, setRefreshEmployees] = useState(false);
 
   const [view, setView] = useState("card"); // 'card' or 'list'
   const [searchTerm, setSearchTerm] = useState(""); // Added for Search logic
@@ -25,7 +26,7 @@ export const EmployeeDashboard = () => {
 
   useEffect(() => {
     dispatch(GetAllEmploye());
-  }, [dispatch]);
+  }, [dispatch , refreshEmployees]);
 
   // ================= SEARCH FILTER LOGIC =================
   const filteredEmployees = (Employe || []).filter((emp) => {
@@ -82,6 +83,7 @@ export const EmployeeDashboard = () => {
           type: "x,y",
           edgeResistance: 0.65,
           dragClickables: false,
+          zIndexBoost: false,
           onDragStart() {
             gsap.to(deleteZoneRef.current, { scale: 1.1, opacity: 1, duration: 0.25 });
             this.target.style.zIndex = 50;
@@ -131,7 +133,10 @@ export const EmployeeDashboard = () => {
             <div ref={containerRef} className="flex flex-wrap gap-8 justify-center md:justify-start">
               {filteredEmployees.map((emp) => (
                 <div key={emp._id} data-id={emp._id} className="card-wrapper cursor-grab active:cursor-grabbing z-0">
-                  <EmployeeCard employee={emp} />
+                  <EmployeeCard employee={emp}
+                    onUpdated={() => setRefreshEmployees(prev => !prev)}
+
+                  />
                 </div>
               ))}
             </div>

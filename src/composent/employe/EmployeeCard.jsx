@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
-import { UpdateEmploye } from "../../slices/sliceEmploye";
+import { GetAllEmploye, UpdateEmploye } from "../../slices/sliceEmploye";
 import toast, { Toaster } from "react-hot-toast";
 import {
   IoPencil,
@@ -17,7 +17,7 @@ import {
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 
-export const EmployeeCard = ({ employee }) => {
+export const EmployeeCard = ({ employee, onUpdated }) => {
   const dispatch = useDispatch();
   const innerRef = useRef(null);
 
@@ -36,20 +36,23 @@ export const EmployeeCard = ({ employee }) => {
   const { loading } = useSelector((state) => state.Employe);
 
   // ================= UPDATE =================
-  const HandleUpdateEmploye = (id) => {
-    dispatch(UpdateEmploye({ id, newinfoEmp }))
-      .unwrap()
-      .then(() => {
-        toast.success("Employé mis à jour");
-        setIsFlipped(false);
-        gsap.to(innerRef.current, {
-          rotateY: 0,
-          duration: 0.6,
-          ease: "back.inOut(1.7)",
-        });
-      })
-      .catch(() => toast.error("Erreur serveur"));
-  };
+ const HandleUpdateEmploye = (id) => {
+  dispatch(UpdateEmploye({ id, newinfoEmp }))
+    .unwrap()
+    .then(() => {
+      toast.success("Employé mis à jour");
+      setIsFlipped(false);
+
+      gsap.to(innerRef.current, {
+        rotateY: 0,
+        duration: 0.6,
+        ease: "back.inOut(1.7)",
+      });
+
+      onUpdated && onUpdated(); // ⭐ هذا هو المفتاح
+    })
+    .catch(() => toast.error("Erreur serveur"));
+};
 
   // ================= FLIP =================
   const toggleFlip = (e) => {

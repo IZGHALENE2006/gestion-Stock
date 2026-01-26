@@ -325,7 +325,6 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
         </div>
       )}
 
-      <Toaster position="bottom-right" />
       <div style={{ display: "none" }}>
         <FacturePrint ref={printRef} facture={Facture} user={user} />
       </div>
