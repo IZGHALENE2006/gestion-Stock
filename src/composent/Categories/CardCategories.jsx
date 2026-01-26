@@ -18,7 +18,7 @@ function CardCategories({ name, Datee, btn, id, update }) {
   }, [dispatch]);
 
   const productCount =
-    Produts?.filter(item => item.categorie === name).length || 0;
+    Produts?.filter(item => item.categorie._id === id).length || 0;
 
   const formattedDate = Datee
     ? new Date(Datee).toLocaleDateString("fr-FR", {
