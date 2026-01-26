@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   IoCalendarOutline, IoFilterOutline, IoReceiptOutline, 
   IoCartOutline, IoChevronDownOutline, IoSearchOutline,
@@ -10,18 +10,26 @@ import { generateFactureVentesPDF } from './FactureVentes';
 import Dialog from '../Dialog/Dialog';
 import DailogInfoVentes from './Dailoginfoventes';
 import DailloginfoFacture from './DailoginfoFacture';
+
 function HestoriqueProfit() {
   const [viewType, setViewType] = useState('ventes'); 
   const [filterType, setFilterType] = useState('jour'); 
   const { user, role } = useSelector(state => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe); 
 
-  const [ListFilterVentes, SetListFilterVentes] = useState([]);
-  const [ListFilterFacture, SetListFilterFacture] = useState([]);
-
   // --- 1. JME3 DATA (ADMIN + EMPLOYE) ---
   let allVentes = [];
   let AllFacture = [];
+
+  const today = new Date();
+  const currentDay = today.toISOString().split("T")[0]; 
+  const currentMonth = today.toISOString().slice(0, 7); 
+  const currentYear = today.getFullYear().toString();
+
+  // Initialize searchValue with currentDay so it's not empty on first render
+  const [searchValue, setSearchValue] = useState(currentDay);
+  const [ListFilterVentes, SetListFilterVentes] = useState([]);
+  const [ListFilterFacture, SetListFilterFacture] = useState([]);
 
   if (role === "admin") {
     const adminVentes = user?.ventes || [];
@@ -41,8 +49,8 @@ function HestoriqueProfit() {
   }
 
   // --- 2. SEARCH LOGIC ---
-  function handleSearch(e) {
-    const value = e.target.value;
+  // Optimized to use direct parameters or current state
+  const handleSearch = (value) => {
     if (!value) {
       SetListFilterVentes([]);
       SetListFilterFacture([]);
@@ -59,33 +67,44 @@ function HestoriqueProfit() {
       SetListFilterVentes(allVentes.filter((t) => t.DateVante?.substring(0, 4) === value));
       SetListFilterFacture(AllFacture.filter((t) => t.DateFacture?.substring(0, 4) === value));
     }
-  }
+  };
 
   const displayData = viewType === 'ventes' ? ListFilterVentes : ListFilterFacture;
 
-  // FIX: Calcul Profit men displayData bach y-jme3 dyal l-admin o l-khedama b-jouj
   const TotalProfit = displayData.reduce((somme, item) => {
     const p = viewType === 'ventes' ? (item.profite || 0) : (item.TotalPrix || 0);
     return somme + Number(p);
   }, 0);
-//Logic Dailog
-//info Ventes
+
   const [openInfo, setopenInfo] = useState(false);
   const [selectedVente, setselectedVente] = useState({});
-//info Facture  
   const [open, setOpen] = useState(false);
   const [data, setData] = useState({});
-function HandeleOpneInfo(item){
-  if(viewType=='ventes'){
-    setopenInfo(true)
-setselectedVente(item) 
-console.log(item);
 
- }else{
-  setData(item)
-  setOpen(true)
+  function HandeleOpneInfo(item){
+    if(viewType=='ventes'){
+      setopenInfo(true);
+      setselectedVente(item); 
+    } else {
+      setData(item);
+      setOpen(true);
+    }
   }
-}
+
+  // Effect to update the search input based on filter type
+  useEffect(() => {
+    if (filterType === "jour") setSearchValue(currentDay);
+    if (filterType === "mois") setSearchValue(currentMonth);
+    if (filterType === "anne") setSearchValue(currentYear);
+  }, [filterType]);
+
+  // Effect to trigger search whenever searchValue OR the source data changes
+  // This ensures that when the component first mounts and "allVentes" is loaded, 
+  // it automatically filters by the initial currentDay.
+  useEffect(() => {
+    handleSearch(searchValue);
+  }, [searchValue, allVentes.length, AllFacture.length]);
+
   return (
     <div className="p-4 min-h-screen bg-[#f8fafc] dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -146,6 +165,7 @@ console.log(item);
           <div className="relative group">
             <IoFilterOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" />
             <select 
+              value={filterType}
               onChange={(e) => {setFilterType(e.target.value); SetListFilterVentes([]); SetListFilterFacture([]);}}
               className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none appearance-none cursor-pointer text-[11px] font-black uppercase tracking-widest focus:ring-2 ring-emerald-500/20"
             >
@@ -158,12 +178,13 @@ console.log(item);
 
           <div className="relative group">
             <IoCalendarOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 z-10" />
-            <input 
-              type={filterType === 'jour' ? "date" : filterType === 'mois' ? "month" : "number"}
-              placeholder={filterType === 'anne' ? "YYYY" : ""}
-              onChange={handleSearch}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-black uppercase cursor-pointer dark:scheme-dark"
-            />
+              <input 
+                type={filterType === 'jour' ? "date" : filterType === 'mois' ? "month" : "number"}
+                placeholder={filterType === 'anne' ? "YYYY" : ""}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-black uppercase cursor-pointer"
+              />
           </div>
 
           <div className="relative flex-1">
@@ -172,30 +193,27 @@ console.log(item);
           </div>
         </div>
 
-        {/* --- TABS --- */}
-       
-       {/* --- TABS & ACTIONS --- */}
-<div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
- <div className="flex p-1.5 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 w-fit shadow-sm">
-          <button onClick={() => setViewType('ventes')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'ventes' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400'}`}>
-            <IoCartOutline size={18} /> Ventes
-          </button>
-          <button onClick={() => setViewType('factures')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'factures' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400'}`}>
-            <IoReceiptOutline size={18} /> Factures
-          </button>
-        
+        {/* --- TABS & ACTIONS --- */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex p-1.5 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 w-fit shadow-sm">
+            <button onClick={() => setViewType('ventes')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'ventes' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400'}`}>
+              <IoCartOutline size={18} /> Ventes
+            </button>
+            <button onClick={() => setViewType('factures')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'factures' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400'}`}>
+              <IoReceiptOutline size={18} /> Factures
+            </button>
+          </div>
+
+          {viewType=='ventes'&&
+            <button 
+              onClick={() =>generateFactureVentesPDF(ListFilterVentes)}
+              className="px-8 py-4 rounded-2xl bg-blue-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white shadow-xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em]"
+            >
+              <IoReceiptOutline size={20} /> Imprimer Facture
+            </button>
+          }
         </div>
 
-  {/* Button Facture (Kiy-ban dima 7it khtariti mat-beddel walou) */}
-{viewType=='ventes'&&
-  <button 
-    onClick={() =>generateFactureVentesPDF(ListFilterVentes)}
-    className="px-8 py-4 rounded-2xl bg-blue-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white shadow-xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em]"
-  >
-    <IoReceiptOutline size={20} /> Imprimer Facture
-  </button>
-}
-</div>
         {/* --- TABLE SECTION --- */}
         <div className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden min-h-[450px]">
           {displayData.length === 0 ? (
@@ -217,7 +235,7 @@ console.log(item);
                 </thead>
                 <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                   {displayData.map((t, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all"
+                    <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer"
                     onClick={()=>HandeleOpneInfo(t)}
                     >
                       <td className="px-8 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase">
@@ -266,11 +284,14 @@ console.log(item);
           )}
         </div>
       </div>
-       <Dialog isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"}>
+      
+      <Dialog 
+        bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
+        isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"}>
         <DailogInfoVentes vente={selectedVente} onClose={() => setopenInfo(false)} />
       </Dialog>
-<DailloginfoFacture data={data} onClose={() => setOpen(false)} open={open} />
-
+      
+      <DailloginfoFacture data={data} onClose={() => setOpen(false)} open={open} />
     </div>
   );
 }

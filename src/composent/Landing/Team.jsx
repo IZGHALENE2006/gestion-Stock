@@ -3,7 +3,7 @@ import { Linkedin, Globe, Github } from 'lucide-react';
 
 const members = [
   { name: 'Izghalene El-Mahdi', role: 'Back-End Developer', image: 'img4.png' },
-  { name: 'BasKer Ayoub', role: 'Front-End Developer', image: '/ayoub.webp' , Linkedin : "https://www.linkedin.com/in/baskerayoub/" , WebSite : "https://baskeer.vercel.app/" , Github : "https://github.com/baskerayoub" },
+  { name: 'BasKer Ayoub', role: 'Front-End Developer', image: '/me-profile.png' , Linkedin : "https://www.linkedin.com/in/baskerayoub/" , WebSite : "https://baskeer.vercel.app/" , Github : "https://github.com/baskerayoub" },
 ];
 
 const Team = () => {

@@ -113,7 +113,7 @@ const isDarkMode = document.documentElement.classList.contains('dark');
 const Plan2Data = {
   labels: Category?.map(cat => cat.name),
   datasets: [{
-    data: Category?.map(cat => Produts.filter(p => p.categorie === cat.name).length),
+    data: Category?.map(cat => Produts.filter(p => p.categorie._id === cat._id).length),
     /* Modern vibrant colors that pop in both modes */
     backgroundColor: [
       '#f59e0b', // Amber 500
@@ -124,7 +124,7 @@ const Plan2Data = {
     ],
     /* Change border color based on mode for a seamless look */
     borderColor: isDarkMode ? '#0f172a' : '#ffffff', 
-    borderWidth: 4,
+    borderWidth: 2,
     hoverOffset: 15,
     borderRadius: 8, // Adds slightly rounded edges to the doughnut segments
   }]
@@ -217,7 +217,7 @@ const stats = [
     },
     { 
       label: "Profit (jour)", 
-      value: TotalProfite || 0, 
+      value: TotalProfite + " Dh" || 0 + " Dh", 
       icon: <IoTrendingUpOutline />, 
       gradient: "from-emerald-400 to-emerald-600", 
       text: "text-emerald-500 dark:text-emerald-400", 
@@ -235,7 +235,7 @@ const stats = [
     },
   ];
 
-  const produitperc = Percentage(Produts.map(p => p.categorie));
+  const produitperc = Percentage(Produts.map(p => p.categorie.name));
 
   if (user?.role === "Employe") return null;
 

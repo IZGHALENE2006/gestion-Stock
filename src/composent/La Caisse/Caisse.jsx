@@ -4,6 +4,7 @@ import gsap from "gsap";
 import CaisseSection from "./Section";
 import RightSidebar from "./RightSidebar";
 import "./Caisse.css";
+
 function LaCaisse() {
   const [cart, setCart] = useState([]);
   const containerRef = useRef(null);
@@ -12,7 +13,6 @@ function LaCaisse() {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product._id);
       
-      // LOGIC: Check Stock Availability
       if (existingItem) {
         if (existingItem.qty >= product.quantite) {
           toast.error(`Stock insuffisant! (${product.quantite} max)`, {
@@ -26,7 +26,6 @@ function LaCaisse() {
         );
       }
 
-      // First time adding
       if (product.quantite <= 0) {
         toast.error("Produit en rupture de stock");
         return prevCart;
@@ -39,10 +38,32 @@ function LaCaisse() {
           name: product.name,
           price: product.prix_vente,
           qty: 1,
-          stockMax: product.quantite // Kan-khabiw l-max hna bach n-checkiw f l-panier
+          stockMax: product.quantite // Stored for the sidebar check
         },
       ];
     });
+  };
+
+  // UPDATED: Logic to check stockMax when clicking + in the sidebar
+  const handleUpdateQty = (id, newQty) => {
+    setCart(prev => prev.map(item => {
+      if (item.id === id) {
+        // If increasing quantity, check stock
+        if (newQty > item.qty && newQty > item.stockMax) {
+          toast.error(`Stock maximum atteint (${item.stockMax})`, {
+            icon: '⚠️',
+            style: { borderRadius: '15px', background: '#fff', color: '#000', fontWeight: 'bold' }
+          });
+          return item;
+        }
+        return { ...item, qty: newQty };
+      }
+      return item;
+    }));
+  };
+
+  const handleRemoveItem = (id) => {
+    setCart(prev => prev.filter(item => item.id !== id));
   };
 
   useLayoutEffect(() => {
@@ -60,20 +81,19 @@ function LaCaisse() {
   const clearCart = () => setCart([]);
 
   return (
-    // Background fatih dialna: f8fafc
     <div ref={containerRef} className="p-6 bg-gray-100 dark:bg-[#1e293b] min-h-screen text-[#1e293b] dark:text-white flex flex-col gap-6 font-sans">
       <Toaster position="top-center" />
-
       <div className="flex flex-col lg:flex-row gap-6 flex-1 h-full">
-        {/* Pass functions to Section */}
         <CaisseSection 
            cart={cart} 
            onAddToCart={handleAddToCart} 
            onClearCart={clearCart} 
         />
-        
-        {/* RightSidebar shows the cart */}
-        <RightSidebar panierItems={cart}/>
+        <RightSidebar 
+          panierItems={cart}
+          onUpdateQty={handleUpdateQty} 
+          onRemoveItem={handleRemoveItem}
+        />
       </div>
     </div>
   );

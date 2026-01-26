@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IoFlashOutline, IoCartOutline, IoReceiptOutline, IoTrashOutline } from "react-icons/io5";
+import { IoFlashOutline, IoCartOutline, IoReceiptOutline, IoAdd, IoRemove, IoTrashOutline } from "react-icons/io5";
 import gsap from "gsap";
 
-export default function RightSidebar({ panierItems = [] }) {
+// Added onUpdateQty and onRemoveItem to props
+export default function RightSidebar({ panierItems = [], onUpdateQty, onRemoveItem }) {
   const [activeTab, setActiveTab] = useState("panier");
   const [DerniereCommande, setDerniereCommande] = useState([]);
   const cartContainerRef = useRef(null);
 
-  // GSAP Animation when cart items change
   useEffect(() => {
     if (activeTab === "panier" && panierItems.length > 0) {
       gsap.fromTo(
@@ -59,7 +59,6 @@ export default function RightSidebar({ panierItems = [] }) {
         
         {activeTab === "panier" ? (
           <>
-            {/* Cart Header */}
             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
               <h3 className="font-black text-sm flex items-center gap-2 text-slate-900 dark:text-white uppercase tracking-tight">
                 <IoCartOutline size={22} className="text-emerald-500"/> Panier
@@ -69,22 +68,37 @@ export default function RightSidebar({ panierItems = [] }) {
               </span>
             </div>
             
-            {/* Cart Items List */}
             <div ref={cartContainerRef} className="flex-1 p-5 overflow-y-auto space-y-3">
               {panierItems.length > 0 ? (
                 panierItems.map((item) => (
                   <div key={item.id} className="cart-item-anim flex justify-between items-center bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 group hover:border-emerald-200 dark:hover:border-emerald-800 transition-all">
                     <div className="flex gap-3 items-center">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-[10px]">
-                        {item.qty}x
+                      {/* QUANTITY CONTROLS */}
+                      <div className="flex flex-col items-center gap-1 mr-1">
+                        <button 
+                          onClick={() => onUpdateQty(item.id, item.qty + 1)}
+                          className="p-1 hover:bg-emerald-500 hover:text-white rounded-md transition-colors text-emerald-600"
+                        >
+                          <IoAdd size={14} />
+                        </button>
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-[10px]">
+                          {item.qty}x
+                        </div>
+                        <button 
+                          onClick={() => item.qty > 1 ? onUpdateQty(item.id, item.qty - 1) : onRemoveItem(item.id)}
+                          className="p-1 hover:bg-rose-500 hover:text-white rounded-md transition-colors text-slate-400"
+                        >
+                          {item.qty > 1 ? <IoRemove size={14} /> : <IoTrashOutline size={14} className="text-rose-500" />}
+                        </button>
                       </div>
+
                       <div>
                         <p className="text-[12px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight line-clamp-1">{item.name}</p>
                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">{item.price} DH / unité</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-black text-slate-900 dark:text-white text-sm">{item.price * item.qty} DH</p>
+                      <p className="font-black text-slate-900 dark:text-white text-sm">{(item.price * item.qty).toFixed(2)} DH</p>
                     </div>
                   </div>
                 ))
@@ -100,14 +114,12 @@ export default function RightSidebar({ panierItems = [] }) {
           </>
         ) : (
           <>
-            {/* Orders Header */}
             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
               <h3 className="font-black text-sm flex items-center gap-2 text-slate-900 dark:text-white uppercase tracking-tight">
                 <IoReceiptOutline size={22} className="text-emerald-500"/> Historique
               </h3>
             </div>
             
-            {/* Orders Table */}
             <div className="flex-1 overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-slate-50 dark:bg-slate-900/80 text-slate-400 dark:text-slate-500 text-[9px] font-black uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">

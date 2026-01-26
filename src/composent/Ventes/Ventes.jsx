@@ -208,7 +208,10 @@ function Ventes() {
         </div>
       </div>
 
-      <Dialog isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"}>
+      <Dialog 
+        bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
+      
+      isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"}>
         <DailogInfoVentes vente={selectedVente} onClose={() => setopenInfo(false)} />
       </Dialog>
     </div>
