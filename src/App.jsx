@@ -23,6 +23,7 @@ import gsap from "gsap";
 import { LuMoon, LuSun } from "react-icons/lu"; 
 import Landing from './composent/Landing/landing'
 import ProfilePage from './composent/profile/profile'
+import ChangePassword from './composent/profile/UpdatePassword'
 function App() {
 
   
@@ -100,7 +101,7 @@ const onLeave = () => {
         <Route path='Caisse' element={<Caisse />} />
         <Route path='Fornisseur' element={<Fornisseur />} />
        <Route path='profile' element={<ProfilePage/>}/>
-       
+       <Route path='changePassword' element={<ChangePassword/>}/>
         <Route path="profit" element={<Profite/>}>
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>

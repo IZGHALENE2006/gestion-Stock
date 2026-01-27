@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { IoLockClosedOutline, IoPersonOutline, IoShieldCheckmarkOutline, IoStatsChartOutline } from "react-icons/io5";
-
+import { Link } from "react-router";
 export default function ProfilePage() {
   const { user, role } = useSelector((state) => state.LoginAdmin);
 
@@ -73,9 +73,11 @@ export default function ProfilePage() {
                </div>
                <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Sécurité</h3>
             </div>
+    <Link to="../changePassword">
             <button className="w-full py-4 px-6 rounded-2xl bg-[#19b393] hover:bg-[#15967b] text-white font-black text-sm transition-all duration-300 shadow-lg shadow-green-200 dark:shadow-green-900/20 flex items-center justify-center gap-2">
               Changer le mot de passe
             </button>
+    </Link>
           </div>
 
           {/* Activity Stats Card */}

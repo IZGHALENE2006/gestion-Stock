@@ -18,7 +18,7 @@ const app = express()
  app.use(cors())
  app.use(express.json())
  
-  app.use('/aip/adimn',AdminLoginRoute)
+  app.use('/api/admin',AdminLoginRoute)
    app.use('/Product',ProductRoute)
    app.use('/Category',CategoryRoute)
    app.use('/Employe',EmployeRoute)

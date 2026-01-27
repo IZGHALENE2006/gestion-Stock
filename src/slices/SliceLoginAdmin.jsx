@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { data } from "react-router";
 
 //Login Admin 
 export const Loginuser = createAsyncThunk('LoginAdmin',async({role,data},{rejectWithValue})=>{
     try{
-      const url = role ==='admin'?"http://localhost:7000/aip/adimn/Login":"http://localhost:7000/Employe/Login"
+      const url = role ==='admin'?"http://localhost:7000/api/admin/Login":"http://localhost:7000/Employe/Login"
         const res = await axios.post(url,data)
         return res.data
     }catch(error){
@@ -63,6 +64,24 @@ export const getMe = createAsyncThunk(
         )
       }
     })
+    //Update Password 
+export const UpdatePassword= createAsyncThunk("UpdatePassword",async(data,{rejectWithValue})=>{
+      const Token = localStorage.getItem("token")
+      try{
+            const res = await axios.post("http://localhost:7000/api/admin/UpdatePassword",data,{
+            headers:{
+                Authorization:`Bearer ${Token}`
+           
+            }
+        })
+        return res.data
+      }catch(err){
+        return rejectWithValue(
+            err.response?.data?.message || "Server error"
+              
+        )
+      }
+})
 const initialState = {
   user: "",
   role: "",
@@ -115,8 +134,22 @@ const LoginAdminSlice = createSlice(
     state.user.ventes.push(...action.payload.lastVentes);
   }
 });
-
-
+//UpdateAdmin
+        bulder
+            .addCase(UpdatePassword.pending,(state)=>{
+              state.loading = true
+              state.error = null
+            })
+            .addCase(UpdatePassword.fulfilled,(state,action)=>{
+              state.loading = false
+              state.error = null
+    const index = state.u.findIndex(t => t._id === action.payload._id);
+      if (index !== -1) state.user[index] = action.payload;          })
+            .addCase(UpdatePassword.rejected,(state,action)=>{
+              state.loading = false
+              state.error = action.payload
+            
+            })
 
          }
     }

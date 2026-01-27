@@ -27,14 +27,21 @@ export default function Dashboard() {
   const { Category } = useSelector((state) => state.category);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (token && !user) dispatch(getMe());
+useEffect(() => {
+  if (token && !user) {
+    dispatch(getMe());
+  }
+}, [token, user, dispatch]);
+useEffect(() => {
+  if (user) {
     dispatch(GetAllProduct());
     dispatch(GetAllEmploye());
     dispatch(GetAllCatefory());
-  }, [token, dispatch, user]);
+  }
+}, [user, dispatch]);
 
-  const totalprix = Produts.reduce((acc, product) => acc + product.prix_achat * product.quantite, 0);
+
+  const totalprix = Produts?.reduce((acc, product) => acc + product.prix_achat * product.quantite, 0);
 
   //Logic Profite
     let allVentes = [];
@@ -49,12 +56,7 @@ export default function Dashboard() {
     allVentes = user?.ventes || [];
   }
   
-  useEffect(()=>{
-  toast.success(`Hello ${user?.name}`,{
-    position:"top-right",
-  
-  })
-  },[])
+
 
 //Logic 4eme daigramme 
 const dayse = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -91,7 +93,6 @@ function calcTotalCAParJourSemaine(ventes) {
 
     const venteDate = new Date(v.DateVante);
 
-    // غير سيمانة الحالية
     if (venteDate < monday || venteDate > sunday) return;
 
     const day = venteDate.toLocaleDateString("en-US", {
@@ -176,7 +177,6 @@ const dayse = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     Sun: 0,
   };
 
-  // 🔹 حساب ventes
   ventes.forEach(v => {
     if (!v.DateVante) return;
 
@@ -223,7 +223,7 @@ const isDarkMode = document.documentElement.classList.contains('dark');
 const Plan2Data = {
   labels: Category?.map(cat => cat.name),
   datasets: [{
-    data: Category?.map(cat => Produts.filter(p => p.categorie._id === cat._id).length),
+    data: Category?.map(cat => Produts?.filter(p => p.categorie?._id === cat._id).length),
     /* Modern vibrant colors that pop in both modes */
     backgroundColor: [
       '#f59e0b', // Amber 500
@@ -325,7 +325,7 @@ const stats = [
     },
     { 
       label: "Valeur Totale", 
-      value: totalprix.toLocaleString() + " DH", 
+      value: totalprix?.toLocaleString() + " DH", 
       icon: <IoWalletOutline />, 
       gradient: "from-purple-400 to-purple-600", 
       text: "text-purple-500 dark:text-purple-400", 
@@ -334,7 +334,7 @@ const stats = [
     },
   ];
 
-  const produitperc = Percentage(Produts.map(p => p.categorie.name));
+  const produitperc = Percentage(Produts?.map(p => p.categorie?.name));
 
   if (user?.role === "Employe") return null;
 
@@ -395,6 +395,7 @@ const maxColor = dataset.backgroundColor[maxIndex];
         </div>
 
       </div>
+      <ToastContainer/>
     </div>
   );
 }
