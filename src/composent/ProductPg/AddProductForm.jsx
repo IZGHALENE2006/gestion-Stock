@@ -47,7 +47,7 @@ export default function AddProductForm() {
 
   // --- Datalist States & Data ---
   const [showDatalist, setShowDatalist] = useState(false);
-  const fournissecursArray = Fournisseur.map(e=>e.name);
+  const fournisseursArray = Fournisseur.map(e=>e.name);
   const [formData, setFormData] = useState(() => ({
     name: "",
     quantite: "",
