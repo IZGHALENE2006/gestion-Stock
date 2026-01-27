@@ -65,7 +65,6 @@ useEffect(() => {
           {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Fournisseurs" expanded={isExpanded} />}
           <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Caisse" expanded={isExpanded} />
           <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
-          <NavItem to="/Home/history" icon={<IoCalendarOutline size={22} />} label="Historique" expanded={isExpanded} />
         </nav>
 
         {/* Profile Section */}

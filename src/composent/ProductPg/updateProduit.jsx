@@ -3,7 +3,6 @@ import {
   IoPricetagOutline,
   IoCubeOutline,
   IoCashOutline,
-
   IoSaveOutline,
   IoLayersOutline,
   IoPeopleOutline,
@@ -11,15 +10,20 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { GetAllProduct, updateProduit } from "../../slices/SliceProduct";
 import toast, { Toaster } from 'react-hot-toast';
+import { GetAllFournisseur } from "../../slices/SliceFournisseur.jsx";
 
 function UpdateProduit(props) {
   const dispatch = useDispatch();
   const { idupdate2, close } = props;
   const { Produts, loading } = useSelector((state) => state.Product);
   const { Category = [] } = useSelector((state) => state.category);
+  const { Fournisseur } = useSelector((state) => state.Fournisseur);
+
+  // --- Datalist State ---
+  const [showDatalist, setShowDatalist] = useState(false);
+  const fournisseursList = Fournisseur.map(f=>f.name)
 
   const currentproduit = Produts.find((t) => t._id == idupdate2);
-
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
@@ -39,6 +43,11 @@ function UpdateProduit(props) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Filter logic for datalist
+  const filteredFournisseurs = fournisseursList.filter((f) =>
+    formData?.fournisseur ? f.toLowerCase().includes(formData.fournisseur.toLowerCase()) : true
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -53,8 +62,8 @@ function UpdateProduit(props) {
           backgroundColor: "var(--toast-bg, #ffffff)",
         },
       });
-        dispatch(GetAllProduct()) 
-
+      dispatch(GetAllProduct()) 
+      dispatch(GetAllFournisseur()) 
       close();
     } catch (err) {
       toast.error('Failed to update produit', {
@@ -73,7 +82,6 @@ function UpdateProduit(props) {
     return <p className="p-10 text-center font-bold text-emerald-500 animate-pulse">Chargement du produit...</p>;
   }
 
-  // Reusable input style for consistency
   const inputBaseStyle = `
     w-full pl-10 py-2.5 rounded-xl border border-gray-300 dark:border-slate-700 
     bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 
@@ -82,8 +90,6 @@ function UpdateProduit(props) {
 
   return (
     <div className="rounded-2xl shadow-xl p-1 w-full max-w-3xl">
-
-
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* 🔹 Name */}
         <div>
@@ -171,19 +177,39 @@ function UpdateProduit(props) {
           </div>
         </div>
 
-        {/* 🔹 Fournisseur */}
-        <div>
+        {/* 🔹 Fournisseur with Datalist */}
+        <div className="relative">
           <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Fournisseur</label>
           <div className="relative group">
             <IoPeopleOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
             <input
                 name="fournisseur"
                 value={formData.fournisseur}
+                onFocus={() => setShowDatalist(true)}
+                onBlur={() => setTimeout(() => setShowDatalist(false), 200)}
                 onChange={handleChange}
                 placeholder="Nom du fournisseur"
                 className={inputBaseStyle}
+                autoComplete="off"
               />
           </div>
+
+          {showDatalist && filteredFournisseurs.length > 0 && (
+            <ul className="absolute z-50 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl max-h-40 overflow-y-auto shadow-2xl">
+              {filteredFournisseurs.map((fourn, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    setFormData({ ...formData, fournisseur: fourn });
+                    setShowDatalist(false);
+                  }}
+                  className="px-4 py-2.5 hover:bg-emerald-600 hover:text-white cursor-pointer text-sm border-b border-gray-100 dark:border-slate-700/50 last:border-none transition-colors text-gray-700 dark:text-slate-200"
+                >
+                  {fourn}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* 🔹 Button */}

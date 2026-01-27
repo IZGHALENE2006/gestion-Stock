@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetAllCatefory } from "../../slices/SilceCategory";
 import Barcode from "react-barcode"; 
 import toast, { Toaster } from 'react-hot-toast';
+import { GetAllEmploye } from "../../slices/sliceEmploye";
+import { GetAllFournisseur } from "../../slices/SliceFournisseur.jsx";
+
 
 // Barcode logic
 const generateEAN13 = () => {
@@ -37,9 +40,14 @@ const InputWrapper = ({ label, children, icon: Icon, action }) => (
 );
 
 export default function AddProductForm() {
+  
+  const { Fournisseur } = useSelector((state) => state.Fournisseur);
   const Dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // --- Datalist States & Data ---
+  const [showDatalist, setShowDatalist] = useState(false);
+  const fournisseursArray = Fournisseur.map(e=>e.name);
   const [formData, setFormData] = useState(() => ({
     name: "",
     quantite: "",
@@ -56,7 +64,13 @@ export default function AddProductForm() {
 
   useEffect(() => {
     Dispatch(GetAllCatefory());
+    Dispatch(GetAllFournisseur());
   }, [Dispatch]);
+
+  // Filter Logic
+  const filteredFournisseurs = fournisseursArray.filter((f) =>
+    f.toLowerCase().includes(formData.fournisseur.toLowerCase())
+  );
 
   const HandlegetCategort = (e) => {
     const val = e.target.value;
@@ -81,7 +95,7 @@ export default function AddProductForm() {
         datecreate: new Date(),
         status: true
       });
-   
+    
       toast.success('Product Added Successfully', {
         style: {
           border: '1px solid #10b981',
@@ -147,9 +161,36 @@ export default function AddProductForm() {
             </select>
           </InputWrapper>
 
-          <InputWrapper label="Fournisseur" icon={IoBusinessSharp}>
-            <input value={formData.fournisseur} onChange={(e) => setFormData({ ...formData, fournisseur: e.target.value })} placeholder="Nom du fournisseur" className={inputStyles} />
-          </InputWrapper>
+          {/* --- Fournisseur Datalist Section --- */}
+          <div className="relative">
+            <InputWrapper label="Fournisseur" icon={IoBusinessSharp}>
+              <input 
+                value={formData.fournisseur} 
+                onFocus={() => setShowDatalist(true)}
+                onBlur={() => setTimeout(() => setShowDatalist(false), 200)}
+                onChange={(e) => setFormData({ ...formData, fournisseur: e.target.value })} 
+                placeholder="Nom du fournisseur" 
+                className={inputStyles} 
+              />
+            </InputWrapper>
+
+            {showDatalist && filteredFournisseurs.length > 0 && (
+              <ul className="absolute z-50 w-full -mt-3 bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700 rounded-xl max-h-48 overflow-y-auto shadow-2xl">
+                {filteredFournisseurs.map((fourn, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      setFormData({ ...formData, fournisseur: fourn });
+                      setShowDatalist(false);
+                    }}
+                    className="px-4 py-3 hover:bg-emerald-600 hover:text-white cursor-pointer text-sm border-b border-gray-100 dark:border-slate-700/50 last:border-none transition-colors text-gray-700 dark:text-slate-200"
+                  >
+                    {fourn}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* Barcode Section */}
