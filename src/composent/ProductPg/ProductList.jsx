@@ -36,8 +36,8 @@ export default function ProductList() {
     
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
-    if (sortBy === "quantite") return b.quantite - a.quantite;
-    if (sortBy === "prix") return b.prix_vente - a.prix_vente;
+    if (sortBy === "quantity") return b.quantite - a.quantite;
+    if (sortBy === "Price") return b.prix_vente - a.prix_vente;
     if (sortBy === "date") return new Date(b.datecreate) - new Date(a.datecreate);
     return 0;
   });
@@ -52,7 +52,7 @@ export default function ProductList() {
             <IoSearchOutline className="text-slate-400 dark:text-slate-500 mr-2" size={18} />
             <input
               type="text"
-              placeholder="Nom ou Code-barres..."
+              placeholder="Nom Or Bar-CODE..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-transparent text-sm text-slate-700 dark:text-slate-200 outline-none w-48 font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500"
@@ -69,7 +69,7 @@ export default function ProductList() {
               onChange={(e) => setSelectedCat(e.target.value)}
               className="appearance-none bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-8 py-2.5 text-xs font-black uppercase tracking-tight outline-none hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer"
             >
-              <option value="">Toutes les Catégories</option>
+              <option value="">All Catégories</option>
               {Category.map((cat, i) => (
                 <option key={i} value={cat.name} className="dark:bg-slate-900">{cat.name}</option>
               ))}
@@ -86,9 +86,9 @@ export default function ProductList() {
               onChange={(e) => setSortBy(e.target.value)}
               className="appearance-none bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-8 py-2.5 text-xs font-black uppercase tracking-tight outline-none hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer"
             >
-              <option value="">Trier par</option>
-              <option value="quantite">Quantité</option>
-              <option value="prix">Prix</option>
+              <option value="">Filter By</option>
+              <option value="quantity">Quantity</option>
+              <option value="Price">Price</option>
               <option value="date">Date</option>
             </select>
           </div>
@@ -100,7 +100,7 @@ export default function ProductList() {
             className="flex items-center gap-2 px-6 py-3 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-[#19b393] border border-emerald-300 dark:border-emerald-800/50 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
           >
             <IoAddOutline size={20} />
-            Ajouter Produit
+            Add Product
           </button>
         )}
       </div>
@@ -110,7 +110,7 @@ export default function ProductList() {
         width="550px" 
         isOpen={open} 
         onClose={() => setOpen(false)} 
-        title="Nouveau Produit"
+        title="New  Produit"
       >
         <AddProductForm close={() => setOpen(false)} />
       </Dialog>

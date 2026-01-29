@@ -72,7 +72,7 @@ function LoginEmploye() {
 
         <form className="flex flex-col gap-5" onSubmit={HandeleLohinEmp}>
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2 tracking-widest">Identifiant</label>
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2 tracking-widest">Email Adress</label>
             <input
               required
               type="email"
@@ -85,7 +85,7 @@ function LoginEmploye() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2 tracking-widest">Mot de Passe</label>
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase ml-2 tracking-widest">Password</label>
             <input
               required
               type="password"
@@ -105,16 +105,16 @@ function LoginEmploye() {
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              "Ouvrir Session"
+              "Log In"
             )}
           </button>
 
           <div className="flex flex-col items-center gap-4 mt-6">
             <Link to="/LoginAdmin" className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-600 hover:text-emerald-500 transition-colors">
-              Accès Administration
+              Admin ?
             </Link>
             <Link to="/LoginChoise" className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-500 hover:underline">
-              Retour au choix
+              Switch Portal
             </Link>
           </div>
 

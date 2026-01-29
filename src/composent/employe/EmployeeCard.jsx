@@ -36,23 +36,23 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
   const { loading } = useSelector((state) => state.Employe);
 
   // ================= UPDATE =================
- const HandleUpdateEmploye = (id) => {
-  dispatch(UpdateEmploye({ id, newinfoEmp }))
-    .unwrap()
-    .then(() => {
-      toast.success("Employé mis à jour");
-      setIsFlipped(false);
+  const HandleUpdateEmploye = (id) => {
+    dispatch(UpdateEmploye({ id, newinfoEmp }))
+      .unwrap()
+      .then(() => {
+        toast.success("Employee updated successfully");
+        setIsFlipped(false);
 
-      gsap.to(innerRef.current, {
-        rotateY: 0,
-        duration: 0.6,
-        ease: "back.inOut(1.7)",
-      });
+        gsap.to(innerRef.current, {
+          rotateY: 0,
+          duration: 0.6,
+          ease: "back.inOut(1.7)",
+        });
 
-      onUpdated && onUpdated(); // ⭐ هذا هو المفتاح
-    })
-    .catch(() => toast.error("Erreur serveur"));
-};
+        onUpdated && onUpdated();
+      })
+      .catch(() => toast.error("Server error"));
+  };
 
   // ================= FLIP =================
   const toggleFlip = (e) => {
@@ -98,7 +98,7 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
                 : "bg-rose-50 dark:bg-rose-900/20 text-rose-600"
               }`}>
                 {employee.isActive ? <IoCheckmarkCircleOutline size={14}/> : <IoCloseCircleOutline size={14}/>}
-                {employee.isActive ? "ACTIF" : "OFFLINE"}
+                {employee.isActive ? "ACTIVE" : "OFFLINE"}
               </div>
             </div>
 
@@ -142,7 +142,7 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
             <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div>
                 <span className="text-[8px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">
-                  Cle d'accès
+                  Access Key
                 </span>
                 <div className="text-xs font-mono font-bold text-slate-700 dark:text-slate-200">
                   {showPassword ? employee.password : "••••••••"}
@@ -160,7 +160,7 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
               <div className="flex items-center gap-2 text-slate-400">
                 <IoCalendarOutline size={14} />
                 <span className="text-[10px] font-black uppercase tracking-tighter">
-                  {new Date(employee.datecreate).toLocaleDateString("fr-FR")}
+                  {new Date(employee.datecreate).toLocaleDateString("en-US")}
                 </span>
               </div>
 
@@ -183,13 +183,11 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
           }}
         >
           <div className="flex items-center gap-2 mb-8">
-            <button onClick={toggleFlip} className="text-slate-400 hover:text-emerald-500 transition-colors"
-            
-            >
+            <button onClick={toggleFlip} className="text-slate-400 hover:text-emerald-500 transition-colors">
                 <IoArrowBackOutline size={20}/>
             </button>
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-800 dark:text-slate-100">
-                Modifier Profile
+                Edit Profile
             </h4>
           </div>
 
@@ -197,7 +195,7 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
             {["name", "email", "phone", "cin", "password"].map((field) => (
               <div key={field} className="relative">
                 <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest absolute -top-2 left-0 bg-white dark:bg-slate-900 px-1">
-                    {field}
+                    {field === "cin" ? "ID Card (CIN)" : field.charAt(0).toUpperCase() + field.slice(1)}
                 </label>
                 <input
                   type="text"
@@ -210,43 +208,42 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
               </div>
             ))}
           </div>
-            {/* ===== ACTIVE STATUS ===== */}
-{/* ===== IS ACTIVE CHECK ===== */}
-<div className="flex items-center justify-between mt-6 p-4 rounded-xl
-                bg-slate-50 dark:bg-slate-800/50
-                border border-slate-200 dark:border-slate-800">
+          
+          {/* ===== ACTIVE STATUS ===== */}
+          <div className="flex items-center justify-between mt-6 p-4 rounded-xl
+                        bg-slate-50 dark:bg-slate-800/50
+                        border border-slate-200 dark:border-slate-800">
 
-  <label className="flex items-center gap-3 cursor-pointer">
-    <input
-      type="checkbox"
-      checked={newinfoEmp.isActive}
-      onChange={(e) =>
-        setNewInfoEmp({
-          ...newinfoEmp,
-          isActive: e.target.checked,
-        })
-      }
-      className="w-5 h-5 accent-emerald-500 cursor-pointer"
-    />
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={newinfoEmp.isActive}
+              onChange={(e) =>
+                setNewInfoEmp({
+                  ...newinfoEmp,
+                  isActive: e.target.checked,
+                })
+              }
+              className="w-5 h-5 accent-emerald-500 cursor-pointer"
+            />
 
-    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
-      Compte actif
-    </span>
-  </label>
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              Active Account
+            </span>
+          </label>
 
-  <span
-    className={`text-xs font-black px-3 py-1 rounded-full
-      ${
-        newinfoEmp.isActive
-          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-          : "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
-      }
-    `}
-  >
-    {newinfoEmp.isActive ? "ACTIF" : "OFFLINE"}
-  </span>
-</div>
-
+          <span
+            className={`text-xs font-black px-3 py-1 rounded-full
+              ${
+                newinfoEmp.isActive
+                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                  : "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
+              }
+            `}
+          >
+            {newinfoEmp.isActive ? "ACTIVE" : "OFFLINE"}
+          </span>
+        </div>
 
           <button
             onClick={() => HandleUpdateEmploye(employee._id)}
@@ -256,7 +253,7 @@ export const EmployeeCard = ({ employee, onUpdated }) => {
             }`}
             style={{ backgroundColor: employee.color || "#10b981" }}
           >
-            {loading ? "EN COURS..." : "CONFIRMER"}
+            {loading ? "PROCESSING..." : "CONFIRM CHANGES"}
           </button>
         </div>
       </div>

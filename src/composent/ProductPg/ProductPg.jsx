@@ -64,7 +64,7 @@ const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
   {/* Total Produits - Indigo */}
   <StatCard 
     icon={<IoFileTrayStackedOutline size={28} />}
-    label="Total Produits"
+    label="Total Product"
     value={Produts.length}
     gradientLight="from-indigo-500 to-blue-600"
     darkIconColor="dark:text-indigo-400"
@@ -73,7 +73,7 @@ const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
   {/* Stock Faible - Amber */}
   <StatCard 
     icon={<IoBagRemoveOutline size={28} />}
-    label="Stock Faible"
+    label="Low Stock"
     value={lowStockCount}
     gradientLight="from-orange-400 to-amber-600"
     darkIconColor="dark:text-amber-400"
@@ -82,7 +82,7 @@ const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
   {/* Rupture Stock - Rose */}
   <StatCard 
     icon={<IoBanOutline size={28} />}
-    label="Rupture Stock"
+    label="Out Of Stock"
     value={outOfStockCount}
     gradientLight={outOfStockCount > 0 ? "from-rose-500 to-red-700" : "from-slate-400 to-slate-500"}
     darkIconColor={outOfStockCount > 0 ? "dark:text-rose-400" : "dark:text-slate-500"}
@@ -91,7 +91,7 @@ const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
   {/* Valeur Inventaire - Emerald */}
   <StatCard 
     icon={<IoWalletOutline size={28} />}
-    label="Valeur Inventaire"
+    label="Inventory Value"
     value={role === 'admin' ? (
       <div className="flex items-baseline gap-1">
         {Total.toLocaleString()} <span className="text-xs font-bold opacity-60 uppercase">dh</span>

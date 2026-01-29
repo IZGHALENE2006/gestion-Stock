@@ -116,7 +116,7 @@ export const EmployeeDashboard = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300 pb-20 ">
-      <div className="px-6 md:px-12 mx-auto mb-8">
+      <div className="px-6 md:px-5 mb-8">
         <EmployeeSearch 
           view={view} 
           setView={setView} 
@@ -181,7 +181,7 @@ export const EmployeeDashboard = () => {
           )
         ) : (
           <div className="w-full py-20 text-center font-black text-slate-300 dark:text-slate-700 uppercase tracking-widest">
-            Aucun employé trouvé
+            No employees
           </div>
         )}
       </div>
@@ -205,13 +205,13 @@ export const EmployeeDashboard = () => {
             <div className="mx-auto w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center text-rose-600 mb-6">
               <IoWarningOutline size={32} />
             </div>
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight mb-2">Suppression</h2>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight mb-2">Deletion</h2>
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-              Voulez-vous vraiment supprimer cet employé ?
+              Are you sure you want to remove this employee?
             </p>
             <div className="flex flex-col gap-3">
-              <button onClick={confirmDelete} className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-[0.2em]">Confirmer</button>
-              <button onClick={cancelDelete} className="w-full py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-[0.2em]">Annuler</button>
+              <button onClick={confirmDelete} className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-[0.2em]">Delete</button>
+              <button onClick={cancelDelete} className="w-full py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-[0.2em]">Cancel</button>
             </div>
           </div>
         </div>

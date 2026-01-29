@@ -21,7 +21,7 @@ function UpdateProduit(props) {
 
   // --- Datalist State ---
   const [showDatalist, setShowDatalist] = useState(false);
-  const fournisseursList = Fournisseur.map(f=>f.name)
+  const fournisseursList = Fournisseur.map(f => f.name)
 
   const currentproduit = Produts.find((t) => t._id == idupdate2);
   const [formData, setFormData] = useState(null);
@@ -53,7 +53,7 @@ function UpdateProduit(props) {
     try {
       await dispatch(updateProduit({ formData, idupdate2 })).unwrap();
       
-      toast.success('Produit updated successfully', {
+      toast.success('Product updated successfully', {
         duration: 3000,
         style: {
           border: '1px solid #10b981',
@@ -66,7 +66,7 @@ function UpdateProduit(props) {
       dispatch(GetAllFournisseur()) 
       close();
     } catch (err) {
-      toast.error('Failed to update produit', {
+      toast.error('Failed to update product', {
         duration: 3000,
         style: {
           border: '1px solid #ef4444',
@@ -79,7 +79,7 @@ function UpdateProduit(props) {
   };
 
   if (!currentproduit || !formData) {
-    return <p className="p-10 text-center font-bold text-emerald-500 animate-pulse">Chargement du produit...</p>;
+    return <p className="p-10 text-center font-bold text-emerald-500 animate-pulse">Loading product...</p>;
   }
 
   const inputBaseStyle = `
@@ -93,7 +93,7 @@ function UpdateProduit(props) {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* 🔹 Name */}
         <div>
-          <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Nom du produit</label>
+          <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Product Name</label>
           <div className="relative group">
             <IoPricetagOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
             <input
@@ -101,16 +101,16 @@ function UpdateProduit(props) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Ex: Clavier Gaming"
+              placeholder="Ex: Gaming Keyboard"
               className={inputBaseStyle}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* 🔹 Quantité */}
+          {/* 🔹 Quantity */}
           <div>
-            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Quantité</label>
+            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Quantity</label>
             <div className="relative group">
               <IoCubeOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
               <input
@@ -126,7 +126,7 @@ function UpdateProduit(props) {
 
           {/* 🔹 Category */}
           <div>
-            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Catégorie</label>
+            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Category</label>
             <div className="relative group">
               <IoLayersOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
               <select
@@ -135,7 +135,7 @@ function UpdateProduit(props) {
                 onChange={handleChange}
                 className={`${inputBaseStyle} appearance-none cursor-pointer`}
               >
-                <option value='' className="dark:bg-slate-900">Sélectionner une catégorie</option>
+                <option value='' className="dark:bg-slate-900">Select a category</option>
                 {Category.map((t) => (
                   <option key={t._id} value={t._id} className="dark:bg-slate-900">{t.name}</option>
                 ))}
@@ -147,7 +147,7 @@ function UpdateProduit(props) {
         {/* 🔹 Prices */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Prix d'achat</label>
+            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Purchase Price</label>
             <div className="relative group">
               <IoCashOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
               <input
@@ -162,7 +162,7 @@ function UpdateProduit(props) {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Prix de vente</label>
+            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Selling Price</label>
             <div className="relative group">
               <IoCashOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
               <input
@@ -177,9 +177,9 @@ function UpdateProduit(props) {
           </div>
         </div>
 
-        {/* 🔹 Fournisseur with Datalist */}
+        {/* 🔹 Supplier with Datalist */}
         <div className="relative">
-          <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Fournisseur</label>
+          <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block uppercase tracking-wider">Supplier</label>
           <div className="relative group">
             <IoPeopleOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
             <input
@@ -188,7 +188,7 @@ function UpdateProduit(props) {
                 onFocus={() => setShowDatalist(true)}
                 onBlur={() => setTimeout(() => setShowDatalist(false), 200)}
                 onChange={handleChange}
-                placeholder="Nom du fournisseur"
+                placeholder="Supplier name"
                 className={inputBaseStyle}
                 autoComplete="off"
               />
@@ -221,7 +221,7 @@ function UpdateProduit(props) {
           text-white py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20`}
         >
           <IoSaveOutline size={20} />
-          {loading ? "Mise à jour..." : "Enregistrer les modifications"}
+          {loading ? "Updating..." : "Save Changes"}
         </button>
       </form>
       <Toaster position="bottom-right" />
