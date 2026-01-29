@@ -22,10 +22,10 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
             {product?.name?.charAt(0).toUpperCase()}
           </div>
           <h2 className="text-xl font-black text-slate-800 uppercase tracking-tighter">
-            Infos Produit
+            Product Info
           </h2>
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">
-            Détails de l'inventaire
+            Inventory Details
           </span>
         </div>
         
@@ -37,7 +37,7 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
               <IoCubeOutline size={20} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Désignation</span>
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Designation</span>
               <span className="text-sm font-black text-slate-700 uppercase">{product?.name}</span>
             </div>
           </div>
@@ -47,8 +47,8 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
               <IoLayersOutline size={20} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Catégorie</span>
-              <span className="text-sm font-black text-slate-700 uppercase">{product?.categorie || "Général"}</span>
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Category</span>
+              <span className="text-sm font-black text-slate-700 uppercase">{product?.categorie || "General"}</span>
             </div>
           </div>
 
@@ -57,7 +57,7 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
               <IoWalletOutline size={20} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Prix d'achat</span>
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Purchase Price</span>
               <span className="text-sm font-black text-slate-700">{product?.prix_achat?.toFixed(2)} DH</span>
             </div>
           </div>
@@ -67,13 +67,13 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
               <IoStatsChartOutline size={20} />
             </div>
             <div className="flex flex-col flex-1">
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Stock Disponible</span>
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Available Stock</span>
               <div className="flex justify-between items-center">
-                 <span className="text-sm font-black text-slate-700">{product?.quantite} Unités</span>
+                 <span className="text-sm font-black text-slate-700">{product?.quantite} Units</span>
                  <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase ${
                     product?.quantite < 10 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'
                  }`}>
-                   {product?.quantite < 10 ? 'Faible' : 'Ok'}
+                   {product?.quantite < 10 ? 'Low' : 'OK'}
                  </span>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function ProductDetailsDialog({ open, onClose, product }) {
             onClick={onClose}
             className="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-[0_10px_25px_rgba(99,102,241,0.3)]"
           >
-            Fermer
+            Close
           </button>
         </div>
       </div>

@@ -21,7 +21,7 @@ function CardCategories({ name, Datee, btn, id, update }) {
     Produts?.filter(item => item.categorie?._id === id).length || 0;
 
   const formattedDate = Datee
-    ? new Date(Datee).toLocaleDateString("fr-FR", {
+    ? new Date(Datee).toLocaleDateString("en-GB", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -64,7 +64,7 @@ function CardCategories({ name, Datee, btn, id, update }) {
       {/* DATE */}
       <div className="flex items-center gap-2 text-[11px] font-bold text-[#64748b] dark:text-slate-400 uppercase tracking-wide mb-6">
         <IoCalendarOutline size={14} className="text-slate-400 dark:text-slate-500" />
-        <span>Créé le {formattedDate}</span>
+        <span>Created At {formattedDate}</span>
       </div>
 
       {/* PRODUCT COUNT BOX */}
@@ -74,10 +74,10 @@ function CardCategories({ name, Datee, btn, id, update }) {
       ">
         <div className="flex flex-col">
           <span className="text-[9px] font-black uppercase text-[#64748b] dark:text-slate-500 tracking-widest">
-            Inventaire
+            Inventory
           </span>
           <span className="text-[#334155] dark:text-slate-300 text-xs font-bold">
-            Nombre de produits
+            Prodcuts Count
           </span>
         </div>
 
@@ -103,7 +103,7 @@ function CardCategories({ name, Datee, btn, id, update }) {
             "
           >
             <IoCreateOutline size={16} />
-            Modifier
+            Edit
           </button>
 
           <button
@@ -117,7 +117,7 @@ function CardCategories({ name, Datee, btn, id, update }) {
             "
           >
             <IoTrashOutline size={16} />
-            Supprimer
+            Delete
           </button>
         </div>
       )}

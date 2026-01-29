@@ -61,7 +61,7 @@ export default function AddCategoryForm() {
     <form onSubmit={handleSubmit} className="space-y-6 flex flex-col gap-4 justify-between transition-colors">
       <div>
         <label className="text-sm text-gray-700 dark:text-slate-300 mb-2 block font-medium">
-          Nom de la catégorie
+          Category Name
         </label>
 
         <div className="relative">
@@ -75,7 +75,7 @@ export default function AddCategoryForm() {
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            placeholder="Ex: Informatique"
+            placeholder="Ex: Computer"
             className="w-full bg-[#071a2f]/5 dark:bg-slate-800/50 border border-[#19b393]/30 dark:border-slate-700
                        rounded-lg pl-10 pr-4 py-3 text-slate-800 dark:text-slate-100
                        placeholder:text-gray-400 dark:placeholder:text-slate-500
@@ -96,7 +96,7 @@ export default function AddCategoryForm() {
           }`}
       >
         <IoSaveOutline size={20} />
-        {isSubmitting ? "Ajout..." : "Ajouter"}
+        {isSubmitting ? "Add..." : "Add Categorie"}
       </button>
       <Toaster />
     </form>

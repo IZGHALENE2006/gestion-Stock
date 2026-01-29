@@ -185,7 +185,7 @@ function Categories() {
                       <td className="px-8 py-5 text-center">
                         <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
                           <IoCalendarOutline size={14} className="text-slate-400" />
-                          {new Date(t.DateCreate).toLocaleDateString("fr-FR", { day: 'numeric', month: 'short', year: 'numeric' })}
+                          {new Date(t.DateCreate).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })}
                         </div>
                       </td>
                       {role === "admin" && (
@@ -233,7 +233,7 @@ function Categories() {
         width="550px"
         isOpen={openAdd}
         onClose={() => setOpenAdd(false)}
-        title="Ajouter nouvelle catégorie"
+        title="Create New Categorie"
       >
         <AddCategoryorm />
       </Dialog>
@@ -242,8 +242,8 @@ function Categories() {
         open={openDelete}
         onClose={() => setOpenDelete(false)}
         onConfirm={confirmDelete}
-        title="Supprimer la catégorie"
-        message="Êtes-vous sûr de vouloir supprimer cette catégorie ?"
+        title="Delete ?"
+        message="Are you sure you want to delete this category?"
       />
 
       <Dialog
@@ -251,7 +251,7 @@ function Categories() {
         width="550px"
         isOpen={openUpdate}
         onClose={() => setOpenUpdate(false)}
-        title="Modifier la catégorie"
+        title="Edit catégorie"
       >
         <UpdateCategoryForma
           idupdate={idUpdate}

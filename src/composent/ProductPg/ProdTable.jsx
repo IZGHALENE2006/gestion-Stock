@@ -52,7 +52,6 @@ const BarcodeDisplay = ({ value }) => {
   return <svg ref={barcodeRef} className="mx-auto"></svg>;
 };
 
-// ADDED: products as a prop
 export default function ProdTable({ products }) {
   const Dispatch = useDispatch();
   const printRef = useRef();
@@ -82,7 +81,7 @@ export default function ProdTable({ products }) {
   const HandleconfiremeDEleteProduit = () => {
     Dispatch(DeleteProduit(iddelete));
     setOpenDailgoConfirmation(false);
-    toast.success('Produit supprimé', { icon: '🗑️' });
+    toast.success('Product deleted', { icon: '🗑️' });
   };
 
   const InfoItem = ({ icon, label, value, color }) => (
@@ -95,7 +94,7 @@ export default function ProdTable({ products }) {
     </div>
   );
 
-  if (loading) return <div className="p-20 text-center font-black text-emerald-500 animate-pulse">CHARGEMENT...</div>;
+  if (loading) return <div className="p-20 text-center font-black text-emerald-500 animate-pulse">Loading...</div>;
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-4xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-colors duration-300">
@@ -103,10 +102,10 @@ export default function ProdTable({ products }) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
-              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Produit</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Product</th>
               <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Status</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Prix</th>
-              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Catégorie</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Price</th>
+              <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Category</th>
               <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Stock</th>
               <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest text-center">Actions</th>
             </tr>
@@ -119,7 +118,7 @@ export default function ProdTable({ products }) {
                   <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${
                     item.quantite > 0 ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400'
                   }`}>
-                    {item.quantite > 0 ? "En Stock" : "Rupture"}
+                    {item.quantite > 0 ? "In Stock": "Out of stock"}
                   </span>
                 </td>
                 <td className="px-6 py-4 font-bold text-slate-600 dark:text-slate-400 text-sm">{item.prix_vente?.toFixed(2)} DH</td>
@@ -147,7 +146,7 @@ export default function ProdTable({ products }) {
       </div>
 
       <Dialog 
-        title={"Information"}
+        title={"Info"}
         bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
         isOpen={openInfo} onClose={() => setOpenInfo(false)} width="650px">
         {selectedProduct && (
@@ -158,26 +157,26 @@ export default function ProdTable({ products }) {
                   {selectedProduct.name.charAt(0).toUpperCase()}
                 </div>
                 <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 uppercase text-center leading-tight">{selectedProduct.name}</h3>
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">{selectedProduct.categorie?.name||"not Valide"}</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">{selectedProduct.categorie?.name||"not Valid"}</p>
                 
                 <div className="p-3">
                   <BarcodeDisplay value={selectedProduct.barcode} />
                 </div>
 
                 <button onClick={handlePrint} className="mt-6 w-full flex items-center justify-center gap-2 py-3 bg-slate-900 dark:bg-emerald-600 hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95">
-                  <FaPrint size={14}/> Imprimer ({selectedProduct.quantite})
+                  <FaPrint size={14}/> Print ({selectedProduct.quantite})
                 </button>
               </div>
 
               <div className="flex-1 grid grid-cols-1 gap-3 py-2">
-                <InfoItem icon={<HiOutlineCube size={20}/>} label="Stock Actuel" value={`${selectedProduct.quantite} Unités`} color="text-emerald-500" />
-                <InfoItem icon={<HiOutlineUser size={20}/>} label="Fournisseur" value={selectedProduct.fournisseur || "Direct"} color="text-slate-500" />
-                <InfoItem icon={<HiOutlineCash size={20}/>} label="Prix d'achat" value={`${selectedProduct.prix_achat?.toFixed(2)} DH`} color="text-rose-500" />
-                <InfoItem icon={<HiOutlineTrendingUp size={20}/>} label="Prix de vente" value={`${selectedProduct.prix_vente?.toFixed(2)} DH`} color="text-emerald-500" />
+                <InfoItem icon={<HiOutlineCube size={20}/>} label="Current Stock" value={`${selectedProduct.quantite} Units`} color="text-emerald-500" />
+                <InfoItem icon={<HiOutlineUser size={20}/>} label="Supplier" value={selectedProduct.fournisseur || "Direct"} color="text-slate-500" />
+                <InfoItem icon={<HiOutlineCash size={20}/>} label="Purchase Price" value={`${selectedProduct.prix_achat?.toFixed(2)} DH`} color="text-rose-500" />
+                <InfoItem icon={<HiOutlineTrendingUp size={20}/>} label="Selling Price" value={`${selectedProduct.prix_vente?.toFixed(2)} DH`} color="text-emerald-500" />
                 
                 <div className="mt-4 flex items-center justify-center gap-2 text-slate-300 dark:text-slate-600">
                   <HiOutlineCalendar size={14}/>
-                  <span className="text-[10px] font-bold uppercase tracking-tighter">Créé le: {new Date(selectedProduct.datecreate).toLocaleDateString()}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-tighter">Created on: {new Date(selectedProduct.datecreate).toLocaleDateString()}</span>
                 </div>
               </div>  
             </div>
@@ -186,11 +185,11 @@ export default function ProdTable({ products }) {
       </Dialog>
 
       <ConfirmDelete
-       open={openDailgoConfirmation} onClose={() => setOpenDailgoConfirmation(false)} onConfirm={HandleconfiremeDEleteProduit} title="Supprimer Produit" />
+       open={openDailgoConfirmation} onClose={() => setOpenDailgoConfirmation(false)} onConfirm={HandleconfiremeDEleteProduit} title="Delete Product" />
       <div style={{ display: "none" }}><PrintContainer ref={printRef} product={selectedProduct} /></div>
       <Dialog 
         bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
-      isOpen={openupdate} onClose={() => setopeopenupdaten(false)} title="Modifier Produit" width="550px">
+      isOpen={openupdate} onClose={() => setopeopenupdaten(false)} title="Update Product" width="550px">
         <UpdateProduit idupdate2={idupdate2} close={() => setopeopenupdaten(false)} />
       </Dialog>
       <Toaster position="bottom-right" />

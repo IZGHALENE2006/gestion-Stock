@@ -9,7 +9,8 @@ export default function Plan2({ data, options, maxColor, produitperc }) {
       <div className="flex items-center gap-3 mb-6">
         <div className="w-1.5 h-6 rounded-full" style={{ backgroundColor: maxColor }} />
         <h3 className="text-slate-800 dark:text-slate-100 font-black uppercase text-xs tracking-widest">
-          Ventes par Catégorie</h3>
+      Sales per Employee
+          </h3>
       </div>
       <div className="flex-1 flex justify-center items-center min-h-65">
         <Doughnut data={data} options={{ ...options, cutout: '75%', plugins: { ...options.plugins, legend: { display: false } } }} />

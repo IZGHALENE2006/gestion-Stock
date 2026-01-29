@@ -61,7 +61,7 @@ function LoginChoise() {
                    transition-all duration-300 group shadow-sm hover:shadow-emerald-500/20"
       >
         <FaArrowLeft className="text-sm group-hover:-translate-x-1 transition-transform" />
-        <span className="text-[10px] font-black uppercase tracking-widest">Retour</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">Return</span>
       </Link>
 
       {/* Background Glows */}
@@ -81,7 +81,7 @@ function LoginChoise() {
           </h1>
           
           <p className="text-slate-500 dark:text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2 opacity-80">
-            SÉLECTIONNER UN PORTAIL
+            SELECT A PORTAL
           </p>
         </div>
       </div>
@@ -122,7 +122,7 @@ function LoginChoise() {
               <div className={`w-0 h-1 mt-4 rounded-full bg-linear-to-r ${role.gradient} group-hover:w-16 transition-all duration-700`} />
               
               <p className="text-slate-400 dark:text-slate-500 text-[9px] font-bold mt-6 opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest">
-                Se Connecter
+                Log in
               </p>
             </div>
           </Link>

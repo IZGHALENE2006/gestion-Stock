@@ -30,7 +30,7 @@ function AddEmploye({ open, onClose }) {
     dispatch(addEmploye(infoEmp))
       .unwrap()
       .then(() => {
-        toast.success("Employé ajouté avec succès", {
+        toast.success("Employee added successfully", {
           duration: 3000,
           style: {
             border: "1px solid #10b981",
@@ -42,7 +42,7 @@ function AddEmploye({ open, onClose }) {
         onClose();
       })
       .catch((err) => {
-        toast.error(error || "Une erreur est survenue", {
+        toast.error(error || "An error occurred", {
           duration: 3000,
         });
       });
@@ -65,10 +65,10 @@ function AddEmploye({ open, onClose }) {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-              Nouvel Employé
+              New Employee
             </h2>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-              Remplissez les informations de profil
+              Fill in the profile information
             </p>
           </div>
           <button
@@ -81,15 +81,15 @@ function AddEmploye({ open, onClose }) {
 
         {/* Body */}
         <div className="space-y-6">
-          {/* Nom + CIN */}
+          {/* Name + CIN */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Nom Complet</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Full Name</label>
               <div className="relative group">
                 <IoPersonOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Jean Dupont"
+                  placeholder="John Doe"
                   className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, name: e.target.value })}
                 />
@@ -97,7 +97,7 @@ function AddEmploye({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">CIN</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">ID Card (CIN)</label>
               <div className="relative group">
                 <IoFingerPrintOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
@@ -110,10 +110,10 @@ function AddEmploye({ open, onClose }) {
             </div>
           </div>
 
-          {/* Téléphone + Email */}
+          {/* Phone + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Téléphone</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Phone Number</label>
               <div className="relative group">
                 <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
@@ -126,12 +126,12 @@ function AddEmploye({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Email Professionnel</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Work Email</label>
               <div className="relative group">
                 <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="email"
-                  placeholder="nom@entreprise.com"
+                  placeholder="name@company.com"
                   className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, email: e.target.value })}
                 />
@@ -139,10 +139,10 @@ function AddEmploye({ open, onClose }) {
             </div>
           </div>
 
-          {/* Password + Couleur */}
+          {/* Password + Color */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Mot de passe</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Password</label>
               <div className="relative group">
                 <IoLockClosedOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                 <input
@@ -155,7 +155,7 @@ function AddEmploye({ open, onClose }) {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Identité Visuelle</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Visual Identity</label>
               <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 rounded-2xl">
                 <input
                   type="color"
@@ -163,7 +163,7 @@ function AddEmploye({ open, onClose }) {
                   value={infoEmp.color}
                   onChange={(e) => setInfoEmp({ ...infoEmp, color: e.target.value })}
                 />
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Choisir une couleur</span>
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Choose a color</span>
               </div>
             </div>
           </div>
@@ -172,8 +172,8 @@ function AddEmploye({ open, onClose }) {
           <div className="pt-2">
             <label className="flex items-center justify-between p-4 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
               <div className="flex flex-col">
-                <span className="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-tight">Compte Actif</span>
-                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-500/50 font-bold uppercase tracking-widest">Autoriser l'accès au tableau de bord</span>
+                <span className="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-tight">Active Account</span>
+                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-500/50 font-bold uppercase tracking-widest">Allow access to the dashboard</span>
               </div>
               <input
                 type="checkbox"
@@ -191,7 +191,7 @@ function AddEmploye({ open, onClose }) {
             onClick={onClose}
             className="px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
           >
-            Annuler
+            Cancel
           </button>
           <button
             onClick={HandelAddEmploye}
@@ -202,7 +202,7 @@ function AddEmploye({ open, onClose }) {
                 : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"}
             `}
           >
-            {loading ? "Traitement..." : "Ajouter l'employé"}
+            {loading ? "Processing..." : "Add Employee"}
           </button>
         </div>
       </div>

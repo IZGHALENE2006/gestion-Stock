@@ -26,7 +26,7 @@ export default function NavRow() {
           Employees
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/Home/employees/statistique"
           className={({ isActive }) =>
             `flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all
@@ -39,7 +39,7 @@ export default function NavRow() {
         >
           <IoBarChartOutline size={18} />
           Statistics
-        </NavLink>
+        </NavLink> */}
       </div>
 
       {/* --- THEME TOGGLE BUTTON --- */}

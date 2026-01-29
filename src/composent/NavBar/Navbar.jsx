@@ -5,8 +5,9 @@ import {
   IoPersonOutline, IoLogOutOutline, IoSettingsOutline, IoPricetagsOutline, IoBusinessOutline 
 } from "react-icons/io5";
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useNavigate ,Link} from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
+import {Box} from "lucide-react"
 
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,15 +17,14 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const nav = useNavigate();
 
-const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-useEffect(() => {
-  if (token && !loaded) {
-    dispatch(getMe());
-    setLoaded(true);
-  }
-}, [dispatch, token, loaded]);
-
+  useEffect(() => {
+    if (token && !loaded) {
+      dispatch(getMe());
+      setLoaded(true);
+    }
+  }, [dispatch, token, loaded]);
 
   const handleProfileClick = () => {
     setProfileOpen(!profileOpen);
@@ -42,13 +42,13 @@ useEffect(() => {
         onMouseLeave={() => setIsExpanded(false)}
         className={`fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 
           transition-all duration-300 ease-in-out flex flex-col overflow-hidden shadow-2xl
-          ${isExpanded ? 'w-64' : 'w-20'}`}
+          ${isExpanded ? 'w-57' : 'w-20'}`}
       >
         
         {/* Logo */}
         <div className="flex items-center h-20 px-6">
           <div className="bg-[#19b393] p-2 rounded-xl min-w-10 h-10 flex items-center justify-center shadow-lg shadow-green-200 dark:shadow-green-900/20">
-            <div className="w-4 h-4 bg-white rounded-sm rotate-45" /> 
+            <Box color='white'/>
           </div>
           <span className={`ml-4 font-black text-slate-800 dark:text-slate-100 text-lg transition-opacity duration-300 whitespace-nowrap
             ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
@@ -59,11 +59,11 @@ useEffect(() => {
         {/* Nav Links */}
         <nav className="grow px-3 mt-4 space-y-1.5">
           {role === 'admin' && <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />}
-          <NavItem to="/Home/Categories" icon={<IoPricetagsOutline size={22} />} label="Catégories" expanded={isExpanded} />
-          <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Produits" expanded={isExpanded} />
-          {role === 'admin' && <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employés" expanded={isExpanded} />}
-          {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Fournisseurs" expanded={isExpanded} />}
-          <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Caisse" expanded={isExpanded} />
+          <NavItem to="/Home/Categories" icon={<IoPricetagsOutline size={22} />} label="Categories" expanded={isExpanded} />
+          <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
+          {role === 'admin' && <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />}
+          {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Suppliers" expanded={isExpanded} />}
+          <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Cashier" expanded={isExpanded} />
           <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
         </nav>
 
@@ -82,25 +82,20 @@ useEffect(() => {
           {/* Dropdown Menu */}
           {profileOpen && isExpanded && (
             <div className="absolute left-4 bottom-20 w-48 bg-white dark:bg-slate-800 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
-     {/* <Link to='/Home/profile'>
-              <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-[#19b393] transition">
-               
-              </button>
-     </Link> */}
-<NavLink
-  to="/Home/profile"
-  onClick={() => setProfileOpen(false)}
-  className="flex items-center w-full px-4 py-3 text-sm font-medium
-             text-slate-600 dark:text-slate-300
-             hover:bg-slate-50 dark:hover:bg-slate-700/50
-             hover:text-[#19b393] transition"
->
-  <IoSettingsOutline className="mr-3" size={18}/>
-  Profile
-</NavLink>
+              <NavLink
+                to="/Home/profile"
+                onClick={() => setProfileOpen(false)}
+                className="flex items-center w-full px-4 py-3 text-sm font-medium
+                           text-slate-600 dark:text-slate-300
+                           hover:bg-slate-50 dark:hover:bg-slate-700/50
+                           hover:text-[#19b393] transition"
+              >
+                <IoSettingsOutline className="mr-3" size={18}/>
+                Profile 
+              </NavLink>
 
               <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition" onClick={HanleLogoutAdmin}>
-                <IoLogOutOutline className="mr-3" size={18}/> Déconnexion
+                <IoLogOutOutline className="mr-3" size={18}/> Logout
               </button>
             </div>
           )}

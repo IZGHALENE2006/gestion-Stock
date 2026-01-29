@@ -84,7 +84,7 @@ function LoginAdmin() {
           <button className="mt-4 bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center">
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : "Authenticate"}
+            ) : "Login"}
           </button>
 
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest mt-6">

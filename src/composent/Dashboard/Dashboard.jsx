@@ -196,10 +196,11 @@ const dayse = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return dayse.map(d => result[d]);
 }
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   // 2. T3rif dial l-Data (khass ykono hna bash t-khdem l-Plan1Data)
 const Plan1Data = {
-  labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+  labels: days,
   datasets: [{
     label: "Profit (DH)",
     data: calcProfitParJourSemaineActuelle(allVentes),
@@ -221,6 +222,7 @@ const Plan1Data = {
   }]
 };
 const isDarkMode = document.documentElement.classList.contains('dark');
+
 const Plan2Data = {
   labels: Category?.map(cat => cat.name),
   datasets: [{
@@ -240,7 +242,6 @@ const Plan2Data = {
     borderRadius: 8, // Adds slightly rounded edges to the doughnut segments
   }]
 };
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function ventesParJour(ventes = []) {
   const result = {
@@ -281,7 +282,7 @@ const Employees = useMemo(()=>{
   };
 
   const Plan4Data = {
-    labels: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+    labels: days,
     datasets: [{
       label: "Valeur Totale",
       data:calcTotalCAParJourSemaine(allVentes),
@@ -298,7 +299,7 @@ const Employees = useMemo(()=>{
 
 const stats = [
     { 
-      label: "Employés", 
+      label: "Employe", 
       value: Employe?.length || "0", 
       icon: <IoPeopleOutline />, 
       gradient: "from-blue-400 to-blue-600", 
@@ -307,7 +308,7 @@ const stats = [
       bgIcon: "bg-blue-50 dark:bg-blue-900/20" 
     },
     { 
-      label: "Produits", 
+      label: "Product", 
       value: Produts?.length || "0", 
       icon: <IoCubeOutline />, 
       gradient: "from-orange-400 to-orange-600", 
@@ -316,7 +317,7 @@ const stats = [
       bgIcon: "bg-orange-50 dark:bg-orange-900/20" 
     },
     { 
-      label: "Profit (jour)", 
+      label: "Profit (Day)", 
       value: TotalProfite + " Dh" || 0 + " Dh", 
       icon: <IoTrendingUpOutline />, 
       gradient: "from-emerald-400 to-emerald-600", 
@@ -325,7 +326,7 @@ const stats = [
       bgIcon: "bg-emerald-50 dark:bg-emerald-900/20" 
     },
     { 
-      label: "Valeur Totale", 
+      label: "Total Value", 
       value: totalprix?.toLocaleString() + " DH", 
       icon: <IoWalletOutline />, 
       gradient: "from-purple-400 to-purple-600", 
@@ -358,7 +359,7 @@ const maxColor = dataset.backgroundColor[maxIndex];
             Dashboard
           </h1>
           <p className="text-slate-400 dark:text-slate-500 font-medium italic text-sm">
-            Rapport d'activité pour {user?.name}
+            Activity report for {user?.name}
           </p>
         </div>
         <div className="text-center">
