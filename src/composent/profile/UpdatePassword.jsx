@@ -6,44 +6,43 @@ import { useNavigate } from 'react-router';
 import toast from "react-hot-toast";
 
 const ChangePassword = () => {
-  const { user, role,error } = useSelector((state) => state.LoginAdmin);
-  const dispatch = useDispatch()
-  const Nave  =  useNavigate()
-const [nwepassword,setnewpassword] = useState({old:"",newpass:"",newpass2:""})
-console.log(nwepassword);
+  const { error } = useSelector((state) => state.LoginAdmin);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [nwepassword, setnewpassword] = useState({ old: "", newpass: "", newpass2: "" });
 
-function HandleUpdatePassword(e) {
-  e.preventDefault();
+  function HandleUpdatePassword(e) {
+    e.preventDefault();
 
-  if (!nwepassword.old || !nwepassword.newpass || !nwepassword.newpass2) {
-    toast.error("All fields are required");
-    return;
-  }
+    if (!nwepassword.old || !nwepassword.newpass || !nwepassword.newpass2) {
+      toast.error("All fields are required");
+      return;
+    }
 
-  if (nwepassword.newpass !== nwepassword.newpass2) {
-    toast.error("Passwords do not match");
-    return;
-  }
+    if (nwepassword.newpass !== nwepassword.newpass2) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
-  dispatch(UpdatePassword(nwepassword))
-    .unwrap()
-    .then(() => {
-      toast.success("Password updated successfully", {
-        duration: 3000,
-        position: "top-right",
+    dispatch(UpdatePassword(nwepassword))
+      .unwrap()
+      .then(() => {
+        toast.success("Password updated successfully", {
+          duration: 3000,
+          position: "top-right",
+        });
+        navigate("/Home/profile");
+      })
+      .catch((err) => {
+        toast.error(
+          err?.response?.data?.message || "Something went wrong",
+          { duration: 4000 }
+        );
       });
-      Nave("/Home/profile");
-    })
-    .catch((err) => {
-      toast.error(
-        err?.response?.data?.message || "Something went wrong",
-        { duration: 4000 }
-      );
-    });
-}
+  }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4 transition-colors duration-300 ">
+    <div className="min-h-[80vh] bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center p-4 transition-colors duration-300">
       <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
         
         {/* Header Section */}
@@ -52,10 +51,10 @@ function HandleUpdatePassword(e) {
             <IoShieldCheckmarkOutline size={32} />
           </div>
           <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">
-            Sécurité
+            Security
           </h2>
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2">
-            Mettez à jour votre mot de passe pour protéger votre compte.
+            Update your password to protect your account.
           </p>
         </div>
 
@@ -65,7 +64,7 @@ function HandleUpdatePassword(e) {
           {/* Current Password */}
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
-              Mot de passe actuel
+              Current Password
             </label>
             <div className="relative group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
@@ -75,7 +74,7 @@ function HandleUpdatePassword(e) {
                 type="password" 
                 placeholder="••••••••" 
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-200 font-bold focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                onChange={(e)=>setnewpassword({...nwepassword,old:e.target.value})}
+                onChange={(e) => setnewpassword({ ...nwepassword, old: e.target.value })}
               />
             </div>
           </div>
@@ -85,7 +84,7 @@ function HandleUpdatePassword(e) {
           {/* New Password */}
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
-              Nouveau mot de passe
+              New Password
             </label>
             <div className="relative group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
@@ -93,10 +92,9 @@ function HandleUpdatePassword(e) {
               </span>
               <input 
                 type="password" 
-                placeholder="Min. 8 caractères" 
+                placeholder="Min. 8 characters" 
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-200 font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
-                onChange={(e)=>setnewpassword({...nwepassword,newpass:e.target.value})}
-              
+                onChange={(e) => setnewpassword({ ...nwepassword, newpass: e.target.value })}
               />
             </div>
           </div>
@@ -104,7 +102,7 @@ function HandleUpdatePassword(e) {
           {/* Confirm Password */}
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
-              Confirmer le mot de passe
+              Confirm New Password
             </label>
             <div className="relative group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
@@ -112,10 +110,9 @@ function HandleUpdatePassword(e) {
               </span>
               <input 
                 type="password" 
-                placeholder="Répéter le mot de passe" 
+                placeholder="Repeat password" 
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-200 font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
-                onChange={(e)=>setnewpassword({...nwepassword,newpass2:e.target.value})}
-              
+                onChange={(e) => setnewpassword({ ...nwepassword, newpass2: e.target.value })}
               />
             </div>
           </div>
@@ -126,15 +123,16 @@ function HandleUpdatePassword(e) {
               type="submit" 
               className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
             >
-              Mettre à jour
+              Update Password
             </button>
             <button 
               type="button" 
+              onClick={() => navigate("/Home/profile")}
               className="w-full py-4 text-slate-400 dark:text-slate-500 font-black text-xs uppercase tracking-[0.2em] hover:text-slate-600 dark:hover:text-slate-300 transition-all"
             >
-              Annuler
+              Cancel
             </button>
-            {error&& <span>{error}</span>}
+            {error && <span className="text-red-500 text-xs font-bold text-center mt-2">{error}</span>}
           </div>
         </form>
       </div>

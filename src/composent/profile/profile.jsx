@@ -1,14 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { IoLockClosedOutline, IoPersonOutline, IoShieldCheckmarkOutline, IoStatsChartOutline } from "react-icons/io5";
-import { Link } from "react-router";
+import { Link } from "react-router-dom"; // Fixed 'react-router' to 'react-router-dom' for standard use cases
+
 export default function ProfilePage() {
   const { user, role } = useSelector((state) => state.LoginAdmin);
 
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center text-[#19b393]">
-        <p className="animate-pulse text-lg font-black tracking-widest uppercase">Chargement...</p>
+        <p className="animate-pulse text-lg font-black tracking-widest uppercase">Loading...</p>
       </div>
     );
   }
@@ -20,10 +21,10 @@ export default function ProfilePage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase">
-            Mon Profil
+            My Profile
           </h1>
           <p className="text-slate-400 dark:text-slate-500 font-medium italic text-sm">
-            Gérez vos informations et votre sécurité
+            Manage your information and security
           </p>
         </div>
         <div className="bg-[#19b393]/10 px-4 py-2 rounded-2xl border border-[#19b393]/20">
@@ -53,10 +54,10 @@ export default function ProfilePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                <InfoBox label="Nom complet" value={user.name} icon={<IoPersonOutline />} />
-                <InfoBox label="Adresse Email" value={user.email} icon={<IoShieldCheckmarkOutline />} />
-                <InfoBox label="Numéro de Téléphone" value={user.phone || "Non renseigné"} icon={<IoShieldCheckmarkOutline />} />
-                <InfoBox label="Numéro CIN" value={user.cin || "—"} icon={<IoShieldCheckmarkOutline />} />
+                <InfoBox label="Full Name" value={user.name} icon={<IoPersonOutline />} />
+                <InfoBox label="Email Address" value={user.email} icon={<IoShieldCheckmarkOutline />} />
+                <InfoBox label="Phone Number" value={user.phone || "Not provided"} icon={<IoShieldCheckmarkOutline />} />
+                <InfoBox label="CIN Number" value={user.cin || "—"} icon={<IoShieldCheckmarkOutline />} />
               </div>
             </div>
           </div>
@@ -71,13 +72,13 @@ export default function ProfilePage() {
                <div className="p-2 bg-red-50 dark:bg-red-500/10 rounded-xl text-red-500">
                   <IoLockClosedOutline size={20} />
                </div>
-               <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Sécurité</h3>
+               <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Security</h3>
             </div>
-    <Link to="../changePassword">
-            <button className="w-full py-4 px-6 rounded-2xl bg-[#19b393] hover:bg-[#15967b] text-white font-black text-sm transition-all duration-300 shadow-lg shadow-green-200 dark:shadow-green-900/20 flex items-center justify-center gap-2">
-              Changer le mot de passe
-            </button>
-    </Link>
+            <Link to="../changePassword">
+              <button className="w-full py-4 px-6 rounded-2xl bg-[#19b393] hover:bg-[#15967b] text-white font-black text-sm transition-all duration-300 shadow-lg shadow-green-200 dark:shadow-green-900/20 flex items-center justify-center gap-2">
+                Change Password
+              </button>
+            </Link>
           </div>
 
           {/* Activity Stats Card */}
@@ -86,15 +87,15 @@ export default function ProfilePage() {
                <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-xl text-blue-500">
                   <IoStatsChartOutline size={20} />
                </div>
-               <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Activité</h3>
+               <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Activity</h3>
             </div>
             <div className="space-y-4">
-              <StatItem label="Ventes effectuées" value={user.ventes?.length || 0} />
-              <StatItem label="Factures générées" value={user.Facture?.length || 0} />
+              <StatItem label="Sales completed" value={user.ventes?.length || 0} />
+              <StatItem label="Invoices generated" value={user.Facture?.length || 0} />
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1">Membre depuis le</p>
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1">Member since</p>
                 <p className="text-sm font-bold text-[#19b393]">
-                  {user.datecreate ? new Date(user.datecreate).toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' }) : "—"}
+                  {user.datecreate ? new Date(user.datecreate).toLocaleDateString("en-US", { day: 'numeric', month: 'long', year: 'numeric' }) : "—"}
                 </p>
               </div>
             </div>
@@ -106,7 +107,7 @@ export default function ProfilePage() {
   );
 }
 
-// Sub-components l-dakhel bach n-hafdo 3la l-alwan
+// Sub-components
 function InfoBox({ label, value, icon }) {
   return (
     <div className="group p-4 rounded-2xl border border-slate-50 dark:border-slate-800 hover:border-[#19b393]/30 transition-all bg-slate-50/50 dark:bg-slate-800/30">
