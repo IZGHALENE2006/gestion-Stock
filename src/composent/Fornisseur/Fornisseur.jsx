@@ -151,7 +151,7 @@ function  HandleUpdateFornisseur(){
               </span>
               <input
                 type="text"
-                placeholder="Rechercher par nom..."
+                placeholder="Search by name..."
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-3.5 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-200 font-bold text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -180,7 +180,7 @@ function  HandleUpdateFornisseur(){
                 onClick={() => setOpen(true)}
                 className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-lg shadow-emerald-600/20 active:scale-95"
               >
-                <IoAddOutline size={20} /> Nouveau
+                <IoAddOutline size={20} /> New
               </button>
             </div>
           </div>
@@ -209,7 +209,7 @@ function  HandleUpdateFornisseur(){
                 <IoSearchOutline size={40} className="text-slate-300 dark:text-slate-700" />
               </div>
               <p className="text-slate-400 dark:text-slate-600 font-black uppercase text-[10px] tracking-[0.3em]">
-                Aucun fournisseur trouvé
+No supplier found
               </p>
           </div>
         )}
@@ -235,10 +235,11 @@ function  HandleUpdateFornisseur(){
                   </div>
                   
                   <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight mb-2">
-                    Suppression
+                              Deletion
+
                   </h2>
                   <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-                    Voulez-vous vraiment supprimer cet fournisseur ? Cette action est irréversible.
+          Do you really want to delete this supplier? This action is irreversible.
                   </p>
       
                   <div className="flex flex-col gap-3">
@@ -246,13 +247,13 @@ function  HandleUpdateFornisseur(){
                       onClick={confirmDelete}
                       className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-rose-600/20 transition-all active:scale-95"
                     >
-                      Confirmer
+                      Confirm
                     </button>
                     <button
                       onClick={cancelDelete}
                       className="w-full py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                     >
-                      Annuler
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -273,7 +274,7 @@ function  HandleUpdateFornisseur(){
       {/* SECTION: Basic Info */}
       <div className="relative group">
         <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2 block ml-1">
-          Nom de l'établissement
+            Establishment Name
         </label>
         <div className="relative">
           <input 
@@ -294,7 +295,7 @@ function  HandleUpdateFornisseur(){
         {/* Ville with Modern Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 block ml-1">
-            Localisation (Ville)
+Location (City)
           </label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600">
@@ -308,7 +309,7 @@ function  HandleUpdateFornisseur(){
                 setShowDatalist(true);
               }}
               className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-100 font-semibold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300"
-              placeholder="Chercher..."
+              placeholder="Search..."
             />
           </div>
           
@@ -335,7 +336,7 @@ function  HandleUpdateFornisseur(){
         {/* Téléphone */}
         <div className="relative">
           <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 block ml-1">
-            Contact Direct
+Direct Contact
           </label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600">
@@ -355,7 +356,7 @@ function  HandleUpdateFornisseur(){
       {/* Email */}
       <div className="relative">
         <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 block ml-1">
-          Adresse Email Professionnelle
+         Professional Email Address
         </label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600">
@@ -377,13 +378,13 @@ function  HandleUpdateFornisseur(){
           onClick={() => setEditOpen(false)}
           className="flex-1 py-4 px-6 rounded-2xl text-slate-500 dark:text-slate-400 font-bold text-[11px] uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95 bg-red-50"
         >
-          Annuler
+          Cancel
         </button>
         <button
           className="flex-[2] py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all active:scale-95 flex items-center justify-center gap-2"
           onClick={HandleUpdateFornisseur}
         >
-          {loading ?'.....' :"Mettre à jour le profil"}
+          {loading ?'.....' :"Update Profile"}
         </button>
       </div>
     </div>

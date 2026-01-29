@@ -71,14 +71,14 @@ export default function AjouterFrn() {
           <div className="flex items-center gap-2 text-blue-400 mb-2">
             <IoInformationCircleOutline size={20} />
             <span className="text-xs font-bold uppercase tracking-widest">
-              Informations Générales
+General Information
             </span>
           </div>
 
           {/* Nom */}
           <div className="relative group">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
-              Nom du Fournisseur
+Supplier Name 
             </label>
             <div className="relative mt-1">
               <IoBusinessOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -86,7 +86,7 @@ export default function AjouterFrn() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 text-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500 dark:border-slate-600"
                 placeholder="Ex: Global Tech SARL"
               />
             </div>
@@ -102,20 +102,20 @@ export default function AjouterFrn() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 text-slate-700 dark:text-slate-500 dark:border-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
                   placeholder="contact@fournisseur.com"
                 />
               </div>
             </div>
 
             <div className="relative">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Téléphone</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Phone</label>
               <div className="relative mt-1">
                 <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 dark:border-slate-700 dark:bg-[#0f172a] border border-slate-200 text-slate-500 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
                   placeholder="+212 6..."
                 />
               </div>
@@ -125,7 +125,7 @@ export default function AjouterFrn() {
           {/* Custom Searchable Input (Datalist Replacement) */}
           <div className="relative" ref={dropdownRef}>
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
-              Ville
+              City
             </label>
             <div className="relative mt-1">
               <IoLocationOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10" />
@@ -136,13 +136,13 @@ export default function AjouterFrn() {
                   setFormData({ ...formData, Ville: e.target.value });
                   setShowDatalist(true);
                 }}
-                className="w-full bg-[#0f172a] border border-slate-700 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500"
-                placeholder="Rechercher une ville..."
+                className="w-full bg-slate-50 text-slate-500 dark:bg-[#0f172a] border border-slate-200 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-blue-500 dark:border-slate-600"
+                placeholder="Search by City..."
               />
               
               {/* Custom Dropdown List */}
               {showDatalist && filteredVilles.length > 0 && (
-                <ul className="absolute z-50 w-full mt-2 bg-[#1e293b] border border-slate-700 rounded-xl max-h-48 overflow-y-auto shadow-2xl">
+                <ul className="absolute z-50 w-full mt-2 bg-[#1e293b] border border-slate-700 rounded-xl max-h-48 overflow-y-auto shadow-2xl ">
                   {filteredVilles.map((ville, index) => (
                     <li
                       key={index}
@@ -171,7 +171,7 @@ export default function AjouterFrn() {
               ${isSubmitting ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#2C74B3] hover:bg-blue-500 active:scale-95'}`}
           >
             <IoSaveOutline size={20} />
-            {isSubmitting ? "ENREGISTREMENT..." : "ENREGISTRER LE FOURNISSEUR"}
+            {isSubmitting ? "SAVE..." : "SAVE SUPPLIER"}
           </button>
         </div>
       </form>

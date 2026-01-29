@@ -17,12 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router";
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler);
 
 export default function Dashboard() {
   const { user, token,role } = useSelector((state) => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe);
-
+const Nave = useNavigate()
   const { Produts } = useSelector((state) => state.Product);
   const { Category } = useSelector((state) => state.category);
   const dispatch = useDispatch();
@@ -336,7 +337,6 @@ const stats = [
 
   const produitperc = Percentage(Produts?.map(p => p.categorie?.name));
 
-  if (user?.role === "Employe") return null;
 
 const dataset = Plan2Data.datasets[0];
 const data = dataset.data;
@@ -344,6 +344,9 @@ const data = dataset.data;
 const maxIndex = data?.indexOf(Math.max(...data));
 const maxColor = dataset.backgroundColor[maxIndex];
 
+  if (user?.role === "Employe") return null
+  if (token?.role === "Employe") return null
+  
 
   return (
    <div className="p-8 bg-gray-100 dark:bg-[#1e293b] min-h-screen space-y-8 transition-colors duration-300">

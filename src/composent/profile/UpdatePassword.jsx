@@ -10,7 +10,6 @@ const ChangePassword = () => {
   const dispatch = useDispatch()
   const Nave  =  useNavigate()
 const [nwepassword,setnewpassword] = useState({old:"",newpass:"",newpass2:""})
-console.log(nwepassword);
 
 function HandleUpdatePassword(e) {
   e.preventDefault();

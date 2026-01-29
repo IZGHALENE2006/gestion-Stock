@@ -20,7 +20,7 @@ export default function NaveProfite() {
         `}
       >
         <IoPeopleOutline size={18} className={({ isActive }) => isActive ? 'animate-pulse' : ''} />
-        <span>Ventes</span>
+        <span>Sales</span>
       </NavLink>
 
       {/* Facture Link */}
@@ -35,7 +35,7 @@ export default function NaveProfite() {
         `}
       >
         <IoBarChartOutline size={18} />
-        <span>Facture</span>
+        <span>Invoice</span>
       </NavLink>
     <NavLink 
         to="/Home/Profit/Hestorique" 
@@ -48,7 +48,7 @@ export default function NaveProfite() {
         `}
       >
         <IoBarChartOutline size={18} />
-        <span>HestoriqueProfit</span>
+        <span>History</span>
       </NavLink>
     </div>
   );

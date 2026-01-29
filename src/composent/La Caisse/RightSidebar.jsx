@@ -1,11 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoFlashOutline, IoCartOutline, IoReceiptOutline, IoAdd, IoRemove, IoTrashOutline } from "react-icons/io5";
 import gsap from "gsap";
+import { useSelector } from "react-redux";
 
 // Added onUpdateQty and onRemoveItem to props
 export default function RightSidebar({ panierItems = [], onUpdateQty, onRemoveItem }) {
   const [activeTab, setActiveTab] = useState("panier");
-  const [DerniereCommande, setDerniereCommande] = useState([]);
+  const { user, role, token, loading } = useSelector(state => state.LoginAdmin);
+  const { Employe } = useSelector(state => state.Employe);
+      let allVentes = [];
+  if (role === "admin") {
+    const adminVentes = user?.ventes || [];
+    // Hna fin kanzido l-smiya dial l-khdam l-koll vente dyalo
+    const employeVentes = Employe?.flatMap(e => 
+      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
+    ) || [];
+    allVentes = [...adminVentes, ...employeVentes];
+  } else {
+    allVentes = user?.ventes || [];
+  }
+
+  const Daye = new Date().toLocaleDateString();
+  const VentesDujour = allVentes.filter((t) => new Date(t.DateVante).toLocaleDateString() === Daye);
   const cartContainerRef = useRef(null);
 
   useEffect(() => {
@@ -126,20 +142,28 @@ export default function RightSidebar({ panierItems = [], onUpdateQty, onRemoveIt
                   <tr>
                     <th className="p-5">ID</th>
                     <th className="p-5">Heure</th>
-                    <th className="p-5">Total</th>
+                    <th className="p-5">Profite</th>
                     <th className="p-5 text-right">Statut</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-                  {DerniereCommande.length > 0 ? (
-                    DerniereCommande.map((cmd) => (
+                  {VentesDujour.length > 0 ? (
+                    
+                    VentesDujour.map((cmd) => (
+                      
                       <tr key={cmd.id} className="hover:bg-emerald-50 dark:hover:bg-emerald-500/5 transition-colors cursor-pointer group">
-                        <td className="p-5 text-xs font-black text-slate-900 dark:text-slate-200">#{cmd.id}</td>
-                        <td className="p-5 text-[11px] font-bold text-slate-400 dark:text-slate-500">{cmd.time}</td>
-                        <td className="p-5 text-xs font-black text-emerald-600 dark:text-emerald-400">{cmd.total} DH</td>
+                        <td className="p-5 text-xs font-black text-slate-900 dark:text-slate-200">#{cmd._id?cmd._id.slice(0,4):"-"}</td>
+  <td className="p-5 text-[11px] font-bold text-slate-400 dark:text-slate-500">
+  {(() => {
+    const [, timePart] = String(cmd.DateVante).split('T');
+    return timePart ? timePart.split('.')[0] : '-';
+  })()}
+</td>
+
+                        <td className="p-5 text-xs font-black text-emerald-600 dark:text-emerald-400">{cmd.profite} DH</td>
                         <td className="p-5 text-right">
                           <span className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter border border-emerald-200 dark:border-emerald-500/20">
-                            {cmd.status}
+                            Pay
                           </span>
                         </td>
                       </tr>

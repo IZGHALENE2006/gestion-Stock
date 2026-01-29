@@ -71,7 +71,7 @@ const DailogInfoVentes = ({ vente, onClose, onViewProduct }) => {
             className="relative z-10 flex items-center gap-2 px-5 py-3 bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white text-[10px] font-black rounded-xl shadow-xl transition-all active:scale-90 hover:bg-emerald-50 dark:hover:bg-emerald-500 uppercase tracking-widest"
           >
             <HiOutlineEye size={18} />
-            <span>Détails Produit</span>
+            <span>View Product</span>
           </button>
         </div>
 
@@ -79,17 +79,17 @@ const DailogInfoVentes = ({ vente, onClose, onViewProduct }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <StatCard 
               icon={<HiOutlineCash size={22}/>} 
-              label="Prix de Vente" 
+              label="Sale Price" 
               value={`${vente.price?.toLocaleString()} DH`}
-              subValue="Prix unitaire"
+              subValue="Unit Price"
               darkIconColor="dark:text-amber-400"
             />
 
             <StatCard 
               icon={<HiOutlineCube size={22}/>} 
-              label="Quantité" 
-              value={`${vente.quantite} Unités`}
-              subValue="Volume total"
+              label="Quantity" 
+              value={`${vente.quantite} Units`}
+              subValue="Total Volume"
               darkIconColor="dark:text-blue-400"
             />
 
@@ -97,13 +97,13 @@ const DailogInfoVentes = ({ vente, onClose, onViewProduct }) => {
               icon={<HiOutlineTrendingUp size={22}/>} 
               label="Profit" 
               value={`${vente.profite?.toLocaleString()} DH`}
-              subValue="Gain net"
-              darkIconColor="dark:text-emerald-400  "
+              subValue="Net Gain"
+              darkIconColor="dark:text-emerald-400"
             />
 
             <StatCard 
               icon={<HiOutlineCalendar size={22}/>} 
-              label="Date & Heure" 
+              label="Date & Time" 
               value={new Date(vente.DateVante).toLocaleDateString()}
               subValue={new Date(vente.DateVante).toLocaleTimeString()}
               darkIconColor="dark:text-purple-400"
@@ -114,7 +114,7 @@ const DailogInfoVentes = ({ vente, onClose, onViewProduct }) => {
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em]">
             <div className="flex items-center gap-2">
                 <HiOutlineHashtag size={14} className="text-emerald-500" />
-                <span>Transaction: <span className="text-emerald-600 dark:text-emerald-400">Validée</span></span>
+                <span>Transaction: <span className="text-emerald-600 dark:text-emerald-400">Completed</span></span>
             </div>
             <div className="italic opacity-50">
                 System Log ID: {String(vente._id).slice(-8)}

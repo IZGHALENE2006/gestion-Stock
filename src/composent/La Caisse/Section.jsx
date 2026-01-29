@@ -78,18 +78,18 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
   async function Khless() {
     // 1. Check if cart is empty
     if (!cart || cart.length === 0) {
-      return toast.error("Le panier est vide. Ajoutez des produits d'abord.");
+      return toast.error("The cart is empty. Please add products first");
     }
 
     // 2. Check if amount was entered
     if (amountPaid === "" || parsedAmountPaid === 0) {
-      return toast.error("Veuillez saisir le montant reçu du client.");
+      return toast.error("Please enter the amount received from the customer.");
     }
 
     // 3. Check if amount is enough
     if (changeToReturn < 0) {
       const manque = (totalOrder - parsedAmountPaid).toFixed(2);
-      return toast.error(`Montant insuffisant. Il manque ${manque} DH`);
+      return toast.error(`Insufficient amount. Missing ${manque} DH`);
     }
 
     try {
@@ -100,13 +100,13 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
         changeToReturn 
       })).unwrap();
       
-      toast.success("Vente validée et enregistrée !");
+      toast.success("Sale validated and saved!");
       setFacture(res.facture); 
       onClearCart();
       setAmountPaid("");
       dispatch(GetAllProduct()); // Refresh stocks
     } catch (err) {
-      toast.error(err?.message || "Erreur lors de la transaction");
+      toast.error(err?.message || "Error during transaction");
     }
   }
 
@@ -146,7 +146,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
       <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
         <div>
           <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
-            Caissier: <span className="text-emerald-600">{user?.name || "Admin"}</span>
+             Cashier: <span className="text-emerald-600">{user?.name || "Admin"}</span>
           </h2>
           <div className="flex items-center gap-2 mt-1">
              <span className="px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-black rounded-md uppercase">{user?.role}</span>
@@ -169,7 +169,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
           <input 
             type="text" 
-            placeholder="Rechercher un produit..." 
+            placeholder="Sreach for a Product ..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-bold text-slate-700 dark:text-slate-200" 
@@ -199,7 +199,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
                   </span>
                   <div className="flex items-center gap-2 mt-1">
                     <span className={`text-[8px] font-black px-2 py-0.5 rounded-md ${item.quantite > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
-                      {item.quantite > 0 ? 'DISPONIBLE' : 'EPUISE'}
+                      {item.quantite > 0 ? 'AVAILABLE' : 'OUT OF STOCK'}
                     </span>
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Stock: {item.quantite}</span>
                   </div>
@@ -209,7 +209,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
               <div className="flex items-center gap-6">
                 <div className="text-right">
                   <p className="font-black text-slate-900 dark:text-white text-lg">{item.prix_vente} <span className="text-[10px]">DH</span></p>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Prix TTC</p>
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Price (incl. tax)</p>
                 </div>
                 <div className="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-all transform group-active:scale-90">
                    <IoCartOutline size={20} />
@@ -221,7 +221,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           {(!Produts || Produts.length === 0) && (
             <div className="flex flex-col items-center justify-center py-24 opacity-20 dark:text-white">
               <IoCartOutline size={80} />
-              <p className="font-black uppercase tracking-[0.3em] text-[10px] mt-4">Aucun produit</p>
+              <p className="font-black uppercase tracking-[0.3em] text-[10px] mt-4">No Product</p>
             </div>
           )}
         </div>
@@ -231,7 +231,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
       <div className="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-end mb-6">
           <div className="flex-1">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Reçu</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Received</p>
             <input 
               type="number" 
               value={amountPaid} 
@@ -241,7 +241,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
             />
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Rendu Client</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Customer Change</p>
             <p className={`text-3xl font-black ${changeToReturn < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
               {Math.max(0, changeToReturn).toFixed(2)} <span className="text-sm font-bold">DH</span>
             </p>
@@ -249,7 +249,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
         </div>
         
         <div className="flex justify-between items-center py-5 border-t border-dashed border-slate-200 dark:border-slate-700">
-          <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">Net à Payer</span>
+          <span className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">Net Amount Due</span>
           <span className="text-4xl font-black text-slate-900 dark:text-white">{totalOrder.toFixed(2)} <span className="text-sm">DH</span></span>
         </div>
       </div>
@@ -305,7 +305,7 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
           onClick={Khless} 
           className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-4xl font-black text-sm uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/20"
         >
-          Confirmer la vente
+          Confirm Sale
         </button>
       </div>
 
@@ -318,8 +318,8 @@ export default function CaisseSection({ cart, onAddToCart, onClearCart }) {
             </button>
             <div ref={scannerRef} className="w-full h-80 overflow-hidden rounded-[2.5rem] bg-black border-4 border-emerald-500 shadow-2xl shadow-emerald-500/20" />
             <div className="text-center mt-6">
-               <p className="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest">Scanner en cours...</p>
-               <p className="text-slate-400 font-bold text-[9px] mt-2 uppercase">Veuillez centrer le code-barres</p>
+               <p className="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest">Scanning in progress...</p>
+               <p className="text-slate-400 font-bold text-[9px] mt-2 uppercase">Please center the barcode</p>
             </div>
           </div>
         </div>

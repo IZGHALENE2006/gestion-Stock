@@ -111,8 +111,8 @@ function HestoriqueProfit() {
         
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase dark:text-white">Historique Profit</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">Archives et statistiques de caisse</p>
+          <h1 className="text-4xl font-black tracking-tighter uppercase dark:text-white">Profit History</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">Cash Register Archives and Statistics</p>
         </div>
 
         {/* --- STATS CARDS SECTION --- */}
@@ -123,7 +123,7 @@ function HestoriqueProfit() {
                 <IoCartOutline size={28} />
               </div>
               <div>
-                <p className="text-emerald-100/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Total Profit Net</p>
+                <p className="text-emerald-100/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Net Total Profit</p>
                 <h3 className="text-3xl font-black text-white tracking-tighter">
                   {TotalProfit.toLocaleString()} <span className="text-sm font-bold opacity-80 ml-1">DH</span>
                 </h3>
@@ -137,7 +137,7 @@ function HestoriqueProfit() {
                 <IoFileTrayStackedOutline size={28} />
               </div>
               <div>
-                <p className="text-amber-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Ventes Réalisées</p>
+                <p className="text-amber-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Completed Sales</p>
                 <h3 className="text-3xl font-black text-white tracking-tighter">
                   {ListFilterVentes.length} <span className="text-sm font-bold opacity-80 ml-1">Items</span>
                 </h3>
@@ -151,9 +151,9 @@ function HestoriqueProfit() {
                 <IoReceiptOutline size={28} />
               </div>
               <div>
-                <p className="text-blue-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Factures Editées</p>
+                <p className="text-blue-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Edited Invoices</p>
                 <h3 className="text-3xl font-black text-white tracking-tighter">
-                  {ListFilterFacture.length} <span className="text-sm font-bold opacity-80 ml-1">Docs</span>
+                  {ListFilterFacture.length} <span className="text-sm font-bold opacity-80 ml-1">Documents</span>
                 </h3>
               </div>
             </div>
@@ -169,9 +169,10 @@ function HestoriqueProfit() {
               onChange={(e) => {setFilterType(e.target.value); SetListFilterVentes([]); SetListFilterFacture([]);}}
               className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none appearance-none cursor-pointer text-[11px] font-black uppercase tracking-widest focus:ring-2 ring-emerald-500/20"
             >
-              <option value="jour">Par Jour (Date)</option>
-              <option value="mois">Par Mois</option>
-              <option value="anne">Par Année</option>
+             <option value="jour">Daily</option>
+<option value="mois">Monthly</option>
+<option value="anne">Yearly</option>
+
             </select>
             <IoChevronDownOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" />
           </div>
@@ -189,7 +190,7 @@ function HestoriqueProfit() {
 
           <div className="relative flex-1">
             <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-            <input type="text" placeholder="RECHERCHER DANS LES RÉSULTATS..." className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-bold tracking-widest uppercase" />
+            <input type="text" placeholder="Search in Results..." className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-bold tracking-widest uppercase" />
           </div>
         </div>
 
@@ -197,10 +198,10 @@ function HestoriqueProfit() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex p-1.5 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 w-fit shadow-sm">
             <button onClick={() => setViewType('ventes')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'ventes' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400'}`}>
-              <IoCartOutline size={18} /> Ventes
+              <IoCartOutline size={18} /> Sale
             </button>
             <button onClick={() => setViewType('factures')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'factures' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400'}`}>
-              <IoReceiptOutline size={18} /> Factures
+              <IoReceiptOutline size={18} /> Invoices
             </button>
           </div>
 
@@ -209,7 +210,7 @@ function HestoriqueProfit() {
               onClick={() =>generateFactureVentesPDF(ListFilterVentes)}
               className="px-8 py-4 rounded-2xl bg-blue-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white shadow-xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em]"
             >
-              <IoReceiptOutline size={20} /> Imprimer Facture
+              <IoReceiptOutline size={20} />Print Invoice
             </button>
           }
         </div>
@@ -225,13 +226,18 @@ function HestoriqueProfit() {
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400">
-                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Date</th>
-                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Responsable</th>
-                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">{viewType === 'ventes' ? 'Produit' : 'Référence'}</th>
-                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-center">Quantité</th>
-                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-right">{viewType=== 'ventes'?'Profit':'Montant'}</th>
-                  </tr>
+                 <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400">
+  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Date</th>
+  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Person in Charge</th>
+  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">
+    {viewType === 'ventes' ? 'Product' : 'Reference'}
+  </th>
+  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-center">Quantity</th>
+  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-right">
+    {viewType === 'ventes' ? 'Profit' : 'Amount'}
+  </th>
+</tr>
+
                 </thead>
                 <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                   {displayData.map((t, idx) => (
