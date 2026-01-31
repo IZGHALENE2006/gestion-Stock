@@ -19,12 +19,14 @@ import { GetAllProduct } from "../../slices/SliceProduct"; // Import for count
 import ConfirmDelete from "../Dialog/ConfirmDelete";
 import UpdateCategoryForma from "./UpdateCategoryForma";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 function Categories() {
   const dispatch = useDispatch();
   const { Category } = useSelector((state) => state.category);
   const { Produts } = useSelector((state) => state.Product); // Get products for counting
-  const { role } = useSelector((state) => state.LoginAdmin);
+  const { role, user, token } = useSelector((state) => state.LoginAdmin);
+const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(GetAllCatefory());
@@ -63,6 +65,11 @@ function Categories() {
     setOpenUpdate(true);
   }
 
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div className="p-6 bg-gray-100 dark:bg-[#0f172a] min-h-screen transition-colors duration-300">
       

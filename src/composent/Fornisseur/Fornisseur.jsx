@@ -15,16 +15,18 @@ import {  IoWarningOutline } from "react-icons/io5";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import cities from "./cities.json"
+import { useNavigate } from 'react-router';
 const Fornisseur = () => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewType, setViewType] = useState("grid"); // 'grid' or 'list'
 const VILLES_DATA = cities.cities.data.map(c => c.names.fr)
     const dropdownRef = useRef(null);
+  const { role, user, token } = useSelector((state) => state.LoginAdmin);
   
   const { Fournisseur,loading, error } = useSelector((state) => state.Fournisseur);
   const Dispatch = useDispatch();
-
+const navigate = useNavigate()
   useEffect(() => {
     Dispatch(GetAllFournisseur());
   }, [Dispatch]);
@@ -66,7 +68,6 @@ const [selectedSupplier,setselectedSupplier] = useState({
     phone: "",
     Ville: ""
 })
-console.log(selectedSupplier);
 
   const [showDatalist, setShowDatalist] = useState(false);
     // Filter logic: find cities that include the typed text
@@ -106,7 +107,11 @@ function  HandleUpdateFornisseur(){
   setEditOpen(false)
   
 }
-
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-[#1e293b] p-6 lg:p-10 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">

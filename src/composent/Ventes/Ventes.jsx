@@ -8,6 +8,7 @@ import { getMe } from "../../slices/SliceLoginAdmin";
 import DailogInfoVentes from "./Dailoginfoventes";
 import Dialog from "../Dialog/Dialog";
 import { generateFactureVentesPDF } from "./FactureVentes";
+import { useNavigate } from "react-router";
 
 function Ventes() {
   const { user, role, token, loading } = useSelector(state => state.LoginAdmin);
@@ -57,7 +58,12 @@ function Ventes() {
     setselectedVente(item);
     setopenInfo(true);
   }
-
+const navigate = useNavigate()
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div className="p-4 min-h-screen text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">

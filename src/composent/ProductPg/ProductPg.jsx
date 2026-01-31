@@ -6,11 +6,12 @@ import {
 } from "react-icons/io5";
 import ProductList from "./ProductList";
 import { useSelector } from "react-redux";
-
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 export default function ProductPg() {
   const { Produts, loading } = useSelector((state) => state.Product);
-  const { role } = useSelector(state => state.LoginAdmin);
- 
+  const { role,token } = useSelector(state => state.LoginAdmin);
+ const navigate= useNavigate()
   const Total = Produts.reduce((somme, item) => {
     return somme += item.prix_vente * item.quantite;
   }, 0);
@@ -56,6 +57,11 @@ const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
     </div>
   </div>
 );
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div className="p-8 bg-gray-100 dark:bg-[#1e293b] min-h-screen">
       {/* --- STATS SECTION --- */}

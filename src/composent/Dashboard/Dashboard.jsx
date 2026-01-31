@@ -23,7 +23,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 export default function Dashboard() {
   const { user, token,role } = useSelector((state) => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe);
-const Nave = useNavigate()
+const navigate = useNavigate()
   const { Produts } = useSelector((state) => state.Product);
   const { Category } = useSelector((state) => state.category);
   const dispatch = useDispatch();
@@ -346,7 +346,11 @@ const maxIndex = data?.indexOf(Math.max(...data));
 const maxColor = dataset.backgroundColor[maxIndex];
 
   if (user?.role === "Employe") return null
-  if (token?.role === "Employe") return null
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   
 
   return (

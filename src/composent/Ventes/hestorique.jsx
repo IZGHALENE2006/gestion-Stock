@@ -10,11 +10,12 @@ import { generateFactureVentesPDF } from './FactureVentes';
 import Dialog from '../Dialog/Dialog';
 import DailogInfoVentes from './Dailoginfoventes';
 import DailloginfoFacture from './DailoginfoFacture';
+import { useNavigate } from 'react-router';
 
 function HestoriqueProfit() {
   const [viewType, setViewType] = useState('ventes'); 
   const [filterType, setFilterType] = useState('jour'); 
-  const { user, role } = useSelector(state => state.LoginAdmin);
+  const { user, role ,token} = useSelector(state => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe); 
 
   // --- 1. JME3 DATA (ADMIN + EMPLOYE) ---
@@ -104,7 +105,12 @@ function HestoriqueProfit() {
   useEffect(() => {
     handleSearch(searchValue);
   }, [searchValue, allVentes.length, AllFacture.length]);
-
+const navigate = useNavigate()
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div className="p-4 min-h-screen bg-[#f8fafc] dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">

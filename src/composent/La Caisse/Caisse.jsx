@@ -4,10 +4,14 @@ import gsap from "gsap";
 import CaisseSection from "./Section";
 import RightSidebar from "./RightSidebar";
 import "./Caisse.css";
-
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 function LaCaisse() {
   const [cart, setCart] = useState([]);
   const containerRef = useRef(null);
+const navigate = useNavigate()
+  const { role, user, token } = useSelector((state) => state.LoginAdmin);
 
   const handleAddToCart = (product) => {
     setCart((prevCart) => {
@@ -79,7 +83,11 @@ function LaCaisse() {
   }, []);
 
   const clearCart = () => setCart([]);
-
+useEffect(() => {
+  if (!token) {
+    navigate("/LoginChoise");
+  }
+}, [token, navigate]);
   return (
     <div ref={containerRef} className="p-6 bg-gray-100 dark:bg-[#1e293b] min-h-screen text-[#1e293b] dark:text-white flex flex-col gap-6 font-sans">
       <Toaster position="top-center" />
