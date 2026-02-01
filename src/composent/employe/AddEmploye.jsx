@@ -206,6 +206,7 @@ function AddEmploye({ open, onClose }) {
           </button>
         </div>
       </div>
+      <Toaster/>
     </div>
   );
 }

@@ -3,20 +3,13 @@ import { IoLockClosedOutline, IoShieldCheckmarkOutline, IoEyeOffOutline } from "
 import { useDispatch, useSelector } from 'react-redux';
 import { UpdatePassword } from '../../slices/SliceLoginAdmin';
 import { useNavigate } from 'react-router';
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const ChangePassword = () => {
-<<<<<<< HEAD
-  const { user, role,error } = useSelector((state) => state.LoginAdmin);
-  const dispatch = useDispatch()
-  const Nave  =  useNavigate()
-const [nwepassword,setnewpassword] = useState({old:"",newpass:"",newpass2:""})
-=======
   const { error } = useSelector((state) => state.LoginAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [nwepassword, setnewpassword] = useState({ old: "", newpass: "", newpass2: "" });
->>>>>>> 4c062f8cdfaae86c70ae687da5961da9ceef5d81
 
   function HandleUpdatePassword(e) {
     e.preventDefault();
@@ -135,7 +128,7 @@ const [nwepassword,setnewpassword] = useState({old:"",newpass:"",newpass2:""})
             <button 
               type="button" 
               onClick={() => navigate("/Home/profile")}
-              className="w-full py-4 text-slate-400 dark:text-slate-500 font-black text-xs uppercase tracking-[0.2em] hover:text-slate-600 dark:hover:text-slate-300 transition-all"
+              className="w-full bg-red-400 rounded-xl  py-4 text-white dark:text-slate-500 font-black text-xs uppercase tracking-[0.2em] hover:bg-red-600 dark:hover:text-slate-300 transition-all"
             >
               Cancel
             </button>
@@ -143,6 +136,7 @@ const [nwepassword,setnewpassword] = useState({old:"",newpass:"",newpass2:""})
           </div>
         </form>
       </div>
+      <Toaster/>
     </div>
   );
 };

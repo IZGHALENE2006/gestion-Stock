@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import NaveProfite from "./NaveProfite";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function Profite() {
       const { role, user, token } = useSelector((state) => state.LoginAdmin);
