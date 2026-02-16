@@ -5,6 +5,7 @@ import ProductSlice from '../slices/SliceProduct'
 import ReducerCateroy from '../slices/SilceCategory'
 import ReducerEmploye from '../slices/sliceEmploye'
 import Fournisseur from '../slices/SliceFournisseur'
+import  UserCriditeSlice from '../slices/SliceCridite'
 export const Store = configureStore(
     {
         reducer:{
@@ -14,6 +15,7 @@ export const Store = configureStore(
          category:ReducerCateroy,
          Employe:ReducerEmploye,
          Fournisseur: Fournisseur,
+         userCridite:UserCriditeSlice
 
         }
     }

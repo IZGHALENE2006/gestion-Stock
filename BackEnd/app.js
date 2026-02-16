@@ -11,8 +11,10 @@ import EmployeRoute from './Routes/EmployeRoute.js'
 import GetMeRoute from './Routes/getMeRoute.js'
 // impotr ventes
 import ventesRoute from './Routes/routeVents.js'
+//import Fournisseur
 import FournisseurRoute from './Routes/FournisseurRoute.js'
-
+//import User Cridite 
+import UserCriditeRoute from './Routes/Usercridite.js'
 const app = express()
 
  app.use(cors())
@@ -25,6 +27,7 @@ const app = express()
    app.use('/user',GetMeRoute)
    app.use('/addVentes',ventesRoute)
    app.use('/Fournisseur',FournisseurRoute)
+   app.use('/usercridite',UserCriditeRoute)
 
 
 export default app

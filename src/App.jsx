@@ -24,6 +24,10 @@ import { LuMoon, LuSun } from "react-icons/lu";
 import Landing from './composent/Landing/landing'
 import ProfilePage from './composent/profile/profile'
 import ChangePassword from './composent/profile/UpdatePassword'
+import Usercridit from './composent/Usercridit/usercridit'
+import AddUserCredit from './composent/Usercridit/pageAddUserCridite'
+import ListUsercridite from './composent/Usercridit/ListUserCridite'
+import UserCreditDetails from './composent/Usercridit/UserCreditDetails'
 function App() {
 
   
@@ -106,6 +110,13 @@ const onLeave = () => {
             <Route path='Ventes' element={<Ventes/>}/>
             <Route path='Facture' element={<FactureVentes/>}/>
             <Route path='Hestorique' element={<HestoriqueProfit/>}/>
+        </Route>
+        <Route path='cridit' element={<Usercridit/>}>
+            <Route path='add' element={<AddUserCredit/>}/>
+            <Route path='UserCridit' element={<ListUsercridite/>}/>
+            <Route path='UserCreditDetails/:id' element={<UserCreditDetails/>}/>
+            
+     
         </Route>
         <Route path='history' element={""} />
         <Route path="employees" element={<EmployeesPage />}>

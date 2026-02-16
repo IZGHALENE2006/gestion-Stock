@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 import {Box} from "lucide-react"
-
+import { IoWalletOutline } from "react-icons/io5";
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -62,10 +62,21 @@ export default function Sidebar() {
           <NavItem to="/Home/Categories" icon={<IoPricetagsOutline size={22} />} label="Categories" expanded={isExpanded} />
           <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
           {role === 'admin' && <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />}
-          {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Suppliers" expanded={isExpanded} />}
+         {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Suppliers" expanded={isExpanded} />}
+
           <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Cashier" expanded={isExpanded} />
           <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
+      
+         {role === 'admin' && (
+  <NavItem 
+    to="/Home/cridit/add" 
+    icon={<IoWalletOutline size={22} />} 
+    label="Credit Management" 
+    expanded={isExpanded} 
+  />
+)} 
         </nav>
+
 
         {/* Profile Section */}
         <div className="p-4 border-t border-slate-100 dark:border-slate-800 relative">
