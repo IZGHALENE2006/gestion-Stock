@@ -4,11 +4,17 @@ import {
   IoLocationOutline, 
   IoCreateOutline, 
   IoTrashOutline,
-  IoShieldCheckmarkOutline
+  IoShieldCheckmarkOutline,
+  IoLogoWhatsapp
 } from "react-icons/io5";
 
 const FrnCard = ({ supplier, onEdit, onDelete, viewType }) => {
   const firstLetter = supplier.name ? supplier.name.charAt(0).toUpperCase() : "?";
+
+  // Sanitize phone for WhatsApp (remove spaces/special characters)
+  const cleanPhone = supplier.phone ? supplier.phone.replace(/\D/g, '') : "";
+  // Ensure we handle the "0" at the start if it exists (e.g., 06... becomes 6...)
+  const whatsappPhone = cleanPhone.startsWith('0') ? cleanPhone.substring(1) : cleanPhone;
 
   // --- VIEW LIST STYLE ---
   if (viewType === 'list') {
@@ -21,9 +27,15 @@ const FrnCard = ({ supplier, onEdit, onDelete, viewType }) => {
           <div>
             <h3 className="text-slate-900 dark:text-slate-100 font-black text-[11px] uppercase tracking-wider">{supplier.name}</h3>
             <div className="flex items-center gap-4 mt-0.5">
-              <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-bold">
-                <IoCallOutline className="text-emerald-500" /> {supplier.phone}
-              </span>
+              {/* Clickable Phone/WhatsApp Link */}
+              <a 
+                href={`https://wa.me/+212${whatsappPhone}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-bold hover:text-emerald-500 transition-colors"
+              >
+                <IoLogoWhatsapp className="text-emerald-500" /> {supplier.phone}
+              </a>
               <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-bold uppercase tracking-tighter">
                 <IoLocationOutline className="text-emerald-500" /> {supplier.Ville}
               </span>
@@ -45,7 +57,6 @@ const FrnCard = ({ supplier, onEdit, onDelete, viewType }) => {
   // --- VIEW GRID STYLE ---
   return (
     <div className="group bg-linear-to-br from-white to-slate-50 dark:from-slate-700/40 dark:to-slate-900/70 relative border border-slate-200 dark:border-slate-700 rounded-[2.5rem] p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:border-emerald-200 dark:hover:border-emerald-800/50 overflow-hidden">
-      {/* Background Accent for Hover */}
       <div className="absolute blur-lg top-0 right-0 -mr-30 -mt-30 w-52 h-52 bg-emerald-500/10 rounded-full group-hover:scale-150 transition-transform duration-500" />
 
       <div className="flex justify-between items-start mb-6 relative z-10">
@@ -67,14 +78,25 @@ const FrnCard = ({ supplier, onEdit, onDelete, viewType }) => {
       </div>
 
       <div className="space-y-2 mb-6 relative z-10">
-        <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-100 dark:group-hover:border-emerald-900/30 transition-colors">
+        {/* Clickable Email */}
+        <a 
+          href={`mailto:${supplier.email}`}
+          className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-100 dark:group-hover:border-emerald-900/30 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-500/5 cursor-pointer"
+        >
           <IoMailOutline className="text-emerald-500" />
           <span className="text-[11px] text-slate-600 dark:text-slate-300 font-bold truncate">{supplier.email}</span>
-        </div>
-        <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-100 dark:group-hover:border-emerald-900/30 transition-colors">
-          <IoCallOutline className="text-emerald-500" />
+        </a>
+
+        {/* Clickable WhatsApp */}
+        <a 
+          href={`https://wa.me/+212${whatsappPhone}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-100 dark:group-hover:border-emerald-900/30 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-500/5 cursor-pointer"
+        >
+          <IoLogoWhatsapp className="text-emerald-500" />
           <span className="text-[11px] text-slate-600 dark:text-slate-300 font-bold">{supplier.phone}</span>
-        </div>
+        </a>
       </div>
 
       <div className="flex gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 relative z-10">
