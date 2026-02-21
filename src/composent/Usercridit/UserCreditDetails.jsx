@@ -4,10 +4,53 @@ import {
   IoCashOutline, IoCheckmarkCircleOutline, IoCalendarOutline,
   IoAddCircleOutline, IoCloseOutline, IoPricetagOutline
 } from "react-icons/io5";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+// import { addProductCredit } from '../redux/slices/CreditSlice'; // Smiya dyal l-action dyalk
 const UserCreditDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+// ... wast l-component
+const dispatch = useDispatch();
+const { Produts } = useSelector((state) => state.Product); // Ga3 l-produits li f-stock
 
+const [outrechose, setOutrechose] = useState(false);
+const [Produitcridi, setProduitcridi] = useState({
+  id: "",
+  nom: "",
+  prix: 0,
+  Paiement: 0,
+  quantite: 1
+});
+
+// Handlers
+const handleSelectProduct = (e) => {
+  const idItem = e.target.value;
+  const item = Produts.find((t) => t._id === idItem);
+  setProduitcridi({
+    ...Produitcridi,
+    id: idItem,
+    nom: item?.name || "",
+    prix: item?.SellingPrice || 0
+  });
+};
+
+const handleConfirm = async (e) => {
+  e.preventDefault();
+  
+  let finalData = { ...Produitcridi };
+  if (outrechose) {
+    finalData.id = uuidv4();
+  }
+
+  // Hna kat-dispatchi l-action dyal Redux
+  // dispatch(addProductCredit({ userId: idUseradd, product: finalData }));
+  
+  console.log("Data sent:", finalData);
+  setIsModalOpen(false);
+  // Reset state
+  setProduitcridi({ id: "", nom: "", prix: 0, Paiement: 0, quantite: 1 });
+  setOutrechose(false);
+};
   return (
     <div className="w-full animate-in fade-in slide-in-from-right-4 duration-500 space-y-8 pb-10">
       
@@ -90,42 +133,116 @@ const UserCreditDetails = () => {
       </div>
 
       {/* --- ADD PRODUCT MODAL --- */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-300">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-black uppercase tracking-tight italic flex items-center gap-2 text-slate-800 dark:text-white">
-                <IoPricetagOutline className="text-emerald-500" /> New Item to Credit
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-                <IoCloseOutline size={24} className="text-slate-400" />
-              </button>
-            </div>
+    {isModalOpen && (
+  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+    <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2.5rem] p-8 shadow-2xl border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
+      
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-black uppercase tracking-tight italic flex items-center gap-2 text-slate-800 dark:text-white">
+          <IoPricetagOutline className="text-emerald-500" /> Nouveau Crédit Produit
+        </h3>
+        <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+          <IoCloseOutline size={24} className="text-slate-400" />
+        </button>
+      </div>
 
-            <form className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Product Name</label>
-                <input type="text" placeholder="Ex: Gas Oil 20L" className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-5 outline-none font-bold text-slate-700 dark:text-white focus:border-emerald-500 transition-all" />
-              </div>
+      <form onSubmit={handleConfirm} className="space-y-6">
+        
+        {/* SECTION: SELECT FROM STOCK */}
+        <div className={`p-5 rounded-3xl border-2 transition-all ${!outrechose ? 'border-emerald-500 bg-emerald-50/30 dark:bg-emerald-500/5' : 'border-slate-100 dark:border-slate-800 opacity-50'}`}>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-lg">🛒</span>
+            <h4 className="font-bold text-sm uppercase tracking-wider text-slate-600 dark:text-slate-300">Produit en Stock</h4>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <select 
+              disabled={outrechose}
+              onChange={handleSelectProduct}
+              className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm focus:border-emerald-500"
+            >
+              <option value="">Choisir un produit...</option>
+              {Produts?.map((p) => (
+                <option key={p._id} value={p._id}>{p.name} - {p.SellingPrice} DH</option>
+              ))}
+            </select>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Price (DH)</label>
-                  <input type="number" placeholder="0.00" className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-5 outline-none font-bold text-slate-700 dark:text-white focus:border-emerald-500 transition-all" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Quantity</label>
-                  <input type="number" defaultValue="1" className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-5 outline-none font-bold text-slate-700 dark:text-white focus:border-emerald-500 transition-all" />
-                </div>
-              </div>
-
-              <button className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-emerald-600/20 active:scale-95 mt-4">
-                Confirm Credit Purchase
-              </button>
-            </form>
+            <input 
+              type="number" 
+              placeholder="Paiement anticipé"
+              disabled={outrechose}
+              value={!outrechose ? Produitcridi.Paiement : ''}
+              onChange={(e) => setProduitcridi({...Produitcridi, Paiement: e.target.value})}
+              className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm focus:border-emerald-500"
+            />
           </div>
         </div>
-      )}
+
+        {/* CHECKBOX: AUTRE CHOSE */}
+        <label className="flex items-center gap-3 cursor-pointer group w-fit">
+          <input 
+            type="checkbox" 
+            checked={outrechose}
+            onChange={(e) => setOutrechose(e.target.checked)}
+            className="w-5 h-5 rounded-lg border-slate-300 text-emerald-600 focus:ring-emerald-500" 
+          />
+          <span className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover:text-emerald-500 transition-colors">Autre produit (Hors Stock)</span>
+        </label>
+
+        {/* SECTION: MANUAL INPUT (COLLAPSE) */}
+        {outrechose && (
+          <div className="p-5 rounded-3xl border-2 border-dashed border-emerald-500 bg-emerald-50/10 animate-in slide-in-from-top-2 duration-300">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input 
+                  type="text" 
+                  placeholder="Nom du produit"
+                  onChange={(e) => setProduitcridi({...Produitcridi, nom: e.target.value})}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm"
+                />
+                <input 
+                  type="number" 
+                  placeholder="Prix"
+                  onChange={(e) => setProduitcridi({...Produitcridi, prix: e.target.value})}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm"
+                />
+                <input 
+                  type="number" 
+                  placeholder="Paiement anticipé"
+                  onChange={(e) => setProduitcridi({...Produitcridi, Paiement: e.target.value})}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm"
+                />
+                <input 
+                  type="number" 
+                  placeholder="Quantité"
+                  defaultValue="1"
+                  onChange={(e) => setProduitcridi({...Produitcridi, quantite: e.target.value})}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-4 outline-none font-bold text-sm"
+                />
+             </div>
+          </div>
+        )}
+
+        {/* ACTIONS */}
+        <div className="flex gap-3 pt-4">
+          <button 
+            type="button"
+            onClick={() => setIsModalOpen(false)}
+            className="flex-1 py-4 border-2 border-slate-100 dark:border-slate-800 text-slate-400 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all"
+          >
+            Annuler
+          </button>
+          <button 
+            type="submit"
+            className="flex-[2] py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-emerald-600/20 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <IoCheckmarkCircleOutline size={18} /> Valider le Crédit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 };

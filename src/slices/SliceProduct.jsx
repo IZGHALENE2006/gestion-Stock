@@ -36,6 +36,8 @@ export const GetAllProduct = createAsyncThunk("GetPrudct",async()=>{
 //Delete product
 export const DeleteProduit = createAsyncThunk("DeleteProduit",async(id,{rejectWithValue})=>{
     const Token  = localStorage.getItem('token')
+    console.log(id);
+    
     try{
         const res = await axios.delete(`http://localhost:7000/Product/Delete/${id}`,{
             headers:{
