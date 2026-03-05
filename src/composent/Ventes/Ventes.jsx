@@ -1,4 +1,4 @@
-import { IoFileTrayStackedOutline, IoWalletOutline, IoSearchOutline } from "react-icons/io5";
+import { IoFileTrayStackedOutline, IoWalletOutline, IoSearchOutline, IoPersonOutline } from "react-icons/io5";
 import { FaUserTie, FaRegUserCircle, FaPrint } from "react-icons/fa";
 import { TbBrandShopee } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,42 +14,44 @@ function Ventes() {
   const { user, role, token, loading } = useSelector(state => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [selectedEmployeId, setSelectedEmployeId] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (token) dispatch(getMe());
     dispatch(GetAllEmploye());
   }, [dispatch, token]);
 
-  const [ListSearche, setSaerchList] = useState([]);
+  useEffect(() => {
+    if (!token) navigate("/LoginChoise");
+  }, [token, navigate]);
 
-  // --- LOGIC TO ADD EMPLOYEE NAME (nameEmp) ---
+  // --- LOGIC TO GATHER ALL SALES ---
   let allVentes = [];
   if (role === "admin") {
-    const adminVentes = user?.ventes || [];
+    const adminVentes = (user?.ventes || []).map(v => ({ ...v, nameEmp: "Admin", empId: "admin" }));
     const employeVentes = Employe?.flatMap(e => 
-      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
+      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name, empId: e._id }))
     ) || [];
     allVentes = [...adminVentes, ...employeVentes];
   } else {
-    allVentes = user?.ventes || [];
+    allVentes = (user?.ventes || []).map(v => ({ ...v, nameEmp: user.name, empId: user._id }));
   }
 
   const Daye = new Date().toLocaleDateString();
   const VentesDujour = allVentes.filter((t) => new Date(t.DateVante).toLocaleDateString() === Daye);
 
-  function HnadleSearcheVetes(e) {
-    const value = e.target.value.toLowerCase();
-    if (value === "") {
-      setSaerchList([]);
-      return;
-    }
-    setSaerchList(VentesDujour.filter((t) => t.name?.toLowerCase().includes(value)));
-  }
+  // --- REFINED FILTER LOGIC (SEARCH + SELECT) ---
+  const displayData = VentesDujour.filter((t) => {
+    const matchesSearch = t.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesEmploye = selectedEmployeId === "All" || t.empId === selectedEmployeId;
+    return matchesSearch && matchesEmploye;
+  });
 
-  const TotalProfite = VentesDujour.reduce((sum, t) => (sum += t.profite), 0);
-  const TotalVentes = VentesDujour.reduce((sum, t) => (sum += Number(t.quantite || 0)), 0);
-
-  const displayData = ListSearche.length === 0 && !loading ? VentesDujour : ListSearche;
+  const TotalProfite = displayData.reduce((sum, t) => sum + t.profite, 0);
+  const TotalVentes = displayData.reduce((sum, t) => sum + Number(t.quantite || 0), 0);
 
   const [openInfo, setopenInfo] = useState(false);
   const [selectedVente, setselectedVente] = useState({});
@@ -58,12 +60,10 @@ function Ventes() {
     setselectedVente(item);
     setopenInfo(true);
   }
-const navigate = useNavigate()
-useEffect(() => {
-  if (!token) {
-    navigate("/LoginChoise");
-  }
-}, [token, navigate]);
+
+  // Colors array for employees
+  const colors = ["text-blue-500", "text-purple-500", "text-orange-500", "text-pink-500", "text-cyan-500"];
+
   return (
     <div className="p-4 min-h-screen text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -98,7 +98,7 @@ useEffect(() => {
             </div>
           </div>
 
-          <div className="relative overflow-hidden group p-8 rounded-[3rem] transition-all hover:scale-[1.02] bg-linear-to-br from-blue-400 to-blue-600 shadow-xl shadow-blue-200/50  dark:shadow-none dark:from-slate-700/50 dark:to-slate-900 dark:border dark:border-slate-700">
+          <div className="relative overflow-hidden group p-8 rounded-[3rem] transition-all hover:scale-[1.02] bg-linear-to-br from-blue-400 to-blue-600 shadow-xl shadow-blue-200/50 dark:shadow-none dark:from-slate-700/50 dark:to-slate-900 dark:border dark:border-slate-700">
             <div className="relative z-10 flex items-center gap-6">
               <div className="p-5 rounded-3xl bg-white/20 dark:bg-blue-500 backdrop-blur-md text-white shadow-xl shadow-black/5">
                 <TbBrandShopee size={35} />
@@ -116,14 +116,28 @@ useEffect(() => {
         {/* Control Bar */}
         <div className="flex flex-col lg:flex-row gap-4 bg-white dark:bg-slate-900 p-5 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
           {role === 'admin' && (
-            <div className="relative flex-1 lg:max-w-xs">
-              <FaRegUserCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />
-              <select className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 focus:border-emerald-500 outline-none transition-all appearance-none cursor-pointer text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">
-                <option value="All">All Sellers</option>
-                {Employe?.map((t) => (
-                  <option key={t._id} value={t._id}>{t.name}</option>
+            <div className="relative flex-1 lg:max-w-xs group">
+              <IoPersonOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" size={18} />
+              <select 
+                value={selectedEmployeId}
+                onChange={(e) => setSelectedEmployeId(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all appearance-none cursor-pointer text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 relative"
+              >
+                <option value="All" className="text-slate-900 font-bold">All Sellers</option>
+                <option value="admin" className="text-amber-600 font-bold"> Admin ({user.name})</option>
+                {Employe?.map((t, index) => (
+                  <option 
+                    key={t._id} 
+                    value={t._id} 
+                    className={`${colors[index % colors.length]} font-bold`}
+                  >
+                     {t.name}
+                  </option>
                 ))}
               </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
             </div>
           )}
           
@@ -134,11 +148,11 @@ useEffect(() => {
                 type="text"
                 placeholder="SEARCH FOR A PRODUCT..."
                 className="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 focus:border-emerald-500 outline-none transition-all text-[11px] font-bold tracking-widest uppercase"
-                onChange={HnadleSearcheVetes}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button className="px-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em]"
-            onClick={()=>generateFactureVentesPDF(VentesDujour)}
+            onClick={()=>generateFactureVentesPDF(displayData)}
             >
               <FaPrint size={18} /> Print
             </button>
@@ -163,10 +177,10 @@ useEffect(() => {
                   <tr key={t._id} className="hover:bg-emerald-50/30 dark:hover:bg-emerald-500/5 transition-all group">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
-                        {t.nameEmp ? (
+                        {t.empId !== "admin" ? (
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-black border border-emerald-200 shadow-sm uppercase">
-                              {t.nameEmp.charAt(0)}
+                              {t.nameEmp?.charAt(0)}
                             </div>
                             <span className="font-black text-xs text-slate-700 dark:text-slate-200 uppercase tracking-tight">{t.nameEmp}</span>
                           </div>
@@ -208,6 +222,11 @@ useEffect(() => {
                 ))}
               </tbody>
             </table>
+            {displayData.length === 0 && (
+              <div className="p-20 text-center text-slate-400 font-black uppercase tracking-widest text-xs">
+                No sales found for this filter
+              </div>
+            )}
           </div>
         </div>
       </div>

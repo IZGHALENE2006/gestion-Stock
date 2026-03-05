@@ -67,14 +67,14 @@ export default function Sidebar() {
           <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Cashier" expanded={isExpanded} />
           <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
       
-         {role === 'admin' && (
+         {/* {role === 'admin' && (
   <NavItem 
     to="/Home/cridit/add" 
     icon={<IoWalletOutline size={22} />} 
     label="Credit Management" 
     expanded={isExpanded} 
   />
-)} 
+)}  */}
         </nav>
 
 
