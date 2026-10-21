@@ -8,7 +8,7 @@ function Home(){
 
                 <Sidebar />
 
-                    <div className="ml-20">
+                    <div className="ms-20">
                   
                <Outlet />
                       

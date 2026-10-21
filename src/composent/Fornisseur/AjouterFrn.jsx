@@ -1,3 +1,5 @@
+import { apiErrorMessage } from "../../i18n/apiErrors.js";
+import { useTranslation } from "react-i18next";
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   IoBusinessOutline, 
@@ -14,7 +16,8 @@ import cities from "./cities.json"
 
 const VILLES_DATA = cities.cities.data.map(c => c.names.fr)
 
-export default function AjouterFrn({ close }) { // Added close prop to match common modal behavior
+export default function AjouterFrn({ close }) {
+  const { t } = useTranslation(); // Added close prop to match common modal behavior
   const Dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDatalist, setShowDatalist] = useState(false);
@@ -48,16 +51,16 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
     setIsSubmitting(true);
     try {
       await Dispatch(AddFournisseur(formData)).unwrap();
-      toast.success("Fournisseur ajouté avec succès");
+      toast.success(t("supplier.added"));
       if(close) close(); // Auto close if prop provided
     } catch (err) {
-      toast.error(err?.message || "Erreur lors de l'ajout");
+      toast.error(apiErrorMessage(err, t, "supplier.addFailed"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const inputStyle = "w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-100 font-semibold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all duration-300 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600";
+  const inputStyle = "w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none text-slate-700 dark:text-slate-100 font-semibold focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-300 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600";
   const labelStyle = "text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 block ml-1";
 
   return (
@@ -65,24 +68,22 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
       <form className="space-y-6" onSubmit={handleSubmit}>
         
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-emerald-500 mb-4 bg-emerald-50 dark:bg-emerald-500/10 w-fit px-4 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-500/20">
+          <div className="flex items-center gap-2 text-primary-500 mb-4 bg-primary-50 dark:bg-primary-500/10 w-fit px-4 py-1.5 rounded-full border border-primary-100 dark:border-primary-500/20">
             <IoInformationCircleOutline size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">
-              General Information
-            </span>
+            <span className="text-[10px] font-black uppercase tracking-widest">{t("supplier.generalInfo")} </span>
           </div>
 
           {/* Nom */}
           <div className="relative group">
-            <label className={labelStyle}>Establishment Name</label>
+            <label className={labelStyle}>{t("supplier.name")} </label>
             <div className="relative mt-1">
-              <IoBusinessOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" size={18} />
+              <IoBusinessOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500 z-10" size={18} />
               <input
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className={inputStyle}
-                placeholder="Ex: Samsung Electronics"
+                placeholder={t("supplier.namePlaceholder")}
               />
             </div>
           </div>
@@ -90,23 +91,23 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
           {/* Email + Phone */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
-              <label className={labelStyle}>Email Address</label>
+              <label className={labelStyle}>{t("supplier.email")} </label>
               <div className="relative mt-1">
-                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" size={18} />
+                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500 z-10" size={18} />
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className={inputStyle}
-                  placeholder="contact@company.com"
+                  placeholder="contact@entreprise.com"
                 />
               </div>
             </div>
 
             <div className="relative">
-              <label className={labelStyle}>Phone Number</label>
+              <label className={labelStyle}>{t("supplier.phone")} </label>
               <div className="relative mt-1">
-                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" size={18} />
+                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500 z-10" size={18} />
                 <input
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -119,9 +120,9 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
 
           {/* City Dropdown */}
           <div className="relative" ref={dropdownRef}>
-            <label className={labelStyle}>Location (City)</label>
+            <label className={labelStyle}>{t("supplier.city")} </label>
             <div className="relative mt-1">
-              <IoLocationOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" size={18} />
+              <IoLocationOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500 z-10" size={18} />
               <input
                 value={formData.Ville}
                 onFocus={() => setShowDatalist(true)}
@@ -130,7 +131,7 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
                   setShowDatalist(true);
                 }}
                 className={inputStyle}
-                placeholder="Search city..."
+                placeholder={t("supplier.searchCity")}
               />
               
               {showDatalist && filteredVilles.length > 0 && (
@@ -142,9 +143,9 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
                         setFormData({ ...formData, Ville: ville });
                         setShowDatalist(false);
                       }}
-                      className="px-5 py-3.5 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 cursor-pointer text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center gap-3 transition-colors border-b border-slate-50 dark:border-slate-700/50 last:border-none"
+                      className="px-5 py-3.5 hover:bg-primary-50 dark:hover:bg-primary-500/10 cursor-pointer text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center gap-3 transition-colors border-b border-slate-50 dark:border-slate-700/50 last:border-none"
                     >
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary-400"></div>
                       {ville}
                     </li>
                   ))}
@@ -162,10 +163,10 @@ export default function AjouterFrn({ close }) { // Added close prop to match com
             className={`flex-[2] py-4 px-6 rounded-2xl font-bold text-[11px] uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2
               ${isSubmitting 
                 ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20 hover:shadow-emerald-500/40'}`}
+                : 'bg-primary-600 hover:bg-primary-500 text-white shadow-primary-500/20 hover:shadow-primary-500/40'}`}
           >
             <IoSaveOutline size={18} />
-            {isSubmitting ? "Processing..." : "Save Supplier"}
+            {isSubmitting ? t("common.loading") : t("supplier.save")}
           </button>
         </div>
       </form>

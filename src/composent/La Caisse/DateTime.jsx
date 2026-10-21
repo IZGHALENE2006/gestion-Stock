@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function LiveClock() {
+  const { i18n } = useTranslation();
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -13,6 +15,6 @@ export default function LiveClock() {
 
   return (
 
-        time.toLocaleTimeString()
+        time.toLocaleTimeString(i18n.language === "ar" ? "ar-MA" : "fr-MA")
   );
 }

@@ -8,6 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+BackEnd/uploads/products/
+BackEnd/uploads/invoice-logos/
 dist
 dist-ssr
 *.local

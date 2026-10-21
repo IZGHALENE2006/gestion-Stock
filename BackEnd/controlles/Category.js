@@ -15,7 +15,7 @@ try{
 }catch(err){
     res.status(500).json({message:"Server Error"})
 }
-}
+}   
 //All Category
 export const GetCategory = async(req,res)=>{
     const Categoreis = await CategoryModel.find({idAdmin:req.user.idAdmin})

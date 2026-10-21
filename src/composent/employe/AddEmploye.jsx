@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { employeeErrorKey } from "../../i18n/employeeErrors.js";
 import { useState } from "react";
 import {
   IoPersonOutline,
@@ -13,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from 'react-hot-toast';
 
 function AddEmploye({ open, onClose }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [infoEmp, setInfoEmp] = useState({
     name: "",
@@ -24,13 +27,13 @@ function AddEmploye({ open, onClose }) {
     isActive: true,
   });
 
-  const { loading, error } = useSelector((state) => state.Employe);
+  const { loading } = useSelector((state) => state.Employe);
 
   function HandelAddEmploye() {
     dispatch(addEmploye(infoEmp))
       .unwrap()
       .then(() => {
-        toast.success("Employee added successfully", {
+        toast.success(t("employees.added"), {
           duration: 3000,
           style: {
             border: "1px solid #10b981",
@@ -42,7 +45,7 @@ function AddEmploye({ open, onClose }) {
         onClose();
       })
       .catch((err) => {
-        toast.error(error || "An error occurred", {
+        toast.error(t(employeeErrorKey(err, "addFailed")), {
           duration: 3000,
         });
       });
@@ -64,12 +67,8 @@ function AddEmploye({ open, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-              New Employee
-            </h2>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-              Fill in the profile information
-            </p>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">{t("employees.newTitle")} </h2>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{t("employees.profileHint")} </p>
           </div>
           <button
             onClick={onClose}
@@ -84,26 +83,26 @@ function AddEmploye({ open, onClose }) {
           {/* Name + CIN */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Full Name</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.name")} </label>
               <div className="relative group">
-                <IoPersonOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <IoPersonOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="John Doe"
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  placeholder={t("employees.namePlaceholder")}
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, name: e.target.value })}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">ID Card (CIN)</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.cin")} </label>
               <div className="relative group">
-                <IoFingerPrintOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <IoFingerPrintOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="text"
                   placeholder="AB123456"
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, cin: e.target.value })}
                 />
               </div>
@@ -113,26 +112,26 @@ function AddEmploye({ open, onClose }) {
           {/* Phone + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Phone Number</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.phone")} </label>
               <div className="relative group">
-                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="tel"
                   placeholder="06 00 00 00 00"
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, phone: e.target.value })}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Work Email</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.email")} </label>
               <div className="relative group">
-                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="email"
-                  placeholder="name@company.com"
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  placeholder="nom@entreprise.com"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, email: e.target.value })}
                 />
               </div>
@@ -142,20 +141,20 @@ function AddEmploye({ open, onClose }) {
           {/* Password + Color */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Password</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.password")} </label>
               <div className="relative group">
-                <IoLockClosedOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <IoLockClosedOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="password"
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none dark:text-white transition-all font-semibold text-sm"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none dark:text-white transition-all font-semibold text-sm"
                   onChange={(e) => setInfoEmp({ ...infoEmp, password: e.target.value })}
                 />
               </div>
             </div>
 
             <div className="flex flex-col">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">Visual Identity</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 block ml-1">{t("employees.color")} </label>
               <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 rounded-2xl">
                 <input
                   type="color"
@@ -163,21 +162,21 @@ function AddEmploye({ open, onClose }) {
                   value={infoEmp.color}
                   onChange={(e) => setInfoEmp({ ...infoEmp, color: e.target.value })}
                 />
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Choose a color</span>
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{t("employees.chooseColor")} </span>
               </div>
             </div>
           </div>
 
           {/* Status Toggle */}
           <div className="pt-2">
-            <label className="flex items-center justify-between p-4 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
+            <label className="flex items-center justify-between p-4 bg-primary-50/50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-900/30 rounded-2xl cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all">
               <div className="flex flex-col">
-                <span className="text-sm font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-tight">Active Account</span>
-                <span className="text-[10px] text-emerald-600/70 dark:text-emerald-500/50 font-bold uppercase tracking-widest">Allow access to the dashboard</span>
+                <span className="text-sm font-black text-primary-800 dark:text-primary-400 uppercase tracking-tight">{t("employees.activeAccount")} </span>
+                <span className="text-[10px] text-primary-600/70 dark:text-primary-500/50 font-bold uppercase tracking-widest">{t("employees.allowAccess")} </span>
               </div>
               <input
                 type="checkbox"
-                className="w-6 h-6 rounded-lg accent-emerald-600 cursor-pointer"
+                className="w-6 h-6 rounded-lg accent-primary-600 cursor-pointer"
                 checked={infoEmp.isActive}
                 onChange={(e) => setInfoEmp({ ...infoEmp, isActive: e.target.checked })}
               />
@@ -190,19 +189,17 @@ function AddEmploye({ open, onClose }) {
           <button
             onClick={onClose}
             className="px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-          >
-            Cancel
-          </button>
+          >{t("common.cancel")} </button>
           <button
             onClick={HandelAddEmploye}
             disabled={loading}
             className={`px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-lg transition-all active:scale-95
               ${loading 
                 ? "bg-slate-400 cursor-not-allowed" 
-                : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"}
+                : "bg-primary-600 hover:bg-primary-500 shadow-primary-600/20"}
             `}
           >
-            {loading ? "Processing..." : "Add Employee"}
+            {loading ? t("common.loading") : t("employees.add")}
           </button>
         </div>
       </div>

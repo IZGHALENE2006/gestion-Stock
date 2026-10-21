@@ -1,291 +1,244 @@
-import { useEffect, useState } from 'react';
-import { 
-  IoCalendarOutline, IoFilterOutline, IoReceiptOutline, 
-  IoCartOutline, IoChevronDownOutline, IoSearchOutline,
-  IoFileTrayStackedOutline 
+import { useEffect, useMemo, useState } from "react";
+import {
+  IoCalendarOutline,
+  IoFilterOutline,
+  IoReceiptOutline,
+  IoCartOutline,
+  IoChevronDownOutline,
+  IoSearchOutline,
+  IoFileTrayStackedOutline,
 } from "react-icons/io5";
 import { FaUserTie } from "react-icons/fa";
-import { useSelector } from 'react-redux';
-import { generateFactureVentesPDF } from './FactureVentes';
-import Dialog from '../Dialog/Dialog';
-import DailogInfoVentes from './Dailoginfoventes';
-import DailloginfoFacture from './DailoginfoFacture';
-import { useNavigate } from 'react-router';
+import { useSelector } from "react-redux";
+import { generateFactureVentesPDF } from "./FactureVentes";
+import Dialog from "../Dialog/Dialog";
+import DailogInfoVentes from "./Dailoginfoventes";
+import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { usePdfExport } from "../../utils/usePdfExport.js";
 
 function HestoriqueProfit() {
-  const [viewType, setViewType] = useState('ventes'); 
-  const [filterType, setFilterType] = useState('jour'); 
-  const { user, role ,token} = useSelector(state => state.LoginAdmin);
-  const { Employe } = useSelector(state => state.Employe); 
+  const { t, i18n } = useTranslation();
+  const { exportPdf, isExporting, exportError } = usePdfExport(generateFactureVentesPDF);
+  const [filterType, setFilterType] = useState("day");
+  const [periodValue, setPeriodValue] = useState(() => new Date().toISOString().split("T")[0]);
+  const [resultSearch, setResultSearch] = useState("");
 
-  // --- 1. JME3 DATA (ADMIN + EMPLOYE) ---
-  let allVentes = [];
-  let AllFacture = [];
+  const { user, role, token } = useSelector((state) => state.LoginAdmin);
+  const { Employe } = useSelector((state) => state.Employe);
+  const navigate = useNavigate();
 
-  const today = new Date();
-  const currentDay = today.toISOString().split("T")[0]; 
-  const currentMonth = today.toISOString().slice(0, 7); 
-  const currentYear = today.getFullYear().toString();
+  const locale = i18n.language === "ar" ? "ar-MA" : "fr-MA";
+  const isRtl = i18n.dir() === "rtl";
+  const padClass = isRtl ? "pr-12 pl-4" : "pl-12 pr-4";
+  const iconClass = isRtl ? "right-4" : "left-4";
+  const endIconClass = isRtl ? "left-4" : "right-4";
 
-  // Initialize searchValue with currentDay so it's not empty on first render
-  const [searchValue, setSearchValue] = useState(currentDay);
-  const [ListFilterVentes, SetListFilterVentes] = useState([]);
-  const [ListFilterFacture, SetListFilterFacture] = useState([]);
+  const currentDay = new Date().toISOString().split("T")[0];
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const currentYear = String(new Date().getFullYear());
 
-  if (role === "admin") {
-    const adminVentes = user?.ventes || [];
-    const employeVentes = Employe?.flatMap(e => 
-      (e.ventes || []).map(v => ({ ...v, nameEmp: e.name }))
-    ) || [];
-    allVentes = [...adminVentes, ...employeVentes];
+  useEffect(() => {
+    if (!token) navigate("/LoginChoise");
+  }, [token, navigate]);
 
-    const AdminFacture = user?.Facture || [];
-    const EmployeFacture = Employe?.flatMap(e => 
-      (e.Facture || []).map(f => ({ ...f, nameEmp: e.name }))
-    ) || [];
-    AllFacture = [...AdminFacture, ...EmployeFacture];
-  } else {
-    allVentes = user?.ventes || [];
-    AllFacture = user?.Facture || [];
-  }
-
-  // --- 2. SEARCH LOGIC ---
-  // Optimized to use direct parameters or current state
-  const handleSearch = (value) => {
-    if (!value) {
-      SetListFilterVentes([]);
-      SetListFilterFacture([]);
-      return;
+  const allVentes = useMemo(() => {
+    if (role === "admin") {
+      const adminVentes = (user?.ventes || []).map((v) => ({ ...v, nameEmp: user?.name || t("historyPage.admin") }));
+      const employeVentes =
+        Employe?.flatMap((e) => (e.ventes || []).map((v) => ({ ...v, nameEmp: e.name || t("historyPage.employee") }))) || [];
+      return [...adminVentes, ...employeVentes];
     }
+    return (user?.ventes || []).map((v) => ({ ...v, nameEmp: user?.name || t("historyPage.admin") }));
+  }, [role, user, Employe, t]);
 
-    if (filterType === 'jour') {
-      SetListFilterVentes(allVentes.filter((t) => t.DateVante?.split('T')[0] === value));
-      SetListFilterFacture(AllFacture.filter((t) => t.DateFacture?.split('T')[0] === value));
-    } else if (filterType === 'mois') {
-      SetListFilterVentes(allVentes.filter((t) => t.DateVante?.substring(0, 7) === value));
-      SetListFilterFacture(AllFacture.filter((t) => t.DateFacture?.substring(0, 7) === value));
-    } else if (filterType === 'anne') {
-      SetListFilterVentes(allVentes.filter((t) => t.DateVante?.substring(0, 4) === value));
-      SetListFilterFacture(AllFacture.filter((t) => t.DateFacture?.substring(0, 4) === value));
-    }
+  const filterByPeriod = (list, key) => {
+    if (!periodValue) return [];
+    if (filterType === "day") return list.filter((item) => String(item[key] || "").split("T")[0] === periodValue);
+    if (filterType === "month") return list.filter((item) => String(item[key] || "").substring(0, 7) === periodValue);
+    return list.filter((item) => String(item[key] || "").substring(0, 4) === periodValue);
   };
 
-  const displayData = viewType === 'ventes' ? ListFilterVentes : ListFilterFacture;
+  const filteredSales = filterByPeriod(allVentes, "DateVante");
 
-  const TotalProfit = displayData.reduce((somme, item) => {
-    const p = viewType === 'ventes' ? (item.profite || 0) : (item.TotalPrix || 0);
-    return somme + Number(p);
+  const salesCount = filteredSales.length;
+  const displayData = filteredSales.filter((item) => {
+    const q = resultSearch.toLowerCase();
+    if (!q) return true;
+    return String(item.name || "").toLowerCase().includes(q) || String(item.nameEmp || "").toLowerCase().includes(q);
+  });
+
+  const totalAmount = displayData.reduce((sum, item) => {
+    return sum + Number(item.profite || 0);
   }, 0);
 
-  const [openInfo, setopenInfo] = useState(false);
-  const [selectedVente, setselectedVente] = useState({});
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState({});
+  const [openInfo, setOpenInfo] = useState(false);
+  const [selectedVente, setSelectedVente] = useState({});
 
-  function HandeleOpneInfo(item){
-    if(viewType=='ventes'){
-      setopenInfo(true);
-      setselectedVente(item); 
-    } else {
-      setData(item);
-      setOpen(true);
-    }
-  }
+  const handleOpenInfo = (item) => {
+    setSelectedVente(item);
+    setOpenInfo(true);
+  };
 
-  // Effect to update the search input based on filter type
-  useEffect(() => {
-    if (filterType === "jour") setSearchValue(currentDay);
-    if (filterType === "mois") setSearchValue(currentMonth);
-    if (filterType === "anne") setSearchValue(currentYear);
-  }, [filterType]);
-
-  // Effect to trigger search whenever searchValue OR the source data changes
-  // This ensures that when the component first mounts and "allVentes" is loaded, 
-  // it automatically filters by the initial currentDay.
-  useEffect(() => {
-    handleSearch(searchValue);
-  }, [searchValue, allVentes.length, AllFacture.length]);
-const navigate = useNavigate()
-useEffect(() => {
-  if (!token) {
-    navigate("/LoginChoise");
-  }
-}, [token, navigate]);
   return (
-    <div className="p-4 min-h-screen bg-[#f8fafc] dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div dir={i18n.dir()} className="p-4 min-h-screen bg-[#f8fafc] dark:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Header */}
-        <div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase dark:text-white">Profit History</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">Cash Register Archives and Statistics</p>
+        <div className={isRtl ? "text-right" : ""}>
+          <h1 className="text-4xl font-black tracking-tighter uppercase dark:text-white">{t("historyPage.title")}</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">{t("historyPage.subtitle")}</p>
         </div>
 
-        {/* --- STATS CARDS SECTION --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="relative overflow-hidden group p-6 rounded-[2.5rem] bg-linear-to-br from-emerald-500 to-emerald-700 shadow-xl shadow-emerald-500/20 dark:shadow-none transition-all hover:scale-[1.02]">
-            <div className="relative z-10 flex items-center gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="relative overflow-hidden group p-6 rounded-[2.5rem] bg-linear-to-br from-primary-500 to-primary-700 shadow-xl shadow-primary-500/20 dark:shadow-none transition-all hover:scale-[1.02]">
+            <div className={`relative z-10 flex items-center gap-4 ${isRtl ? "flex-row-reverse text-right" : ""}`}>
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-md text-white border border-white/30">
                 <IoCartOutline size={28} />
               </div>
               <div>
-                <p className="text-emerald-100/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Net Total Profit</p>
+                <p className="text-primary-100/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">{t("historyPage.netTotal")}</p>
                 <h3 className="text-3xl font-black text-white tracking-tighter">
-                  {TotalProfit.toLocaleString()} <span className="text-sm font-bold opacity-80 ml-1">DH</span>
+                  {totalAmount.toLocaleString(locale)} <span className="text-sm font-bold opacity-80 ml-1">DH</span>
                 </h3>
               </div>
             </div>
           </div>
 
           <div className="relative overflow-hidden group p-6 rounded-[2.5rem] bg-linear-to-br from-amber-400 to-amber-600 shadow-xl shadow-amber-500/20 dark:shadow-none transition-all hover:scale-[1.02]">
-            <div className="relative z-10 flex items-center gap-4">
+            <div className={`relative z-10 flex items-center gap-4 ${isRtl ? "flex-row-reverse text-right" : ""}`}>
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-md text-white border border-white/30">
                 <IoFileTrayStackedOutline size={28} />
               </div>
               <div>
-                <p className="text-amber-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Completed Sales</p>
+                <p className="text-amber-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">{t("historyPage.completedSales")}</p>
                 <h3 className="text-3xl font-black text-white tracking-tighter">
-                  {ListFilterVentes.length} <span className="text-sm font-bold opacity-80 ml-1">Items</span>
+                  {salesCount} <span className="text-sm font-bold opacity-80 ml-1">{t("historyPage.items")}</span>
                 </h3>
               </div>
             </div>
           </div>
 
-          <div className="relative overflow-hidden group p-6 rounded-[2.5rem] bg-linear-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/20 dark:shadow-none transition-all hover:scale-[1.02]">
-            <div className="relative z-10 flex items-center gap-4">
-              <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-md text-white border border-white/30">
-                <IoReceiptOutline size={28} />
-              </div>
-              <div>
-                <p className="text-blue-50/70 text-[9px] font-black uppercase tracking-[0.2em] mb-0.5">Edited Invoices</p>
-                <h3 className="text-3xl font-black text-white tracking-tighter">
-                  {ListFilterFacture.length} <span className="text-sm font-bold opacity-80 ml-1">Documents</span>
-                </h3>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* --- FILTERS BAR --- */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-slate-900 p-5 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="relative group">
-            <IoFilterOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500 z-10" />
-            <select 
+            <IoFilterOutline className={`absolute ${iconClass} top-1/2 -translate-y-1/2 text-primary-500 z-10`} />
+            <select
               value={filterType}
-              onChange={(e) => {setFilterType(e.target.value); SetListFilterVentes([]); SetListFilterFacture([]);}}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none appearance-none cursor-pointer text-[11px] font-black uppercase tracking-widest focus:ring-2 ring-emerald-500/20"
+              onChange={(e) => {
+                const next = e.target.value;
+                setFilterType(next);
+                setPeriodValue(next === "day" ? currentDay : next === "month" ? currentMonth : currentYear);
+              }}
+              className={`w-full ${padClass} py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none appearance-none cursor-pointer text-[11px] font-black uppercase tracking-widest focus:ring-2 ring-primary-500/20`}
             >
-             <option value="jour">Daily</option>
-<option value="mois">Monthly</option>
-<option value="anne">Yearly</option>
-
+              <option value="day">{t("historyPage.daily")}</option>
+              <option value="month">{t("historyPage.monthly")}</option>
+              <option value="year">{t("historyPage.yearly")}</option>
             </select>
-            <IoChevronDownOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" />
+            <IoChevronDownOutline className={`absolute ${endIconClass} top-1/2 -translate-y-1/2 text-slate-400`} />
           </div>
 
           <div className="relative group">
-            <IoCalendarOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 z-10" />
-              <input 
-                type={filterType === 'jour' ? "date" : filterType === 'mois' ? "month" : "number"}
-                placeholder={filterType === 'anne' ? "YYYY" : ""}
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-black uppercase cursor-pointer"
-              />
+            <IoCalendarOutline className={`absolute ${iconClass} top-1/2 -translate-y-1/2 text-primary-500 z-10`} />
+            <input
+              type={filterType === "day" ? "date" : filterType === "month" ? "month" : "number"}
+              placeholder={filterType === "year" ? "YYYY" : ""}
+              value={periodValue}
+              onChange={(e) => setPeriodValue(e.target.value)}
+              className={`w-full ${padClass} py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-black uppercase cursor-pointer`}
+            />
           </div>
 
           <div className="relative flex-1">
-            <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-            <input type="text" placeholder="Search in Results..." className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-bold tracking-widest uppercase" />
+            <IoSearchOutline className={`absolute ${iconClass} top-1/2 -translate-y-1/2 text-slate-400`} size={20} />
+            <input
+              type="text"
+              value={resultSearch}
+              onChange={(e) => setResultSearch(e.target.value)}
+              placeholder={t("historyPage.searchResults")}
+              className={`w-full ${padClass} py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 outline-none text-[11px] font-bold tracking-widest uppercase`}
+            />
           </div>
         </div>
 
-        {/* --- TABS & ACTIONS --- */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex p-1.5 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 w-fit shadow-sm">
-            <button onClick={() => setViewType('ventes')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'ventes' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400'}`}>
-              <IoCartOutline size={18} /> Sale
-            </button>
-            <button onClick={() => setViewType('factures')} className={`flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${viewType === 'factures' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400'}`}>
-              <IoReceiptOutline size={18} /> Invoices
-            </button>
-          </div>
-
-          {viewType=='ventes'&&
-            <button 
-              onClick={() =>generateFactureVentesPDF(ListFilterVentes)}
-              className="px-8 py-4 rounded-2xl bg-blue-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white shadow-xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em]"
+        <div className={`flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${isRtl ? "md:flex-row-reverse" : ""}`}>
+            <button
+              onClick={() => exportPdf(filteredSales)}
+              disabled={isExporting}
+              aria-busy={isExporting}
+              className="ui-action ui-action--print text-sm px-8 py-4 rounded-2xl transition-all flex items-center gap-3"
             >
-              <IoReceiptOutline size={20} />Print Invoice
+              <IoReceiptOutline size={20} />
+              {isExporting ? t("salesPdf.exporting") : t("historyPage.printSalesInvoice")}
             </button>
-          }
         </div>
 
-        {/* --- TABLE SECTION --- */}
+        {exportError && <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">{exportError}</p>}
         <div className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden min-h-[450px]">
           {displayData.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-32 opacity-20">
               <IoFileTrayStackedOutline size={80} />
-              <p className="mt-4 font-black uppercase tracking-[0.3em] text-[10px]">Aucune donnée disponible pour cette période</p>
+              <p className="mt-4 font-black uppercase tracking-[0.3em] text-[10px]">{t("historyPage.noDataPeriod")}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full text-start">
                 <thead>
-                 <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400">
-  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Date</th>
-  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">Person in Charge</th>
-  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">
-    {viewType === 'ventes' ? 'Product' : 'Reference'}
-  </th>
-  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-center">Quantity</th>
-  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-right">
-    {viewType === 'ventes' ? 'Profit' : 'Amount'}
-  </th>
-</tr>
-
+                  <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400">
+                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">{t("historyPage.tableDate")}</th>
+                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">{t("historyPage.tableResponsible")}</th>
+                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em]">
+                      {t("historyPage.tableProduct")}
+                    </th>
+                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-center">{t("historyPage.tableQuantity")}</th>
+                    <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-right">
+                      {t("historyPage.tableProfit")}
+                    </th>
+                  </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-                  {displayData.map((t, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer"
-                    onClick={()=>HandeleOpneInfo(t)}
+                  {displayData.map((item, idx) => (
+                    <tr
+                      key={idx}
+                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer"
+                      onClick={() => handleOpenInfo(item)}
                     >
                       <td className="px-8 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase">
-                        {new Date(t.DateVante || t.DateFacture).toLocaleDateString('fr-FR')}
+                        {new Date(item.DateVante).toLocaleDateString(locale)}
                       </td>
                       <td className="px-8 py-5">
-                        {t.nameEmp ? (
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-[10px] font-black border border-emerald-200 uppercase">
-                              {t.nameEmp.charAt(0)}
+                        {item.nameEmp ? (
+                          <div className={`flex items-center gap-3 ${isRtl ? "flex-row-reverse justify-end" : ""}`}>
+                            <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-500/10 flex items-center justify-center text-primary-600 text-[10px] font-black border border-primary-200 uppercase">
+                              {item.nameEmp.charAt(0)}
                             </div>
-                            <span className="text-xs font-black uppercase text-slate-700 dark:text-slate-300">{t.nameEmp}</span>
+                            <span className="text-xs font-black uppercase text-slate-700 dark:text-slate-300">{item.nameEmp}</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3">
+                          <div className={`flex items-center gap-3 ${isRtl ? "flex-row-reverse justify-end" : ""}`}>
                             <div className="w-8 h-8 rounded-lg bg-amber-900/20 text-amber-500 border border-amber-500/20 flex items-center justify-center shadow-sm">
                               <FaUserTie size={14} />
                             </div>
-                            <div className="flex flex-col">
-                              <span className="text-[7px] text-amber-500 font-black uppercase tracking-widest leading-none mb-0.5">Admin</span>
-                              <span className="text-[11px] text-slate-900 dark:text-white font-black uppercase">{user.name}</span>
+                            <div className={`flex flex-col ${isRtl ? "items-end" : ""}`}>
+                              <span className="text-[7px] text-amber-500 font-black uppercase tracking-widest leading-none mb-0.5">{t("historyPage.admin")}</span>
+                              <span className="text-[11px] text-slate-900 dark:text-white font-black uppercase">{user?.name}</span>
                             </div>
                           </div>
                         )}
                       </td>
                       <td className="px-8 py-5">
                         <p className="font-black text-xs text-slate-700 dark:text-slate-200 uppercase tracking-tight">
-                          {viewType === 'ventes' ? t.name : `#${String(t._id).slice(-5).toUpperCase()}`}
+                          {item.name}
                         </p>
                       </td>
                       <td className="px-8 py-5 text-center">
                         <span className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black">
-                          {t.quantite || (t.produits ? t.produits.length : 1)}
+                          {item.quantite || 0}
                         </span>
                       </td>
                       <td className="px-8 py-5 text-right font-black text-sm">
-                        <span className={viewType === 'ventes' ? 'text-emerald-600' : 'text-blue-600'}>
-                          {viewType === 'ventes' ? (t.profite || 0) : (t.TotalPrix || 0)} DH
+                        <span className="text-primary-600">
+                          {Number(item.profite || 0).toLocaleString(locale)} DH
                         </span>
                       </td>
                     </tr>
@@ -296,14 +249,17 @@ useEffect(() => {
           )}
         </div>
       </div>
-      
-      <Dialog 
-        bgcolor={document.documentElement.classList.contains('dark') ? "#0f172a" : "#ffffff"}
-        isOpen={openInfo} onClose={() => setopenInfo(false)} width="650px" title={"Détails de vente"}>
-        <DailogInfoVentes vente={selectedVente} onClose={() => setopenInfo(false)} />
+
+      <Dialog
+        bgcolor={document.documentElement.classList.contains("dark") ? "#0f172a" : "#ffffff"}
+        isOpen={openInfo}
+        onClose={() => setOpenInfo(false)}
+        width="650px"
+        title={t("salesPage.saleDetailsTitle")}
+      >
+        <DailogInfoVentes vente={selectedVente} onClose={() => setOpenInfo(false)} />
       </Dialog>
-      
-      <DailloginfoFacture data={data} onClose={() => setOpen(false)} open={open} />
+
     </div>
   );
 }

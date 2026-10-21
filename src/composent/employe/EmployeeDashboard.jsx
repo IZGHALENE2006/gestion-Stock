@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
@@ -10,6 +11,7 @@ import { DeleteEmploye, GetAllEmploye } from "../../slices/sliceEmploye";
 gsap.registerPlugin(Draggable);
 
 export const EmployeeDashboard = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [refreshEmployees, setRefreshEmployees] = useState(false);
 
@@ -146,10 +148,10 @@ export const EmployeeDashboard = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">Employé</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">Cin</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">Email</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Actions</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">{t("employees.employee")} </th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">{t("employees.cin")} </th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest">{t("employees.email")} </th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">{t("employees.actions")} </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -157,13 +159,13 @@ export const EmployeeDashboard = () => {
                     <tr key={emp._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
+                          <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600">
                             <IoPersonOutline size={16} />
                           </div>
                           <span className="text-sm font-bold text-slate-700 dark:text-slate-200 uppercase">{emp.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400">{emp.cin || "N/A"}</td>
+                      <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400">{emp.cin || t("employees.unavailable")}</td>
                       <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400">{emp.email}</td>
                       <td className="px-6 py-4 text-right">
                         <button 
@@ -180,9 +182,7 @@ export const EmployeeDashboard = () => {
             </div>
           )
         ) : (
-          <div className="w-full py-20 text-center font-black text-slate-300 dark:text-slate-700 uppercase tracking-widest">
-            No employees
-          </div>
+          <div className="w-full py-20 text-center font-black text-slate-300 dark:text-slate-700 uppercase tracking-widest">{t("employees.empty")} </div>
         )}
       </div>
 
@@ -205,13 +205,11 @@ export const EmployeeDashboard = () => {
             <div className="mx-auto w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-2xl flex items-center justify-center text-rose-600 mb-6">
               <IoWarningOutline size={32} />
             </div>
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight mb-2">Deletion</h2>
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-              Are you sure you want to remove this employee?
-            </p>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight mb-2">{t("employees.deleteTitle")} </h2>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">{t("employees.deleteConfirm")} </p>
             <div className="flex flex-col gap-3">
-              <button onClick={confirmDelete} className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-[0.2em]">Delete</button>
-              <button onClick={cancelDelete} className="w-full py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-[0.2em]">Cancel</button>
+              <button onClick={confirmDelete} className="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-[0.2em]">{t("employees.delete")} </button>
+              <button onClick={cancelDelete} className="w-full py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-[0.2em]">{t("common.cancel")} </button>
             </div>
           </div>
         </div>

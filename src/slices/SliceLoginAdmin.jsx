@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { data } from "react-router";
 
 //Login Admin 
 export const Loginuser = createAsyncThunk('LoginAdmin',async({role,data},{rejectWithValue})=>{
@@ -47,7 +46,6 @@ export const getMe = createAsyncThunk(
     ////////////////////////////@@@@@@@@@@@Add Ventes///////////////////
     export const addVentes = createAsyncThunk("addVentes",async(data,{rejectWithValue})=>{
       const Token = localStorage.getItem("token")
-      console.log(data);
       
       try{
             const res = await axios.post("http://localhost:7000/addVentes",data,{
@@ -133,6 +131,12 @@ const LoginAdminSlice = createSlice(
   if (state.user?.ventes && action.payload?.lastVentes) {
     state.user.ventes.push(...action.payload.lastVentes);
   }
+  if (state.user && action.payload?.facture) {
+    state.user.Facture ??= [];
+    const index = state.user.Facture.findIndex((invoice) => invoice._id === action.payload.facture._id);
+    if (index === -1) state.user.Facture.push(action.payload.facture);
+    else state.user.Facture[index] = action.payload.facture;
+  }
 });
 //UpdateAdmin
         bulder
@@ -143,8 +147,7 @@ const LoginAdminSlice = createSlice(
             .addCase(UpdatePassword.fulfilled,(state,action)=>{
               state.loading = false
               state.error = null
-    const index = state.u.findIndex(t => t._id === action.payload._id);
-      if (index !== -1) state.user[index] = action.payload;          })
+            })
             .addCase(UpdatePassword.rejected,(state,action)=>{
               state.loading = false
               state.error = action.payload

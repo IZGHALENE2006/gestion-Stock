@@ -1,2 +1,104 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Blue navigation, soft surfaces and consistent colours for each action. */
+@theme {
+  --color-white: #f9fafb;
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  --color-blue-950: #172554;
+  --color-slate-50: #f1f5fb;
+  --color-slate-100: #eaf0f8;
+  --color-slate-200: #d8e2ec;
+  --color-gray-50: #f4f6fa;
+  --color-gray-100: #f1f5fb;
+  --color-gray-200: #dde5ec;
+}
+
+@layer components {
+  /* Explicit action classes keep colour independent from button size/layout. */
+  .ui-action {
+    --action-bg: #2563eb;
+    --action-hover: #1d4ed8;
+    --action-text: #fff;
+    --action-border: transparent;
+    --action-ring: #60a5fa;
+    min-height: 2.5rem;
+    border: 1px solid var(--action-border);
+    background-color: var(--action-bg);
+    color: var(--action-text);
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+    transition: background-color 160ms, border-color 160ms, box-shadow 160ms;
+  }
+  .ui-action:hover:not(:disabled) { background-color: var(--action-hover); }
+  .ui-action:focus-visible { outline: 3px solid var(--action-ring); outline-offset: 3px; }
+  .ui-action:disabled { cursor: not-allowed; opacity: .45; }
+  .ui-action--import { --action-bg: #7c3aed; --action-hover: #6d28d9; --action-ring: #a78bfa; }
+  .ui-action--print { --action-bg: #0e7490; --action-hover: #155e75; --action-ring: #22d3ee; }
+  .ui-action--payment { --action-bg: #047857; --action-hover: #065f46; --action-ring: #34d399; }
+  .ui-action--edit, .ui-action--credit {
+    --action-bg: #fff3d6; --action-hover: #fde7ad; --action-text: #92400e;
+    --action-border: #f5d38a; --action-ring: #fbbf24;
+  }
+  .ui-action--delete {
+    --action-bg: #fff1f2; --action-hover: #ffe4e6; --action-text: #be123c;
+    --action-border: #fecdd3; --action-ring: #fb7185;
+  }
+  .ui-action--view {
+    --action-bg: #e0e7ff; --action-hover: #c7d2fe; --action-text: #4338ca;
+    --action-border: #c7d2fe; --action-ring: #818cf8;
+  }
+  .dark .ui-action--edit, .dark .ui-action--credit {
+    --action-bg: #382a17; --action-hover: #4b361c; --action-text: #fcd34d; --action-border: #735326;
+  }
+  .dark .ui-action--delete {
+    --action-bg: #3d1c2a; --action-hover: #542336; --action-text: #fda4af; --action-border: #713047;
+  }
+  .dark .ui-action--view {
+    --action-bg: #252951; --action-hover: #33396b; --action-text: #c7d2fe; --action-border: #454b80;
+  }
+
+  .ui-tone-blue { --ui-accent: #2563eb; --ui-soft: #e5eeff; --ui-ink: #1d4ed8; }
+  .ui-tone-violet { --ui-accent: #7c3aed; --ui-soft: #f0e8ff; --ui-ink: #6d28d9; }
+  .ui-tone-cyan { --ui-accent: #0891b2; --ui-soft: #dff5fa; --ui-ink: #0e7490; }
+  .ui-tone-amber { --ui-accent: #d97706; --ui-soft: #fff1d6; --ui-ink: #92400e; }
+  .ui-tone-rose { --ui-accent: #e11d48; --ui-soft: #ffe8ee; --ui-ink: #be123c; }
+  .ui-tone-emerald { --ui-accent: #059669; --ui-soft: #dff5ed; --ui-ink: #047857; }
+  .dark :is(.ui-tone-blue, .ui-tone-violet, .ui-tone-cyan, .ui-tone-amber, .ui-tone-rose, .ui-tone-emerald) {
+    --ui-soft: color-mix(in srgb, var(--ui-accent) 15%, #0f172a);
+    --ui-ink: color-mix(in srgb, var(--ui-accent) 35%, #fff);
+  }
+  .ui-stat {
+    border-inline-start: 3px solid var(--ui-accent);
+    background-image: linear-gradient(120deg, var(--ui-soft), transparent 75%);
+  }
+  .ui-stat-icon { background-color: var(--ui-soft); color: var(--ui-ink); }
+  .ui-module {
+    border-top: 3px solid var(--ui-accent);
+    background-image: linear-gradient(150deg, var(--ui-soft), transparent 55%);
+  }
+  .ui-module:hover { border-color: var(--ui-accent); }
+  .ui-module-icon { background-color: var(--ui-accent); color: #fff; }
+}

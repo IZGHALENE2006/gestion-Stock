@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { IoPeopleOutline, IoBarChartOutline, IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
-import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function NavRow() {
-  const [dark, setDark] = useState(document.documentElement.classList.contains("dark"));
+  const { t } = useTranslation();
 
   // Toggle Dark Mode Logic
 
@@ -17,13 +17,13 @@ export default function NavRow() {
             `flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all
             ${
               isActive
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+                ? "bg-primary-600 text-white shadow-lg shadow-primary-500/20"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
             }`
           }
         >
           <IoPeopleOutline size={18} />
-          Employees
+          {t("employees.title")}
         </NavLink>
 
         {/* <NavLink
@@ -32,7 +32,7 @@ export default function NavRow() {
             `flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all
             ${
               isActive
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+                ? "bg-primary-600 text-white shadow-lg shadow-primary-500/20"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
             }`
           }

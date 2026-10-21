@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import React, { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Box } from 'lucide-react';
 
 const Preloader = ({ onComplete }) => {
+  const { t } = useTranslation();
   const containerRef = useRef();
   const lineRef = useRef();
 
@@ -66,15 +68,13 @@ const Preloader = ({ onComplete }) => {
             />
           </div>
 
-          <p className="reveal-text text-[#19b393] text-[9px] font-black tracking-[0.6em] uppercase transition-colors">
-            Loading ...
-          </p>
+          <p className="reveal-text text-[#19b393] text-[9px] font-black tracking-[0.6em] uppercase transition-colors">{t("common.loading")} </p>
         </div>
 
         {/* Footer info within preloader */}
         <div className="reveal-text mt-12 flex justify-between w-full border-t border-white/5 dark:border-gray-200 pt-4">
-          <span className="text-[8px] text-gray-500 uppercase tracking-widest font-medium">Version BETA</span>
-          <span className="text-[8px] text-gray-500 uppercase tracking-widest font-medium">Loading</span>
+          <span className="text-[8px] text-gray-500 uppercase tracking-widest font-medium">{t("landingHero.betaVersion")} </span>
+          <span className="text-[8px] text-gray-500 uppercase tracking-widest font-medium">{t("common.loading")} </span>
         </div>
       </div>
     </div>

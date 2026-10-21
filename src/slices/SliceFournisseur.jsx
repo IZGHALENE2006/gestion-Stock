@@ -28,7 +28,7 @@ export const AddFournisseur = createAsyncThunk(
 // Get All Fournisseurs
 export const GetAllFournisseur = createAsyncThunk(
   "GetAllFournisseur",
-  async () => {
+  async (_, { rejectWithValue }) => {
     const Token = localStorage.getItem("token");
     try {
       const res = await axios.get(
@@ -41,7 +41,7 @@ export const GetAllFournisseur = createAsyncThunk(
       );
       return res.data;
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error.response?.data?.message || "Server error");
     }
   }
 );
@@ -104,6 +104,8 @@ const initialState = {
   Fournisseur: [],
   loading: false,
   error: null,
+  listLoading: false,
+  listError: null,
 };
 
 const SliceFournisseur = createSlice({
@@ -128,9 +130,20 @@ const SliceFournisseur = createSlice({
       });
 
     // Get All Fournisseurs
-    builder.addCase(GetAllFournisseur.fulfilled, (state, action) => {
-      state.Fournisseur = action.payload;
-    });
+    builder
+      .addCase(GetAllFournisseur.pending, (state) => {
+        state.listLoading = true;
+        state.listError = null;
+      })
+      .addCase(GetAllFournisseur.fulfilled, (state, action) => {
+        state.listLoading = false;
+        state.listError = null;
+        state.Fournisseur = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(GetAllFournisseur.rejected, (state, action) => {
+        state.listLoading = false;
+        state.listError = action.payload || "Server error";
+      });
 
     // Delete Fournisseur
     builder
@@ -168,7 +181,7 @@ const SliceFournisseur = createSlice({
           item.name = action.payload.name;
           item.email = action.payload.email;
           item.phone = action.payload.phone;
-          item.address = action.payload.address;
+          item.Ville = action.payload.Ville;
           item.status = action.payload.status;
         }
       })

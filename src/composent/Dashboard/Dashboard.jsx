@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from "chart.js";
 import { IoPeopleOutline, IoCubeOutline, IoTrendingUpOutline, IoWalletOutline, IoCalendarOutline } from "react-icons/io5";
 import Card from "./Card";
@@ -14,13 +15,16 @@ import Plan4 from "./Plan4";
 import stringToColor from "string-to-color";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler);
 
 export default function Dashboard() {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === "ar" ? "ar-MA" : "fr-MA";
+  const weekdayLabels = Array.from({ length: 7 }, (_, index) => new Date(2024, 0, index + 1).toLocaleDateString(locale, { weekday: "short" }));
   const { user, token, role } = useSelector((state) => state.LoginAdmin);
   const { Employe } = useSelector(state => state.Employe);
   const { Produts } = useSelector((state) => state.Product);
@@ -72,7 +76,7 @@ export default function Dashboard() {
           result[d.getHours()] += Number(v.profite || 0);
         }
       });
-      return { labels: hours, data: result, label: "Profit (Day)" };
+      return { labels: hours, data: result, label: t("dashboard.profitDay") };
 
     } else if (profitFilter === "month") {
       const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -85,7 +89,7 @@ export default function Dashboard() {
           result[d.getDate() - 1] += Number(v.profite || 0);
         }
       });
-      return { labels, data: result, label: "Profit (Month)" };
+      return { labels, data: result, label: t("dashboard.profitMonth") };
 
     } else {
       const dayseList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -99,11 +103,11 @@ export default function Dashboard() {
       allVentes.forEach(v => {
         const d = new Date(v.DateVante);
         if (d >= monday) {
-          const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
+          const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d.getDay()];
           if (result[dayName] !== undefined) result[dayName] += Number(v.profite || 0);
         }
       });
-      return { labels: dayseList, data: dayseList.map(d => result[d]), label: "Profit (Week)" };
+      return { labels: weekdayLabels, data: dayseList.map(d => result[d]), label: t("dashboard.profitWeek") };
     }
   };
 
@@ -128,7 +132,7 @@ export default function Dashboard() {
       y: { 
         beginAtZero: true, 
         grid: { color: "rgba(148, 163, 184, 0.1)", drawBorder: false }, 
-        ticks: { color: "#94a3b8", callback: (value) => value.toLocaleString() + ' DH' } 
+        ticks: { color: "#94a3b8", callback: (value) => value.toLocaleString(locale) + ' DH' }
       },
       x: { grid: { display: false }, ticks: { color: "#94a3b8" } }
     }
@@ -137,7 +141,7 @@ export default function Dashboard() {
   const Plan1Data = {
     labels: filteredProfit.labels,
     datasets: [{
-      label: "Profit (DH)",
+      label: t("dashboard.profitDH"),
       data: filteredProfit.data,
       borderColor: "#19b393",
       borderWidth: 3,
@@ -147,8 +151,8 @@ export default function Dashboard() {
       backgroundColor: (context) => {
         const ctx = context.chart.ctx;
         const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-        gradient.addColorStop(0, "rgba(25, 179, 147, 0.4)");
-        gradient.addColorStop(1, "rgba(25, 179, 147, 0)");
+        gradient.addColorStop(0, "rgba(51, 116, 173, 0.4)");
+        gradient.addColorStop(1, "rgba(51, 116, 173, 0)");
         return gradient;
       },
       fill: true,
@@ -175,7 +179,7 @@ export default function Dashboard() {
     const result = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
     ventes.forEach(v => {
       if (!v.DateVante) return;
-      const day = new Date(v.DateVante).toLocaleDateString("en-US", { weekday: "short" });
+      const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(v.DateVante).getDay()];
       if(result[day] !== undefined) result[day] += v.profite || 0;
     });
     return days.map(d => result[d]);
@@ -191,7 +195,7 @@ export default function Dashboard() {
   }, [Employe]);
 
   const Plan3Data = {
-    labels: days,
+    labels: weekdayLabels,
     datasets: Employees.map((emp) => ({
       label: emp.name,
       data: emp.data,
@@ -201,9 +205,9 @@ export default function Dashboard() {
   };
 
   const Plan4Data = {
-    labels: days,
+    labels: weekdayLabels,
     datasets: [{
-      label: "Valeur Totale",
+      label: t("dashboard.totalValue"),
       data: (function() {
         const now = new Date();
         const dayOfWeek = now.getDay();
@@ -215,7 +219,7 @@ export default function Dashboard() {
         allVentes.forEach(v => {
           const vd = new Date(v.DateVante);
           if (vd >= monday) {
-            const dName = vd.toLocaleDateString("en-US", { weekday: "short" });
+            const dName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][vd.getDay()];
             if (res[dName] !== undefined) res[dName] += (Number(v.price || 0) * Number(v.quantite || 0));
           }
         });
@@ -227,10 +231,10 @@ export default function Dashboard() {
   };
 
   const stats = [
-    { label: "Employe", value: Employe?.length || "0", icon: <IoPeopleOutline />, gradient: "from-blue-400 to-blue-600", text: "text-blue-500 dark:text-blue-400", bg: "bg-blue-500/50", bgIcon: "bg-blue-50 dark:bg-blue-900/20" },
-    { label: "Product", value: Produts?.length || "0", icon: <IoCubeOutline />, gradient: "from-orange-400 to-orange-600", text: "text-orange-500 dark:text-orange-400", bg: "bg-orange-50/50", bgIcon: "bg-orange-50 dark:bg-orange-900/20" },
-    { label: filteredProfit.label, value: totalFilteredProfit.toLocaleString() + " Dh", icon: <IoTrendingUpOutline />, gradient: "from-emerald-400 to-emerald-600", text: "text-emerald-500 dark:text-emerald-400", bg: "bg-emerald-50/50", bgIcon: "bg-emerald-50 dark:bg-emerald-900/20" },
-    { label: "Total Value", value: totalprix?.toLocaleString() + " DH", icon: <IoWalletOutline />, gradient: "from-purple-400 to-purple-600", text: "text-purple-500 dark:text-purple-400", bg: "bg-purple-50/50", bgIcon: "bg-purple-50 dark:bg-purple-900/20" },
+    { label: t("employees.title"), value: Employe?.length || "0", icon: <IoPeopleOutline />, gradient: "from-blue-400 to-blue-600", text: "text-blue-500 dark:text-blue-400", bg: "bg-blue-500/50", bgIcon: "bg-blue-50 dark:bg-blue-900/20" },
+    { label: t("nav.products"), value: Produts?.length || "0", icon: <IoCubeOutline />, gradient: "from-orange-400 to-orange-600", text: "text-orange-500 dark:text-orange-400", bg: "bg-orange-50/50", bgIcon: "bg-orange-50 dark:bg-orange-900/20" },
+    { label: filteredProfit.label, value: totalFilteredProfit.toLocaleString(locale) + " Dh", icon: <IoTrendingUpOutline />, gradient: "from-emerald-400 to-emerald-600", text: "text-emerald-500 dark:text-emerald-400", bg: "bg-emerald-50/50", bgIcon: "bg-emerald-50 dark:bg-emerald-900/20" },
+    { label: t("dashboard.totalValue"), value: totalprix?.toLocaleString(locale) + " DH", icon: <IoWalletOutline />, gradient: "from-purple-400 to-purple-600", text: "text-purple-500 dark:text-purple-400", bg: "bg-purple-50/50", bgIcon: "bg-purple-50 dark:bg-purple-900/20" },
   ];
 
   const produitperc = Percentage(Produts?.map(p => p.categorie?.name));
@@ -246,12 +250,12 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase">Dashboard</h1>
-          <p className="text-slate-400 dark:text-slate-500 font-medium italic text-sm">Activity report for {user?.name}</p>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase">{t("nav.dashboard")} </h1>
+          <p className="text-slate-400 dark:text-slate-500 font-medium italic text-sm">{t("dashboard.activityFor")} {user?.name}</p>
         </div>
         <div className="text-center">
           <h1 className="text-[#19b393] font-black text-xl leading-none"><Time /></h1>
-          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold mt-1 uppercase tracking-widest">{new Date().toLocaleDateString("fr-FR")}</p>
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold mt-1 uppercase tracking-widest">{new Date().toLocaleDateString(locale)}</p>
         </div>
       </div>
 
@@ -266,8 +270,7 @@ export default function Dashboard() {
           
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-slate-700 dark:text-slate-200 font-bold flex items-center gap-2">
-              <IoCalendarOutline className="text-[#19b393]" /> Profit Overview
-            </h3>
+              <IoCalendarOutline className="text-[#19b393]" />{t("dashboard.profitOverview")} </h3>
             {/* Filter Buttons */}
             <div className="flex bg-gray-200/50 dark:bg-slate-800 p-1 rounded-xl">
               {['day', 'week', 'month'].map((f) => (
@@ -280,7 +283,7 @@ export default function Dashboard() {
                     : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                   }`}
                 >
-                  {f}
+                  {t(`dashboard.${f}`)}
                 </button>
               ))}
             </div>

@@ -1,118 +1,47 @@
-import { 
-  IoFileTrayStackedOutline, 
-  IoWalletOutline, 
-  IoBagRemoveOutline, 
-  IoBanOutline 
-} from "react-icons/io5";
+import { IoFileTrayStackedOutline, IoWalletOutline, IoBagRemoveOutline, IoBanOutline } from "react-icons/io5";
 import ProductList from "./ProductList";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
-export default function ProductPg() {
-  const { Produts, loading } = useSelector((state) => state.Product);
-  const { role,token } = useSelector(state => state.LoginAdmin);
- const navigate= useNavigate()
-  const Total = Produts.reduce((somme, item) => {
-    return somme += item.prix_vente * item.quantite;
-  }, 0);
+import { Navigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
+function StatCard({ icon, label, value, warning = false }) {
+  return (
+    <div className="flex min-w-0 items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${warning ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' : 'bg-primary-100 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400'}`}>{icon}</div>
+      <div className="min-w-0">
+        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
+        <div className="mt-1 break-words text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductPg() {
+  const { t, i18n } = useTranslation();
+  const { Produts = [] } = useSelector((state) => state.Product);
+  const { role, token } = useSelector((state) => state.LoginAdmin);
+  const locale = i18n.language === "ar" ? "ar-MA" : "fr-MA";
+  const total = Produts.reduce((sum, item) => sum + item.prix_vente * item.quantite, 0);
   const lowStockCount = Produts.filter(item => item.quantite > 0 && item.quantite < 10).length;
   const outOfStockCount = Produts.filter(item => item.quantite <= 0).length;
+  if (!token) return <Navigate to="/LoginChoise" replace />;
 
-  // Reusable Stat Card Component for Light Mode
-const StatCard = ({ icon, label, value, gradientLight, darkIconColor }) => (
-    <div className={`relative overflow-hidden group
-      flex-1 min-w-60 p-6 rounded-[2.5rem] transition-all duration-500 border flex items-center gap-5 group
-      shadow-sm hover:shadow-xl hover:-translate-y-2 
-      /* Light Mode */
-      bg-linear-to-br ${gradientLight} shadow-lg border-gray-300
-      
-      /* Dark Mode */
-      dark:bg-none dark:bg-slate-900/40 dark:border-slate-700 dark:shadow-none
-    `}>
-    {/* Icon Container */}
-    <div className={`p-4 rounded-[1.8rem] 
-      /* Light: White overlay */
-      bg-white/20 text-white border border-white/30
-      /* Dark: Themed tint */
-      dark:bg-slate-800 ${darkIconColor} dark:border-slate-700
-      backdrop-blur-md shadow-sm transition-transform group-hover:scale-110`}>
-      {icon}
-    </div>
-
-        <div className={`duration-700 absolute -right-12 -top-12 w-32 h-32 bg-linear-to-br ${gradientLight} to-transparent 
-        opacity-20 dark:opacity-[0.85] blur-3xl rounded-full group-hover:-right-1 group-hover:-top-1`} />
-      
-    
-    {/* Text Content */}
-    <div>
-      <p className="text-[10px] font-black uppercase tracking-widest mb-1 
-        text-white/80 dark:text-slate-500">
-        {label}
-      </p>
-      <h2 className="text-2xl font-black tracking-tight 
-        text-white dark:text-slate-100">
-        {value}
-      </h2>
-    </div>
-  </div>
-);
-useEffect(() => {
-  if (!token) {
-    navigate("/LoginChoise");
-  }
-}, [token, navigate]);
   return (
-    <div className="p-8 bg-gray-100 dark:bg-[#1e293b] min-h-screen">
-      {/* --- STATS SECTION --- */}
-<div className="flex flex-wrap gap-6 mb-10">
-  
-  {/* Total Produits - Indigo */}
-  <StatCard 
-    icon={<IoFileTrayStackedOutline size={28} />}
-    label="Total Product"
-    value={Produts.length}
-    gradientLight="from-indigo-500 to-blue-600"
-    darkIconColor="dark:text-indigo-400"
-  />
-
-  {/* Stock Faible - Amber */}
-  <StatCard 
-    icon={<IoBagRemoveOutline size={28} />}
-    label="Low Stock"
-    value={lowStockCount}
-    gradientLight="from-orange-400 to-amber-600"
-    darkIconColor="dark:text-amber-400"
-  />
-
-  {/* Rupture Stock - Rose */}
-  <StatCard 
-    icon={<IoBanOutline size={28} />}
-    label="Out Of Stock"
-    value={outOfStockCount}
-    gradientLight={outOfStockCount > 0 ? "from-rose-500 to-red-700" : "from-slate-400 to-slate-500"}
-    darkIconColor={outOfStockCount > 0 ? "dark:text-rose-400" : "dark:text-slate-500"}
-  />
-
-  {/* Valeur Inventaire - Emerald */}
-  <StatCard 
-    icon={<IoWalletOutline size={28} />}
-    label="Inventory Value"
-    value={role === 'admin' ? (
-      <div className="flex items-baseline gap-1">
-        {Total.toLocaleString()} <span className="text-xs font-bold opacity-60 uppercase">dh</span>
-      </div>
-    ) : "**** DH"}
-    gradientLight="from-emerald-400 to-teal-600"
-    darkIconColor="dark:text-emerald-400"
-  />
-
-</div>
-
-      {/* --- LIST SECTION --- */}
-      <div className="rounded-[3rem]">
+    <main dir={i18n.dir()} className="min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950 sm:px-8">
+      <div className="mx-auto max-w-[1500px]">
+        <header className="mb-7">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600 dark:text-primary-400">STOCK PRO</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-100">{t("nav.products")}</h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{t("productList.caption")}</p>
+        </header>
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard icon={<IoFileTrayStackedOutline size={23} className="text-blue-600 dark:text-blue-400" />} label={t("productPage.totalProduct")} value={Produts.length} />
+          <StatCard icon={<IoBagRemoveOutline size={23} />} label={t("productPage.lowStock")} value={lowStockCount} warning={lowStockCount > 0} />
+          <StatCard icon={<IoBanOutline size={23} className="text-rose-500" />} label={t("productPage.outOfStock")} value={outOfStockCount} warning={outOfStockCount > 0} />
+          <StatCard icon={<IoWalletOutline size={23} />} label={t("productPage.inventoryValue")} value={role === 'admin' ? `${total.toLocaleString(locale)} DH` : t("productPage.hiddenValue")} />
+        </div>
         <ProductList />
       </div>
-    </div>
+    </main>
   );
 }

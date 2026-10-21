@@ -3,7 +3,7 @@
 /* Product.css - Clean & Light Version */
 
 .ProductsCard {
-    background-color: #ffffff;
+    background-color: var(--color-white, #f9fafb);
     border: 1px solid #f1f5f9; /* slate-100 */
     padding: 1.5rem; /* p-6 (24px) */
     border-radius: 1.5rem; /* rounded-xl (b7al l-JS) */

@@ -1,180 +1,244 @@
-  import { createSlice } from "@reduxjs/toolkit";
-  import { createAsyncThunk } from "@reduxjs/toolkit";
-  import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
-  //create UserCridite
-  export const addUserCiridite = createAsyncThunk("addEmploye",async(Date,{rejectWithValue})=>{
-    const Token = localStorage.getItem("token")
-    try{
-          const res = await axios.post("http://localhost:7000/usercridite/add",Date,{
-          headers:{
-              Authorization:`Bearer ${Token}`
-          }
-      })
-      return res.data
-    }catch(err){
-      return rejectWithValue(
-          err.response?.data?.message || "Server error"
-            
-      )
-    }
-  })
-  //GetAllUserCridite
-  export const GetAllUserCridite = createAsyncThunk("GetAllEmploye",async(_,{rejectWithValue})=>{
-    const Token = localStorage.getItem("token")
-    try{
-          const res = await axios.get("http://localhost:7000/usercridite/get",{
-          headers:{
-              Authorization:`Bearer ${Token}`
-          }
-      })
-      return res.data
-    }catch(err){
-      return rejectWithValue(
-          err.response?.data?.message || "Server error"
-            
-      )
-    }
-  })
+const API_URL = "http://localhost:7000/usercridite";
 
-  //DeleteUserCridite
-  export const DeleteUserCridite = createAsyncThunk("DeleteEmploye",async(id,{rejectWithValue})=>{
-    const Token = localStorage.getItem("token")
-    const iditem  = id
-    console.log(iditem);
-    
-    
-    try{
-          const res = await axios.delete(`http://localhost:7000/usercridite/Delete/${iditem}`,{
-          headers:{
-              Authorization:`Bearer ${Token}`
-          }
-      })
-      return res.data
-    }catch(err){
-      return rejectWithValue(
-          err.response?.data?.message || "Server error"
-            
-      )
-    }
-  })
-  //UpdateEmploye
-    export const UpdateEmploye = createAsyncThunk("UpdateEmploye",async(data,{rejectWithValue})=>{
-      const Token = localStorage.getItem("token")
-      const {id}  = data
-    console.log(data);
-    
-      
-      
-      try{
-            const res = await axios.put(`http://localhost:7000/Employe/Update/${id}`,data.newinfoEmp,{
-            headers:{
-                Authorization:`Bearer ${Token}`
-            }
-        })
-        return res.data
-      }catch(err){
-        return rejectWithValue(
-            err.response?.data?.message || "Server error"
-              
-        )
-      }
-  })
+const getAuthConfig = () => {
+  const token = localStorage.getItem("token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 
-  const initialstate = {
-      UserrCridite :[],
-      loading:false,
-      error:null
+const upsertUser = (users, updatedUser) => {
+  const index = users.findIndex((u) => u._id === updatedUser._id);
+  if (index === -1) {
+    users.unshift(updatedUser);
+    return;
   }
-  const SliceCridite = createSlice(
-      {
-          name:"employe",
-          initialState:initialstate,
-          reducers:{},
-          extraReducers:(bulder)=>{
-              //Add Employe
-            bulder
-            .addCase(addUserCiridite.pending,(state)=>{
-              state.loading = true
-              state.error = null
-            })
-            .addCase(addUserCiridite.fulfilled,(state,action)=>{
-              state.loading = false
-              state.error = null
-              state.UserrCridite  .push(action.payload)
-            })
-            .addCase(addUserCiridite.rejected,(state,action)=>{
-              state.loading = false
-              state.error = action.payload
-            
-            })
-            //get all Employe 
-                bulder
-            .addCase(GetAllUserCridite.pending,(state)=>{
-              state.loading = true
-              state.error = null
-            })
-            .addCase(GetAllUserCridite.fulfilled,(state,action)=>{
-              state.loading = false
-              state.error = null
-              state.UserrCridite =action.payload
-            })
-            .addCase(GetAllUserCridite.rejected,(state,action)=>{
-              state.loading = false
-              state.error = action.payload
-            
-            })
+  users[index] = updatedUser;
+};
 
-            //DeleteEmploye
-                bulder
-            .addCase(DeleteUserCridite.pending,(state)=>{
-              state.loading = true
-              state.error = null
-            })
-            .addCase(DeleteUserCridite.fulfilled,(state,action)=>{
-              state.loading = false
-              state.error = null
-              state.Employe =state.Employe.filter((t)=>t._id!==action.payload._id)
-            })
-            .addCase(DeleteUserCridite.rejected,(state,action)=>{
-              state.loading = false
-              state.error = action.payload
-            
-            })
+export const addUserCiridite = createAsyncThunk(
+  "credit/addUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${API_URL}/add`, userData, getAuthConfig());
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
 
-              //UpdateEmploye
-                bulder
-            .addCase(UpdateEmploye.pending,(state)=>{
-              state.loading = true
-              state.error = null
-            })
-            .addCase(UpdateEmploye.fulfilled,(state,action)=>{
-              state.loading = false
-              state.error = null
-    const index = state.Employe.findIndex(t => t._id === action.payload._id);
-      if (index !== -1) state.Employe[index] = action.payload;          })
-            .addCase(UpdateEmploye.rejected,(state,action)=>{
-              state.loading = false
-              state.error = action.payload
-            
-            })
-    //                    //addVentes
-    //             bulder
-    //         .addCase(addVentes.pending,(state)=>{
-    //           state.loading = true
-    //           state.error = null
-    //         })
-    //         .addCase(addVentes.fulfilled,(state,action)=>{
-    //           state.loading = false
-    //           state.error = null
-    // const index = state.Employe.findIndex(t => t._id === action.payload._id);
-    //   if (index !== -1) state.Employe[index] = action.payload;          })
-    //         .addCase(addVentes.rejected,(state,action)=>{
-    //           state.loading = false
-    //           state.error = action.payload
-            
-    //         })
-          }
-      }
-  )
-  export default SliceCridite.reducer
+export const GetAllUserCridite = createAsyncThunk(
+  "credit/getAllUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${API_URL}/get`, getAuthConfig());
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+export const GetUserCriditeById = createAsyncThunk(
+  "credit/getUserById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${API_URL}/get/${id}`, getAuthConfig());
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+export const AddCreditLine = createAsyncThunk(
+  "credit/addLine",
+  async ({ userId, payload }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/add-product/${userId}`,
+        payload,
+        getAuthConfig()
+      );
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+export const AddCreditPayment = createAsyncThunk(
+  "credit/addPayment",
+  async ({ userId, payload }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/add-payment/${userId}`,
+        payload,
+        getAuthConfig()
+      );
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+export const DeleteCreditLine = createAsyncThunk(
+  "credit/deleteLine",
+  async ({ userId, productId }, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(
+        `${API_URL}/DeleteProduct/${userId}/${productId}`,
+        getAuthConfig()
+      );
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+export const DeleteUserCridite = createAsyncThunk(
+  "credit/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`${API_URL}/Delete/${id}`, getAuthConfig());
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Server error");
+    }
+  }
+);
+
+const initialState = {
+  users: [],
+  selectedUser: null,
+  loading: false,
+  actionLoading: false,
+  error: null,
+};
+
+const SliceCridite = createSlice({
+  name: "credit",
+  initialState,
+  reducers: {
+    clearSelectedUser(state) {
+      state.selectedUser = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(GetAllUserCridite.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(GetAllUserCridite.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(GetAllUserCridite.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(GetUserCriditeById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(GetUserCriditeById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedUser = action.payload;
+        upsertUser(state.users, action.payload);
+      })
+      .addCase(GetUserCriditeById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(addUserCiridite.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+      })
+      .addCase(addUserCiridite.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        upsertUser(state.users, action.payload);
+      })
+      .addCase(addUserCiridite.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(AddCreditLine.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+      })
+      .addCase(AddCreditLine.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        state.selectedUser = action.payload;
+        upsertUser(state.users, action.payload);
+      })
+      .addCase(AddCreditLine.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(AddCreditPayment.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+      })
+      .addCase(AddCreditPayment.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        state.selectedUser = action.payload;
+        upsertUser(state.users, action.payload);
+      })
+      .addCase(AddCreditPayment.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(DeleteCreditLine.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+      })
+      .addCase(DeleteCreditLine.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        state.selectedUser = action.payload;
+        upsertUser(state.users, action.payload);
+      })
+      .addCase(DeleteCreditLine.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(DeleteUserCridite.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+      })
+      .addCase(DeleteUserCridite.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        state.users = state.users.filter((u) => u._id !== action.payload._id);
+        if (state.selectedUser?._id === action.payload._id) {
+          state.selectedUser = null;
+        }
+      })
+      .addCase(DeleteUserCridite.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { clearSelectedUser } = SliceCridite.actions;
+export default SliceCridite.reducer;

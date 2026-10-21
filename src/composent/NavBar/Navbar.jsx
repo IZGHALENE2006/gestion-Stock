@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { 
-  IoGridOutline, IoPeopleOutline, IoCartOutline, 
-  IoBarChartOutline, IoCardOutline, IoCalendarOutline, 
+  IoAppsOutline, IoGridOutline, IoPeopleOutline, IoPeopleCircleOutline, IoCartOutline,
+  IoBarChartOutline, IoCardOutline, IoReceiptOutline, IoDocumentTextOutline,
   IoPersonOutline, IoLogOutOutline, IoSettingsOutline, IoPricetagsOutline, IoBusinessOutline 
 } from "react-icons/io5";
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, useNavigate, Link } from 'react-router-dom';
+import { NavLink, useMatch, useNavigate } from 'react-router-dom';
 import { getMe, logoutAdmin } from '../../slices/SliceLoginAdmin';
 import {Box} from "lucide-react"
 import { IoWalletOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 export default function Sidebar() {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+  const addingInvoice = Boolean(useMatch('/Home/Facture/new'));
   const [isExpanded, setIsExpanded] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { user, role, token } = useSelector(state => state.LoginAdmin);
@@ -41,72 +45,78 @@ export default function Sidebar() {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
         className={`fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 
-          transition-all duration-300 ease-in-out flex flex-col overflow-hidden shadow-2xl
-          ${isExpanded ? 'w-57' : 'w-20'}`}
+          transition-all duration-300 ease-in-out flex flex-col overflow-hidden shadow-[4px_0_24px_rgba(36,63,91,0.04)]
+          ${isExpanded ? 'w-57' : 'w-20'} ${isArabic ? 'right-0 left-auto border-l border-r-0' : 'left-0'}`}
       >
         
         {/* Logo */}
-        <div className="flex items-center h-20 px-6">
-          <div className="bg-[#19b393] p-2 rounded-xl min-w-10 h-10 flex items-center justify-center shadow-lg shadow-green-200 dark:shadow-green-900/20">
-            <Box color='white'/>
+        <div className="flex shrink-0 items-center h-20 px-6">
+          <div className="bg-primary-100 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300 p-2 rounded-xl min-w-10 h-10 flex items-center justify-center">
+            <Box />
           </div>
-          <span className={`ml-4 font-black text-slate-800 dark:text-slate-100 text-lg transition-opacity duration-300 whitespace-nowrap
+          <span className={`${isArabic ? 'mr-4' : 'ml-4'} font-black text-slate-800 dark:text-slate-100 text-lg transition-opacity duration-300 whitespace-nowrap
             ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-            STOCK <span className='text-[#19b393]'>PRO</span>
+            STOCK <span className='text-primary-600'>PRO</span>
           </span>
         </div>
 
         {/* Nav Links */}
-        <nav className="grow px-3 mt-4 space-y-1.5">
-          {role === 'admin' && <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label="Dashboard" expanded={isExpanded} />}
-          <NavItem to="/Home/Categories" icon={<IoPricetagsOutline size={22} />} label="Categories" expanded={isExpanded} />
-          <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label="Products" expanded={isExpanded} />
-          {role === 'admin' && <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label="Employees" expanded={isExpanded} />}
-         {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label="Suppliers" expanded={isExpanded} />}
 
-          <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label="Cashier" expanded={isExpanded} />
-          <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label="Profits" expanded={isExpanded} />
+        <nav className="min-h-0 grow overflow-x-hidden overflow-y-auto px-3 mt-4 space-y-1.5 pb-3">
+          <NavItem to="/Home/pagination" icon={<IoAppsOutline size={22} />} label={t("pageNavigation.title")} expanded={isExpanded} />
+
+          {role === 'admin' && <NavItem to="/Home/Dashboard" icon={<IoBarChartOutline size={22} />} label={t("nav.dashboard")} expanded={isExpanded} />}
+          <NavItem to="/Home/Categories" icon={<IoPricetagsOutline size={22} />} label={t("nav.categories")} expanded={isExpanded} />
+          <NavItem to="/Home/products" icon={<IoGridOutline size={22} />} label={t("nav.products")} expanded={isExpanded} />
+          {role === 'admin' && <NavItem to="/Home/employees/EmployeeDashboard" icon={<IoPeopleOutline size={22} />} label={t("nav.employees")} expanded={isExpanded} />}
+         {role === 'admin' && <NavItem to="/Home/Fornisseur" icon={<IoBusinessOutline size={22} />} label={t("nav.suppliers")} expanded={isExpanded} />}
+
+          <NavItem to="/Home/Caisse" icon={<IoCartOutline size={22} />} label={t("nav.cashier")} expanded={isExpanded} />
+          <NavItem to="/Home/Facture" icon={<IoReceiptOutline size={22} />} label={t("nav.invoices")} expanded={isExpanded} end={addingInvoice} />
+          <NavItem to="/Home/Clients" icon={<IoPeopleCircleOutline size={22} />} label={t("clients.title")} expanded={isExpanded} />
+          {role === 'admin' && <NavItem to="/Home/invoice-settings" icon={<IoSettingsOutline size={22} />} label={t("invoiceSettings.title")} expanded={isExpanded} />}
+          <NavItem to="/Home/Profit/Ventes" icon={<IoCardOutline size={22} />} label={t("nav.profits")} expanded={isExpanded} />
       
-         {/* {role === 'admin' && (
-  <NavItem 
-    to="/Home/cridit/add" 
-    icon={<IoWalletOutline size={22} />} 
-    label="Credit Management" 
-    expanded={isExpanded} 
-  />
-)}  */}
+          {role === 'admin' && (
+            <NavItem
+              to="/Home/cridit/add"
+              icon={<IoWalletOutline size={22} />}
+              label={t("nav.creditManagement")}
+              expanded={isExpanded}
+            />
+          )}
         </nav>
 
 
         {/* Profile Section */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 relative">
+        <div className="shrink-0 p-4 border-t border-slate-100 dark:border-slate-800 relative">
           <div className="flex items-center cursor-pointer p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" onClick={handleProfileClick}>
-            <div className="min-w-10 h-10 rounded-xl bg-[#19b393]/20 border border-green-100 dark:border-green-900/30 flex items-center justify-center text-[#19b393] font-bold">
+            <div className="min-w-10 h-10 rounded-xl bg-primary-600/20 border border-primary-100 dark:border-primary-900/30 flex items-center justify-center text-primary-600 font-bold">
               <IoPersonOutline size={20} />
             </div>
-            <div className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap capitalize">{user?.name || "User"}</p>
-              <p className="text-[10px] text-[#19b393] font-black uppercase tracking-wider">{role}</p>
+            <div className={`${isArabic ? 'mr-3' : 'ml-3'} transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap capitalize">{user?.name || t("nav.user")}</p>
+              <p className="text-[10px] text-primary-600 font-black uppercase tracking-wider">{role}</p>
             </div>
           </div>
 
           {/* Dropdown Menu */}
           {profileOpen && isExpanded && (
-            <div className="absolute left-4 bottom-20 w-48 bg-white dark:bg-slate-800 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
+            <div className={`absolute bottom-20 w-48 bg-white dark:bg-slate-800 shadow-2xl rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden animate-in fade-in slide-in-from-bottom-2 ${isArabic ? 'right-4' : 'left-4'}`}>
               <NavLink
                 to="/Home/profile"
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center w-full px-4 py-3 text-sm font-medium
                            text-slate-600 dark:text-slate-300
                            hover:bg-slate-50 dark:hover:bg-slate-700/50
-                           hover:text-[#19b393] transition"
+                           hover:text-primary-600 transition"
               >
-                <IoSettingsOutline className="mr-3" size={18}/>
-                Profile 
+                <IoSettingsOutline className={isArabic ? "ml-3" : "mr-3"} size={18}/>
+                {t("nav.profile")}
               </NavLink>
 
               <button className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition" onClick={HanleLogoutAdmin}>
-                <IoLogOutOutline className="mr-3" size={18}/> Logout
+                <IoLogOutOutline className={isArabic ? "ml-3" : "mr-3"} size={18}/> {t("nav.logout")}
               </button>
             </div>
           )}
@@ -117,14 +127,15 @@ export default function Sidebar() {
 }
 
 // NavItem Helper
-function NavItem({ to, icon, label, expanded }) {
+function NavItem({ to, icon, label, expanded, end = false }) {
   return (
     <NavLink 
       to={to} 
+      end={end}
       className={({ isActive }) => `
         flex items-center h-12 rounded-xl transition-all duration-200 
         ${isActive 
-          ? 'bg-[#19b393] text-white shadow-lg shadow-green-100 dark:shadow-green-900/20 scale-[1.02]' 
+          ? 'bg-primary-100 text-primary-800 dark:bg-primary-500/15 dark:text-primary-300'
           : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'
         }
       `}

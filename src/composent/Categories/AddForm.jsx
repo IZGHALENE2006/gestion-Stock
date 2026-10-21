@@ -1,57 +1,30 @@
 import { useState } from "react";
 import { IoSaveOutline, IoGridOutline } from "react-icons/io5";
-import { AddCategory } from "../../slices/SilceCategory"; 
+import { AddCategory } from "../../slices/SilceCategory";
 import { useDispatch } from "react-redux";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export default function AddCategoryForm() {
-  const Dispatch = useDispatch();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    DateCreate: new Date()
+    DateCreate: new Date(),
   });
-
-  // Detect dark mode for toast styling
-  const isDark = document.documentElement.classList.contains('dark');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      await Dispatch(AddCategory(formData)).unwrap();
+      await dispatch(AddCategory(formData)).unwrap();
       setFormData({ name: "" });
-      
-      toast.success('Categorie Added Succefuly', {
-        duration: 3000,
-        style: {
-          border: '1px solid #00d435',
-          padding: '16px',
-          color: '#00d435',
-          backgroundColor: isDark ? "#0f172a" : "#fffffe",
-          backdropFilter: "blur(10px)",
-        },
-        iconTheme: {
-          primary: '#00d435',
-          secondary: '#FFFAEE',
-        },
-      });
-    } catch (err) {
-      toast.error('Failed to add category', {
-        duration: 3000,
-        style: {
-          border: '1px solid #e22620',
-          padding: '16px',
-          color: '#e22620',
-          backgroundColor: isDark ? "#0f172a" : "#fffffe",
-          backdropFilter: "blur(10px)",
-        },
-        iconTheme: {
-          primary: '#e22620',
-          secondary: '#FFFAEE',
-        },
-      });
+
+      toast.success(t("categoryForm.added"));
+    } catch {
+      toast.error(t("categoryForm.failed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -61,7 +34,7 @@ export default function AddCategoryForm() {
     <form onSubmit={handleSubmit} className="space-y-6 flex flex-col gap-4 justify-between transition-colors">
       <div>
         <label className="text-sm text-gray-700 dark:text-slate-300 mb-2 block font-medium">
-          Category Name
+          {t("categoryForm.categoryName")}
         </label>
 
         <div className="relative">
@@ -72,15 +45,13 @@ export default function AddCategoryForm() {
           <input
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-            placeholder="Ex: Computer"
-            className="w-full bg-[#071a2f]/5 dark:bg-slate-800/50 border border-[#19b393]/30 dark:border-slate-700
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder={t("categoryForm.placeholder")}
+            className="w-full bg-[#071a2f]/5 dark:bg-slate-800/50 border border-primary-600/30 dark:border-slate-700
                        rounded-lg pl-10 pr-4 py-3 text-slate-800 dark:text-slate-100
                        placeholder:text-gray-400 dark:placeholder:text-slate-500
                        focus:outline-none focus:ring-2
-                       focus:ring-[#19b393] transition-all"
+                       focus:ring-primary-600 transition-all"
           />
         </div>
       </div>
@@ -88,15 +59,14 @@ export default function AddCategoryForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full flex justify-center text-white items-center gap-2 py-3 rounded-lg font-semibold transition
-          ${
-            isSubmitting
-              ? "bg-gray-500 cursor-not-allowed"
-              : "bg-[#19b393] hover:bg-[#0e6b58] active:scale-95 shadow-lg shadow-emerald-500/10"
-          }`}
+        className={`w-full flex justify-center text-white items-center gap-2 py-3 rounded-lg font-semibold transition ${
+          isSubmitting
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-primary-600 hover:bg-primary-700 active:scale-95 shadow-lg shadow-primary-500/10"
+        }`}
       >
         <IoSaveOutline size={20} />
-        {isSubmitting ? "Add..." : "Add Categorie"}
+        {isSubmitting ? t("categoryForm.adding") : t("categoryForm.addCategory")}
       </button>
       <Toaster />
     </form>

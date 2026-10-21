@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 
 import bcrypt from "bcryptjs";
+import { PAYMENT_METHOD_VALUES } from "../../shared/paymentMethods.js";
+import { creditInvoiceFields } from "./creditInvoiceFields.js";
 
 const ShemaEmploye = new mongoose.Schema(
     {
@@ -44,6 +46,7 @@ const ShemaEmploye = new mongoose.Schema(
                            nameEmp:String,
 
                            price:Number,
+                          priceType:{ type:String, enum:["retail", "wholesale"], default:"retail" },
 
                            quantite:Number,
                            profite : Number,
@@ -59,17 +62,44 @@ const ShemaEmploye = new mongoose.Schema(
                     {
                       Product:[
                         {
+                          idProduct:{ type:mongoose.Schema.Types.ObjectId, ref:"Products" },
                           name:String,
                           price:Number,
+                          priceType:{ type:String, enum:["retail", "wholesale"], default:"retail" },
                           quantite:Number,
-                          TotalPrix:Number
+                          code:String,
+                          vatRate:{ type:Number, min:0, max:100 },
+                          vatAmount:{ type:Number, min:0 },
+                          totalHT:{ type:Number, min:0 },
+                          totalTTC:{ type:Number, min:0 },
+                          orderDiscountAmount:{ type:Number, min:0 },
+                          TotalPrix:Number,
+                          subtotal:Number,
+                          discountType:{ type:String, enum:["percent", "amount"], default:"percent" },
+                          discountValue:{ type:Number, default:0, min:0 },
+                          discountAmount:{ type:Number, default:0, min:0 }
                         }
                       ],
                         nameEmp:String,
+                      clientName:{ type:String, trim:true, maxlength:160 },
+                      clientId:{ type:mongoose.Schema.Types.ObjectId, ref:"Client" },
+                      ...creditInvoiceFields,
+                      invoiceOrigin:{ type:String, enum:["manual", "cashier"], default:"cashier" },
+                      paymentMethod:{ type:String, enum:PAYMENT_METHOD_VALUES },
+                      vatRate:{ type:Number, min:0, max:100 },
+                      vatAmount:{ type:Number, min:0 },
+                      totalHT:{ type:Number, min:0 },
                       TotalQauntite:Number,
                       TotalPrix:Number,
                       totalOrder:Number,
                       PrixReture:Number,
+                      subtotal:Number,
+                      discountType:{ type:String, enum:["percent", "amount"], default:"percent" },
+                      discountValue:{ type:Number, default:0, min:0 },
+                      discountAmount:{ type:Number, default:0, min:0 },
+                      lineDiscountAmount:{ type:Number, default:0, min:0 },
+                      orderDiscountAmount:{ type:Number, min:0 },
+                      amountPaid:Number,
                      DateFacture :{
                             type:Date,
                             default:Date.now

@@ -1,44 +1,68 @@
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { autoTable } from "jspdf-autotable";
+import i18n from "../../i18n/index.js";
+import { createPdfDocument, pdfTableStyles, pdfLtr } from "../../utils/createPdfDocument.js";
 
-export const generateFactureVentesPDF = (facture) => {
-
+export const createFactureVentesPDF = async (facture) => {
   if (!facture || !facture.length) return;
 
-  const doc = new jsPDF();
-  const TotalProfite = facture.reduce((somme, t) => (somme += t.profite), 0);
+  const t = i18n.getFixedT(i18n.language);
+  const locale = i18n.language === "ar" ? "ar-MA" : "fr-MA";
+  const rtl = i18n.dir() === "rtl";
+  const doc = await createPdfDocument({ rtl });
+  const x = rtl ? doc.internal.pageSize.getWidth() - 14 : 14;
+  const textOptions = { align: rtl ? "right" : "left" };
+  const orderColumns = (row) => rtl ? [...row].reverse() : row;
+  const totalProfit = facture.reduce((sum, item) => sum + Number(item.profite || 0), 0);
 
   doc.setFontSize(16);
-  doc.text("FACTURE", 14, 15);
+  doc.setFont("Amiri", "bold");
+  doc.text(t("salesPdf.salesReportTitle"), x, 15, textOptions);
 
-  doc.setFontSize(10);
-  doc.text(`Date: ${new Date().toLocaleString()}`, 14, 22);
-  
-//   doc.text(`Id: ${facture._id}`, 14, 28);    
+  doc.setFont("Amiri", "normal");
+  doc.setFontSize(12);
+  doc.text(`${t("salesPdf.date")}: ${pdfLtr(new Date().toLocaleString(locale))}`, x, 23, textOptions);
 
   autoTable(doc, {
     startY: 35,
-head: [['Employe',"Nom", "Quantité", "Prix Vente","Profit", "Date","Temps"]],
-body: facture.map(p => {
-  const [datePart, timePart] = String(p.DateVante).split('T');
-  const time = timePart ? timePart.split('.')[0] : '-';
-
-  return [
-    p.nameEmp,
-    p.name,
-    p.quantite,
-    `${p.price} Dh`,
-    `+ ${p.profite} Dh`,
-    datePart,
-    time
-  ];
-}),
-
+    ...pdfTableStyles(rtl),
+    columnStyles: { [rtl ? 4 : 2]: { minCellWidth: 22 } },
+    head: [
+      orderColumns([
+        t("salesPdf.seller"),
+        t("salesPdf.product"),
+        t("salesPdf.quantity"),
+        t("salesPdf.salePrice"),
+        t("salesPdf.profit"),
+        t("salesPdf.dateColumn"),
+        t("salesPdf.timeColumn"),
+      ]),
+    ],
+    body: facture.map((p) => {
+      const [datePart, timePart] = String(p.DateVante || "").split("T");
+      const time = timePart ? timePart.split(".")[0] : "-";
+      return orderColumns([
+        p.nameEmp || "-",
+        p.name || "-",
+        p.quantite || 0,
+        `${Number(p.price || 0).toFixed(2)} DH`,
+        `+ ${Number(p.profite || 0).toFixed(2)} DH`,
+        datePart || "-",
+        time,
+      ]);
+    }),
   });
 
-  const y = doc.lastAutoTable.finalY + 10;
+  let y = doc.lastAutoTable.finalY + 10;
+  if (y > doc.internal.pageSize.getHeight() - 14) {
+    doc.addPage();
+    y = 20;
+  }
+  doc.text(`${t("salesPdf.totalDailySales")}: ${pdfLtr(`${totalProfit.toFixed(2)} DH`)}`, x, y, textOptions);
 
-  doc.text(`Ventes du Jour: ${TotalProfite} Dh`, 14, y);
+  return doc;
+};
 
-  doc.save(`facture.pdf`);
+export const generateFactureVentesPDF = async (facture) => {
+  const doc = await createFactureVentesPDF(facture);
+  if (doc) doc.save("sales_report.pdf");
 };
